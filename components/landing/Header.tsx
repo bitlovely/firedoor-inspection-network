@@ -52,12 +52,12 @@ export function Header() {
             </div>
 
             <div className="hidden items-center gap-3 md:flex">
-              <a
-                href="#"
+              <Link
+                href="/signin"
                 className="rounded-lg px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-white/10"
               >
                 Sign in
-              </a>
+              </Link>
               <Link
                 href="/apply"
                 className="rounded-lg bg-accent-gradient px-4 py-2 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
