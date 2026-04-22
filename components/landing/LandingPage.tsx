@@ -17,6 +17,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import Image from "next/image";
 import { Header } from "./Header";
 import { HeroNetworkBackground } from "./HeroNetworkBackground";
 
@@ -107,7 +108,13 @@ const trustItems = [
 function LogoMark() {
   return (
     <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
-      <Flame className="h-5 w-5 text-accent-foreground" strokeWidth={2.5} />
+      <Image
+        src="/logo-mark.svg"
+        alt=""
+        width={20}
+        height={20}
+        className="h-5 w-5"
+      />
     </span>
   );
 }

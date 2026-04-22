@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Flame, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const nav = [
   { label: "How it works", href: "#how" },
@@ -24,7 +25,14 @@ export function Header() {
               className="flex items-center gap-2 text-primary-foreground transition-opacity hover:opacity-90"
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
-                <Flame className="h-5 w-5" strokeWidth={2.5} />
+                <Image
+                  src="/logo-mark.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                  priority
+                />
               </span>
               <span className="font-display text-base font-bold tracking-tight sm:text-lg">
                 FireDoor <span className="text-accent">Network</span>

@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "FireDoor Network — A network that leads to work",
   description:
     "The UK network connecting verified fire door surveyors and inspectors with the property managers, contractors and clients who need them.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
   openGraph: {
     title: "FireDoor Network — A network that leads to work",
     description:

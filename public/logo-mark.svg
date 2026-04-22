@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Door -->
+  <path
+    d="M40 26h44c4.4 0 8 3.6 8 8v60c0 4.4-3.6 8-8 8H40c-4.4 0-8-3.6-8-8V34c0-4.4 3.6-8 8-8Z"
+    stroke="#ffffff"
+    stroke-width="6"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M48 38v52"
+    stroke="#ffffff"
+    stroke-width="6"
+    stroke-linecap="round"
+    opacity="0.65"
+  />
+  <circle cx="74" cy="64" r="4.5" fill="#ffffff" opacity="0.9" />
+
+  <!-- Network nodes (right side) -->
+  <circle cx="102" cy="42" r="6" fill="#ffffff" opacity="0.9" />
+  <circle cx="108" cy="70" r="6" fill="#ffffff" opacity="0.9" />
+  <circle cx="94" cy="88" r="6" fill="#ffffff" opacity="0.9" />
+
+  <!-- Links -->
+  <path
+    d="M92 50L100 44M92 74l12-4M86 86l6 2"
+    stroke="#ffffff"
+    stroke-width="6"
+    stroke-linecap="round"
+    opacity="0.7"
+  />
+</svg>
+
