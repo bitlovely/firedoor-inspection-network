@@ -182,30 +182,69 @@ export function LandingPage() {
               Three steps from application to your first lead.
             </h2>
           </div>
-          <div className="mt-16 grid gap-6 md:grid-cols-3 lg:gap-8">
-            {howSteps.map((item, t) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.step}
-                  className="group relative rounded-2xl bg-neu p-8 shadow-[10px_10px_22px_hsl(var(--neu-shadow-dark)),_-10px_-10px_22px_hsl(var(--neu-shadow-light))] transition-all duration-300 hover:-translate-y-1 hover:shadow-[14px_14px_34px_hsl(var(--neu-shadow-dark)),_-14px_-14px_34px_hsl(var(--neu-shadow-light))]"
-                  style={{ animationDelay: `${t * 100}ms` }}
+          <div className="relative mt-16">
+            {/* connectors (desktop) */}
+            <svg
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 hidden h-full w-full md:block"
+              viewBox="0 0 1000 280"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <marker
+                  id="how-arrow"
+                  markerWidth="10"
+                  markerHeight="10"
+                  refX="8"
+                  refY="5"
+                  orient="auto"
                 >
-                  <div className="absolute top-6 right-6 font-display text-5xl font-extrabold text-secondary transition-colors group-hover:text-accent/20">
-                    {item.step}
+                  <path d="M0,0 L10,5 L0,10 Z" fill="rgba(0,0,0,0.28)" />
+                </marker>
+              </defs>
+              <path
+                d="M 210 70 C 360 25, 430 25, 530 88"
+                fill="none"
+                stroke="rgba(0,0,0,0.18)"
+                strokeWidth="2"
+                markerEnd="url(#how-arrow)"
+              />
+              <path
+                d="M 560 170 C 620 215, 710 235, 820 212"
+                fill="none"
+                stroke="rgba(0,0,0,0.18)"
+                strokeWidth="2"
+                markerEnd="url(#how-arrow)"
+              />
+            </svg>
+
+            <div className="grid gap-10 md:grid-cols-3 md:gap-8">
+              {howSteps.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.step} className="relative">
+                    <div className="flex items-start gap-5 md:flex-col md:gap-4">
+                      <div className="flex shrink-0 items-center gap-4 md:w-full md:justify-start">
+                        <div className="font-display text-3xl font-extrabold text-primary/70">
+                          {item.step}.
+                        </div>
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-black/10 bg-white shadow-[0_10px_30px_-20px_rgba(0,0,0,0.35)]">
+                          <Icon className="h-6 w-6 text-primary" strokeWidth={2} />
+                        </div>
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-display text-lg font-bold text-primary">
+                          {item.title}
+                        </div>
+                        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-all group-hover:bg-accent-gradient group-hover:shadow-accent-glow">
-                    <Icon className="h-6 w-6" strokeWidth={2} />
-                  </div>
-                  <h3 className="mt-6 font-display text-xl font-bold text-primary">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 leading-relaxed text-muted-foreground">
-                    {item.description}
-                  </p>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
