@@ -76,9 +76,9 @@ export function HeroNetworkBackground() {
       >
         <defs>
           <linearGradient id={`grad-${uid}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="rgb(255 106 26)" stopOpacity="0.55" />
-            <stop offset="55%" stopColor="white" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="rgb(255 106 26)" stopOpacity="0.38" />
+            <stop offset="0%" stopColor="rgb(255 106 26)" stopOpacity="0.5" />
+            <stop offset="55%" stopColor="rgb(255 255 255)" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="rgb(255 106 26)" stopOpacity="0.34" />
           </linearGradient>
           <filter id={`glow-${uid}`} x="-40%" y="-40%" width="180%" height="180%">
             <feGaussianBlur stdDeviation="0.35" result="blur" />

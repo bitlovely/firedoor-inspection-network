@@ -5,7 +5,8 @@
   --foreground: 222 47% 8%;
   --card: 0 0% 100%;
   --card-foreground: 222 47% 8%;
-  --primary: 222 60% 11%;
+  /* Closer to screenshot: deeper navy */
+  --primary: 224 65% 10%;
   --primary-foreground: 0 0% 100%;
   --accent: 18 95% 55%;
   --accent-foreground: 0 0% 100%;
@@ -22,9 +23,9 @@
   --radius: 0.75rem;
   --gradient-hero: linear-gradient(
     135deg,
-    hsl(222 60% 8%) 0%,
-    hsl(222 55% 14%) 60%,
-    hsl(222 50% 18%) 100%
+    hsl(224 66% 10%) 0%,
+    hsl(226 58% 18%) 48%,
+    hsl(230 52% 22%) 100%
   );
   --gradient-accent: linear-gradient(
     135deg,
@@ -33,10 +34,10 @@
   );
   --gradient-glow: radial-gradient(
     circle at 50% 0%,
-    hsl(18 95% 55% / 0.18),
-    transparent 60%
+    hsl(18 95% 55% / 0.16),
+    transparent 62%
   );
-  --shadow-accent: 0 12px 32px -8px hsl(18 95% 55% / 0.45);
+  --shadow-accent: 0 14px 38px -12px hsl(18 95% 55% / 0.42);
 
   /* Neumorphism surfaces (light mode) */
   --neu-surface: 220 20% 96%;

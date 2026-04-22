@@ -17,7 +17,7 @@ export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="container mx-auto px-4 pt-4 sm:px-6">
-        <div className="rounded-2xl bg-primary/35 backdrop-blur-md shadow-[0_18px_45px_-18px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
+        <div className="menu-water relative overflow-hidden rounded-2xl bg-primary/35 backdrop-blur-md shadow-[0_18px_45px_-18px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
           <nav className="flex h-14 items-center justify-between px-3 sm:px-4">
             <Link
               href="/"
@@ -94,6 +94,49 @@ export function Header() {
           ) : null}
         </div>
       </div>
+
+      <style jsx>{`
+        .menu-water::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0.55;
+          mix-blend-mode: screen;
+          background-image: linear-gradient(
+              110deg,
+              rgba(255, 255, 255, 0) 0%,
+              rgba(255, 255, 255, 0.08) 18%,
+              rgba(255, 106, 26, 0.1) 38%,
+              rgba(255, 255, 255, 0.06) 52%,
+              rgba(255, 255, 255, 0) 70%
+            ),
+            radial-gradient(
+              120% 90% at 0% 50%,
+              rgba(255, 255, 255, 0.06),
+              rgba(255, 255, 255, 0) 60%
+            );
+          background-size: 220% 100%, 120% 100%;
+          background-position: 0% 50%, 0% 50%;
+          animation: menu-water-flow 7.5s linear infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .menu-water::before {
+            animation: none;
+            opacity: 0.35;
+          }
+        }
+
+        @keyframes menu-water-flow {
+          0% {
+            background-position: 0% 50%, 0% 50%;
+          }
+          100% {
+            background-position: 100% 50%, 120% 50%;
+          }
+        }
+      `}</style>
     </header>
   );
 }
