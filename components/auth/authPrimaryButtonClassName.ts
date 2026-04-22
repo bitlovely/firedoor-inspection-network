@@ -1,0 +1,3 @@
+/** Shared primary CTA for /signin and /signup — orange, high-contrast on black. */
+export const authPrimaryButtonClassName =
+  "mt-2 inline-flex h-[3.25rem] w-full items-center justify-center rounded-2xl bg-gradient-to-b from-orange-500 to-orange-600 px-6 text-sm font-semibold tracking-tight text-white shadow-[0_1px_0_0_rgba(255,255,255,0.22)_inset,0_14px_36px_-10px_rgba(234,88,12,0.65)] outline-none transition-[transform,filter,box-shadow] duration-200 hover:brightness-[1.06] hover:shadow-[0_1px_0_0_rgba(255,255,255,0.28)_inset,0_18px_44px_-10px_rgba(234,88,12,0.72)] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-orange-400/90 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
