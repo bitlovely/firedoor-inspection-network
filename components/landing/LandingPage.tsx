@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -19,6 +18,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Header } from "./Header";
+import { HeroDoor3D } from "./HeroDoor3D";
 
 const howSteps = [
   {
@@ -172,14 +172,7 @@ export function LandingPage() {
             <div className="relative">
               <div className="absolute -inset-4 rounded-full bg-accent/20 blur-3xl" />
               <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-lg">
-                <Image
-                  src="/hero-firedoor.jpg"
-                  alt="Modern fire-rated door with certification label in a commercial corridor"
-                  width={1600}
-                  height={1200}
-                  className="h-auto w-full object-cover"
-                  priority
-                />
+                <HeroDoor3D />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary via-primary/60 to-transparent p-6">
                   <div className="flex items-center gap-3 rounded-xl bg-primary-foreground/95 p-3 backdrop-blur">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-accent-foreground">
