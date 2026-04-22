@@ -249,43 +249,63 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="why" className="relative overflow-hidden bg-secondary/40 py-24 lg:py-32">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold tracking-wider text-accent uppercase">
-              Why join
+      <section id="why" className="relative overflow-hidden bg-[#f3f4f6] py-24 lg:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#e5e7eb] via-[#f3f4f6] to-[#f3f4f6]" />
+        <div className="container relative mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_-60px_rgba(0,0,0,0.35)]">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-16 -right-8 select-none text-[220px] leading-none font-display font-extrabold text-black/[0.06] sm:text-[280px]"
+            >
+              ?
             </div>
-            <h2 className="mt-4 font-display text-3xl leading-tight font-extrabold tracking-tight text-balance text-primary sm:text-4xl lg:text-5xl">
-              We&apos;re not another trade body.
-              <span className="block text-accent">
-                We&apos;re a route to revenue.
-              </span>
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Built by people who actually inspect doors — for people who actually
-              inspect doors.
-            </p>
-          </div>
-          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-            {whyItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.title}
-                  className="rounded-2xl bg-neu p-6 shadow-[10px_10px_22px_hsl(var(--neu-shadow-dark)),_-10px_-10px_22px_hsl(var(--neu-shadow-light))] transition-all hover:shadow-[14px_14px_34px_hsl(var(--neu-shadow-dark)),_-14px_-14px_34px_hsl(var(--neu-shadow-light))]"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent shadow-[6px_6px_14px_hsl(var(--neu-shadow-dark)),_-6px_-6px_14px_hsl(var(--neu-shadow-light))]">
-                    <Icon className="h-5 w-5" strokeWidth={2.25} />
-                  </div>
-                  <h3 className="mt-4 font-display text-lg font-bold text-primary">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                    {item.description}
-                  </p>
+            <div className="grid gap-8 px-8 py-10 sm:px-12 sm:py-12 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-6">
+                <div className="inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 text-xs font-semibold tracking-wider text-black/70 uppercase">
+                  Why join
                 </div>
-              );
-            })}
+                <h2 className="mt-4 font-display text-3xl leading-tight font-extrabold tracking-tight text-balance text-black sm:text-4xl lg:text-5xl">
+                  We&apos;re not another trade body.
+                  <span className="block text-black/70">
+                    We&apos;re a route to revenue.
+                  </span>
+                </h2>
+              </div>
+              <div className="space-y-4 text-sm leading-relaxed text-black/70 lg:col-span-6 lg:pt-2">
+                <p>
+                  Built by people who actually inspect doors — for people who
+                  actually inspect doors.
+                </p>
+                <p>
+                  Get discovered by clients who need compliant fire door work and
+                  contact you directly.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 border-t border-black/10 md:grid-cols-3">
+              {whyItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.title}
+                    className="border-r border-b border-black/10 p-6 last:border-r-0 md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+3)]:border-b-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white">
+                        <Icon className="h-5 w-5 text-black/70" strokeWidth={2} />
+                      </div>
+                      <div className="font-display text-base font-bold text-black">
+                        {item.title}
+                      </div>
+                    </div>
+                    <p className="mt-3 text-sm leading-relaxed text-black/70">
+                      {item.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
