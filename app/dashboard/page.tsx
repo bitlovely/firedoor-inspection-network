@@ -50,6 +50,9 @@ export default function DashboardPage() {
         if (!res.ok) {
           throw new Error("error" in json ? json.error : "Unable to load dashboard");
         }
+        if (!("application" in json)) {
+          throw new Error("Unable to load dashboard");
+        }
         if (!cancelled) setApp(json.application);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Something went wrong");
