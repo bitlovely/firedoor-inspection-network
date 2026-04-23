@@ -82,7 +82,8 @@ export function AdminDashboardClient() {
       if (!res.ok || !json?.application) {
         throw new Error(json?.error ?? "Update failed");
       }
-      setApps((prev) => prev.map((a) => (a.id === id ? json.application : a)));
+      const updated = json.application;
+      setApps((prev) => prev.map((a) => (a.id === id ? updated : a)));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Update failed");
     } finally {
@@ -104,7 +105,8 @@ export function AdminDashboardClient() {
       if (!res.ok || !json?.application) {
         throw new Error(json?.error ?? "Update failed");
       }
-      setApps((prev) => prev.map((a) => (a.id === id ? json.application : a)));
+      const updated = json.application;
+      setApps((prev) => prev.map((a) => (a.id === id ? updated : a)));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Update failed");
     } finally {
