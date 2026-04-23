@@ -44,13 +44,18 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/signin" className="transition-colors hover:text-accent">
-                  Member sign in
-                </Link>
+                <a href="#how" className="transition-colors hover:text-accent">
+                  How it works
+                </a>
               </li>
               <li>
-                <Link href="/directory" className="transition-colors hover:text-accent">
-                  Directory
+                <a href="#why" className="transition-colors hover:text-accent">
+                  Why join
+                </a>
+              </li>
+              <li>
+                <Link href="/signin" className="transition-colors hover:text-accent">
+                  Member sign in
                 </Link>
               </li>
             </ul>
@@ -59,14 +64,24 @@ export function SiteFooter() {
             <h4 className="font-display text-sm font-bold tracking-wider uppercase">Company</h4>
             <ul className="mt-4 space-y-2 text-sm text-white/60">
               <li>
-                <Link href="/" className="transition-colors hover:text-accent">
-                  Home
-                </Link>
+                <a href="#" className="transition-colors hover:text-accent">
+                  About
+                </a>
               </li>
               <li>
-                <Link href="/apply" className="transition-colors hover:text-accent">
-                  Become an affiliate
-                </Link>
+                <a href="#trust" className="transition-colors hover:text-accent">
+                  Terms
+                </a>
+              </li>
+              <li>
+                <a href="#" className="transition-colors hover:text-accent">
+                  Contact
+                </a>
+              </li>
+              <li>
+                <a href="#" className="transition-colors hover:text-accent">
+                  Privacy
+                </a>
               </li>
             </ul>
           </div>
