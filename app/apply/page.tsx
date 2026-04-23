@@ -28,15 +28,17 @@ export default function ApplyPage() {
       </div>
 
       <div className="container relative z-10 mx-auto px-4 py-10 sm:px-6 lg:py-14">
-        <div className="mb-8 flex justify-start lg:mb-10">
-          <Link
-            href="/"
-            className="text-xs text-white underline-offset-4 hover:underline sm:text-sm"
-          >
+        <header className="mb-8 text-center lg:mb-10">
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Become an Affiliate
+          </h1>
+        </header>
+        <AffiliateApplicationForm />
+        <div className="mt-10 text-center text-xs text-white sm:text-sm">
+          <Link href="/" className="underline-offset-4 hover:underline">
             Back to home
           </Link>
         </div>
-        <AffiliateApplicationForm />
       </div>
     </main>
   );

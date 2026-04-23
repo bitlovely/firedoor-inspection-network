@@ -42,9 +42,9 @@ export function AffiliateApplicationForm() {
   const field =
     "mt-1.5 min-h-12 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/60 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 sm:px-4";
 
-  /** Native `<select>`: black surface + dark scheme so the dropdown list matches where supported. */
+  /** Native `<select>`: match inputs; keep dropdown options dark where supported. */
   const selectField =
-    "mt-1.5 min-h-12 w-full rounded-xl border border-white/15 bg-black px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 sm:px-4 [color-scheme:dark] [&>option]:bg-black [&>option]:text-white";
+    "mt-1.5 min-h-12 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 sm:px-4 [color-scheme:dark] [&>option]:bg-black [&>option]:text-white";
 
   const card =
     "rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9";
