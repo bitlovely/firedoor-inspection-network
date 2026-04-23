@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import {
   affiliateApplicationFieldSchema,
   assertFileOk,
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
       postcode: formData.get("postcode"),
       years_experience: formData.get("years_experience"),
       areas_covered: formData.get("areas_covered"),
+      password: formData.get("password"),
     };
 
     const parsed = affiliateApplicationFieldSchema.safeParse({
@@ -45,6 +47,15 @@ export async function POST(request: Request) {
     }
 
     const fields = parsed.data;
+
+    const password =
+      typeof raw.password === "string" ? raw.password.trim() : "";
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: "Password must be at least 8 characters" },
+        { status: 400 },
+      );
+    }
 
     const certEntries = formData
       .getAll("certifications")
@@ -93,6 +104,27 @@ export async function POST(request: Request) {
     const supabase = createAdminClient();
     const applicationId = randomUUID();
 
+    // Create (or ensure) a Supabase Auth user so they can sign in after applying.
+    // Use the *public* email + password the applicant submitted.
+    const { data: createdUser, error: createUserError } =
+      await supabase.auth.admin.createUser({
+        email: fields.email,
+        password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: fields.full_name,
+          company_name: fields.company_name,
+          application_id: applicationId,
+        },
+      });
+
+    if (createUserError) {
+      const message = createUserError.message || "Unable to create user";
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
+
+    const userId = createdUser.user?.id ?? null;
+
     const uploadOne = async (file: File, storagePath: string) => {
       const buf = Buffer.from(await file.arrayBuffer());
       const { error } = await supabase.storage.from(BUCKET).upload(storagePath, buf, {
@@ -129,6 +161,7 @@ export async function POST(request: Request) {
       .from("affiliate_applications")
       .insert({
         id: applicationId,
+        user_id: userId,
         full_name: fields.full_name,
         company_name: fields.company_name,
         email: fields.email,
