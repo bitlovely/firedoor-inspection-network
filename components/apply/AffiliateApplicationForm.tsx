@@ -16,6 +16,23 @@ export function AffiliateApplicationForm() {
     const form = e.currentTarget;
     const fd = new FormData(form);
 
+    const password = fd.get("password");
+    const passwordConfirm = fd.get("password_confirm");
+    if (
+      typeof password !== "string" ||
+      typeof passwordConfirm !== "string" ||
+      password.length === 0
+    ) {
+      setError("Password is required");
+      setPending(false);
+      return;
+    }
+    if (password !== passwordConfirm) {
+      setError("Passwords do not match");
+      setPending(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/affiliate-applications", {
         method: "POST",
@@ -129,6 +146,38 @@ export function AffiliateApplicationForm() {
               placeholder="e.g. SW1A 1AA"
               className={field}
             />
+          </div>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="font-display text-lg font-bold text-white">Account</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="password" className="text-sm font-medium text-white">
+                Password <span className="text-accent">*</span>
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autoComplete="new-password"
+                className={field}
+              />
+            </div>
+            <div>
+              <label htmlFor="password_confirm" className="text-sm font-medium text-white">
+                Confirm password <span className="text-accent">*</span>
+              </label>
+              <input
+                id="password_confirm"
+                name="password_confirm"
+                type="password"
+                required
+                autoComplete="new-password"
+                className={field}
+              />
+            </div>
           </div>
         </section>
 
