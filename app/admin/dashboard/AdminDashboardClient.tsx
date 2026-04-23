@@ -44,6 +44,9 @@ export function AdminDashboardClient() {
         | { applications: Application[] }
         | { error: string };
       if (!res.ok) throw new Error("error" in json ? json.error : "Unable to load");
+      if (!("applications" in json)) {
+        throw new Error("Unable to load");
+      }
       setApps(json.applications);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unable to load");
