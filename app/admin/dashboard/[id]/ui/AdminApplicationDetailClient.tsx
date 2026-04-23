@@ -121,14 +121,6 @@ export function AdminApplicationDetailClient() {
               <ChevronLeft className="h-4 w-4" />
               Back to dashboard
             </Link>
-            <button
-              type="button"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-5 text-sm font-semibold text-white hover:bg-white/10 disabled:opacity-60"
-              onClick={() => router.refresh()}
-              disabled={pending}
-            >
-              Refresh
-            </button>
           </div>
 
           <div className="mt-6 rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9">

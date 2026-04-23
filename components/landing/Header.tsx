@@ -9,7 +9,7 @@ const nav = [
   { label: "How it works", href: "#how" },
   { label: "Why join", href: "#why" },
   { label: "Trust", href: "#trust" },
-  { label: "Directory", href: "#directory" },
+  { label: "Directory", href: "/directory" },
 ] as const;
 
 export function Header() {

@@ -185,7 +185,7 @@ export default function DashboardPage() {
                         <span className={statusBadge(app.status)}>{app.status}</span>
                         {(app.status === "approved" || app.status === "verified") && (
                           <Link
-                            href={`/affiliates/${encodeURIComponent(app.id)}`}
+                            href={`/directory/${encodeURIComponent(app.id)}`}
                             className="text-sm text-white underline-offset-4 hover:underline"
                           >
                             View public profile
