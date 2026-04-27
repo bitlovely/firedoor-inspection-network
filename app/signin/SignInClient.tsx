@@ -10,14 +10,17 @@ import { createBrowserClient } from "@/lib/supabase/browser";
 export function SignInClient() {
   const router = useRouter();
   const [pending, setPending] = useState(false);
+  const [resetPending, setResetPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const [resetNotice, setResetNotice] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    setResetNotice(null);
     setPending(true);
 
     const email = emailValue.trim();
@@ -60,7 +63,46 @@ export function SignInClient() {
     }
   }
 
-  const canSubmit = !pending && emailValue.trim().length > 3 && passwordValue.length > 0;
+  async function onForgotPassword() {
+    setError(null);
+    setResetNotice(null);
+    const email = emailValue.trim();
+    if (!email) {
+      setError("Enter your email first, then click “Forgot Password?”.");
+      return;
+    }
+    setResetPending(true);
+    try {
+      // Avoid sending reset emails for unregistered users.
+      try {
+        const existsRes = await fetch(
+          `/api/auth/email-exists?email=${encodeURIComponent(email)}`,
+        );
+        const existsJson = (await existsRes.json().catch(() => null)) as
+          | { exists?: boolean; error?: string }
+          | null;
+        if (!existsRes.ok || existsJson?.exists !== true) {
+          setError("You have not registered yet. Please sign up first.");
+          return;
+        }
+      } catch {
+        // If the helper check fails, fall back to attempting the reset.
+      }
+
+      const supabase = createBrowserClient();
+      const redirectTo = `${window.location.origin}/reset-password`;
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+      if (error) throw error;
+      setResetNotice(`Password reset email sent to ${email}.`);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to send reset email");
+    } finally {
+      setResetPending(false);
+    }
+  }
+
+  const canSubmit =
+    !pending && !resetPending && emailValue.trim().length > 3 && passwordValue.length > 0;
 
   return (
     <div className="w-full max-w-md">
@@ -82,6 +124,11 @@ export function SignInClient() {
               className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
             >
               {error}
+            </div>
+          ) : null}
+          {resetNotice ? (
+            <div className="rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/90">
+              {resetNotice}
             </div>
           ) : null}
 
@@ -136,9 +183,17 @@ export function SignInClient() {
               />
               Remember me
             </label>
-            <Link href="#" className="text-white underline-offset-4 hover:underline">
-              Forgot Password?
-            </Link>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                void onForgotPassword();
+              }}
+              className="cursor-pointer text-white underline-offset-4 hover:underline"
+              disabled={pending || resetPending}
+            >
+              {resetPending ? "Sending…" : "Forgot Password?"}
+            </button>
           </div>
 
           <button
@@ -172,9 +227,17 @@ export function SignInClient() {
       </div>
 
       <div className="mt-6 text-center text-xs text-white">
+        <p>
+          Don’t have an account?{" "}
+          <Link href="/signup" className="underline-offset-4 hover:underline">
+            Sign up
+          </Link>
+        </p>
+        <p className="mt-2">
         <Link href="/" className="underline-offset-4 hover:underline">
           Back to home
         </Link>
+        </p>
       </div>
     </div>
   );
