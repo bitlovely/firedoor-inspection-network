@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import type React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BadgeCheck, FileBadge, IdCard, Star, X } from "lucide-react";
 import { Header } from "@/components/landing/Header";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -86,6 +88,35 @@ export default async function DirectoryAffiliateProfilePage({
     ? (p.sample_report_paths.filter((v): v is string => typeof v === "string") as string[])
     : [];
 
+  function trustRow(opts: {
+    ok: boolean;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }) {
+    const Icon = opts.icon;
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+        <div className="flex items-center gap-2 text-sm">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5">
+            <Icon className="h-4 w-4 text-white/80" />
+          </span>
+          <span className="text-white/90">{opts.label}</span>
+        </div>
+        {opts.ok ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-200">
+            <BadgeCheck className="h-3.5 w-3.5" />
+            Verified
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-semibold text-white/70">
+            <X className="h-3.5 w-3.5" />
+            Not verified
+          </span>
+        )}
+      </div>
+    );
+  }
+
   return (
     <main className="min-h-dvh w-full bg-black text-white">
       <Header />
@@ -137,12 +168,31 @@ export default async function DirectoryAffiliateProfilePage({
               <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
                 Trust
               </p>
-              <ul className="mt-2 space-y-1">
-                <li>{p.verified_insurance ? "✔" : "—"} Verified Insurance</li>
-                <li>{p.verified_certification ? "✔" : "—"} Verified Certification</li>
-                <li>{p.identity_checked ? "✔" : "—"} Identity Checked</li>
-                <li>{p.review_count > 0 ? "✔" : "—"} Reviews</li>
-              </ul>
+              <div className="mt-3 space-y-2">
+                {trustRow({
+                  ok: p.verified_insurance,
+                  label: "Insurance verified",
+                  icon: FileBadge,
+                })}
+                {trustRow({
+                  ok: p.verified_certification,
+                  label: "Certification verified",
+                  icon: BadgeCheck,
+                })}
+                {trustRow({
+                  ok: p.identity_checked,
+                  label: "Identity checked",
+                  icon: IdCard,
+                })}
+                {trustRow({
+                  ok: p.review_count > 0,
+                  label:
+                    p.review_count > 0 && p.review_rating
+                      ? `Reviews (${Number(p.review_rating).toFixed(1)} · ${p.review_count})`
+                      : "Reviews",
+                  icon: Star,
+                })}
+              </div>
             </div>
             <div className="rounded-2xl border border-white/15 bg-white/8 p-4 text-sm text-white/90">
               <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
@@ -195,40 +245,37 @@ export default async function DirectoryAffiliateProfilePage({
               ) : null}
             </section>
 
-            <aside className="rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9">
-              <h2 className="font-display text-lg font-bold">Contact details</h2>
-              <div className="mt-3 space-y-2 text-sm text-white/90">
-                <p>
-                  <span className="text-white/70">Email:</span>{" "}
-                  {contactEnabled ? p.email : "Upgrade required"}
-                </p>
-                <p>
-                  <span className="text-white/70">Phone:</span>{" "}
-                  {contactEnabled ? p.phone : "Upgrade required"}
-                </p>
-                <p>
-                  <span className="text-white/70">Postcode:</span> {p.postcode}
-                </p>
-              </div>
+            {contactEnabled ? (
+              <aside className="rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9">
+                <h2 className="font-display text-lg font-bold">Contact</h2>
+                <div className="mt-3 space-y-2 text-sm text-white/90">
+                  {p.email ? (
+                    <p>
+                      <span className="text-white/70">Email:</span> {p.email}
+                    </p>
+                  ) : null}
+                  {p.phone ? (
+                    <p>
+                      <span className="text-white/70">Phone:</span> {p.phone}
+                    </p>
+                  ) : null}
+                  <p>
+                    <span className="text-white/70">Postcode:</span> {p.postcode}
+                  </p>
+                </div>
 
-              <div className="mt-6">
-                {contactEnabled && p.email ? (
-                  <a
-                    href={`mailto:${encodeURIComponent(p.email)}`}
-                    className="inline-flex w-full items-center justify-center rounded-xl bg-accent-gradient px-4 py-3 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
-                  >
-                    Contact via email
-                  </a>
-                ) : (
-                  <Link
-                    href="/signup"
-                    className="inline-flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10"
-                  >
-                    Upgrade to contact
-                  </Link>
-                )}
-              </div>
-            </aside>
+                {p.email ? (
+                  <div className="mt-6">
+                    <a
+                      href={`mailto:${encodeURIComponent(p.email)}`}
+                      className="inline-flex w-full items-center justify-center rounded-xl bg-accent-gradient px-4 py-3 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
+                    >
+                      Contact via email
+                    </a>
+                  </div>
+                ) : null}
+              </aside>
+            ) : null}
           </div>
 
           <div className="mt-10 text-center text-sm">
