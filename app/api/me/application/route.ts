@@ -34,7 +34,7 @@ export async function GET(request: Request) {
 
   const admin = createAdminClient();
   const baseSelect =
-    "id,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,certification_paths,insurance_path,dbs_path,profile_photo_path";
+    "id,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,certification_paths,insurance_path,dbs_path,profile_photo_path,verified_insurance,verified_certification,identity_checked";
   const planSelect = `${baseSelect},plan_type,subscription_status,subscription_current_period_end`;
 
   let data: unknown = null;

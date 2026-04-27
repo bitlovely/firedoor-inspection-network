@@ -11,6 +11,8 @@ import {
   LayoutDashboard,
   LogOut,
   UserRound,
+  BadgeCheck,
+  Circle,
   Download,
   MapPin,
 } from "lucide-react";
@@ -36,6 +38,9 @@ type Application = {
   plan_type?: "basic" | "advanced" | string | null;
   subscription_status?: "active" | "inactive" | string | null;
   subscription_current_period_end?: string | null;
+  verified_insurance?: boolean;
+  verified_certification?: boolean;
+  identity_checked?: boolean;
 };
 
 function toArray(v: unknown): string[] {
@@ -58,6 +63,20 @@ function statusBadge(status: string) {
     default:
       return `${base} border-white/20 bg-white/5 text-white/90`;
   }
+}
+
+function verifyPill(ok: boolean | undefined) {
+  return ok ? (
+    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-200">
+      <BadgeCheck className="h-3.5 w-3.5" />
+      Verified
+    </span>
+  ) : (
+    <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-[11px] font-semibold text-white/70">
+      <Circle className="h-3.5 w-3.5" />
+      Pending
+    </span>
+  );
 }
 
 export default function DashboardPage() {
@@ -471,6 +490,12 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="mt-5 space-y-2">
+                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3">
+                      <span className="text-sm text-white">Certifications</span>
+                      <div className="flex items-center gap-2">
+                        {verifyPill(app.verified_certification)}
+                      </div>
+                    </div>
                     {toArray(app.certification_paths).map((path, idx) => (
                       <button
                         key={path}
@@ -483,25 +508,37 @@ export default function DashboardPage() {
                         <Download className="h-4 w-4 shrink-0" />
                       </button>
                     ))}
-                    <button
-                      type="button"
-                      onClick={() => downloadDoc(app.insurance_path)}
-                      disabled={downloading === app.insurance_path}
-                      className="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white hover:bg-white/10 disabled:opacity-60"
-                    >
-                      <span className="truncate">Insurance</span>
-                      <Download className="h-4 w-4 shrink-0" />
-                    </button>
+                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3">
+                      <span className="text-sm text-white">Insurance</span>
+                      <div className="flex items-center gap-2">
+                        {verifyPill(app.verified_insurance)}
+                        <button
+                          type="button"
+                          onClick={() => downloadDoc(app.insurance_path)}
+                          disabled={downloading === app.insurance_path}
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white hover:bg-white/10 disabled:opacity-60"
+                          aria-label="Download insurance"
+                        >
+                          <Download className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
                     {app.dbs_path ? (
-                      <button
-                        type="button"
-                        onClick={() => downloadDoc(app.dbs_path!)}
-                        disabled={downloading === app.dbs_path}
-                        className="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white hover:bg-white/10 disabled:opacity-60"
-                      >
-                        <span className="truncate">DBS</span>
-                        <Download className="h-4 w-4 shrink-0" />
-                      </button>
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3">
+                        <span className="text-sm text-white">DBS</span>
+                        <div className="flex items-center gap-2">
+                          {verifyPill(app.identity_checked)}
+                          <button
+                            type="button"
+                            onClick={() => downloadDoc(app.dbs_path!)}
+                            disabled={downloading === app.dbs_path}
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white hover:bg-white/10 disabled:opacity-60"
+                            aria-label="Download DBS"
+                          >
+                            <Download className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
                     ) : null}
                   </div>
 
