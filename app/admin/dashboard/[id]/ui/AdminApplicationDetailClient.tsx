@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Download, Loader2, ChevronLeft } from "lucide-react";
+import { CheckCircle2, Circle, Download, Loader2, ChevronLeft } from "lucide-react";
 
 type Application = {
   id: string;
@@ -20,6 +20,9 @@ type Application = {
   insurance_path: string;
   dbs_path: string | null;
   internal_notes: string | null;
+  verified_insurance?: boolean;
+  verified_certification?: boolean;
+  identity_checked?: boolean;
 };
 
 function toArray(v: unknown): string[] {
@@ -77,7 +80,13 @@ export function AdminApplicationDetailClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  async function patch(patch: { status?: string; internal_notes?: string }) {
+  async function patch(patch: {
+    status?: string;
+    internal_notes?: string;
+    verified_insurance?: boolean;
+    verified_certification?: boolean;
+    identity_checked?: boolean;
+  }) {
     setSaving(true);
     setError(null);
     try {
@@ -204,7 +213,7 @@ export function AdminApplicationDetailClient() {
                       <p className="text-xs font-semibold tracking-wider text-white uppercase">
                         Actions
                       </p>
-                      <div className="mt-3 grid grid-cols-3 gap-2">
+                      <div className="mt-3 grid grid-cols-2 gap-2">
                         <button
                           type="button"
                           disabled={saving}
@@ -221,14 +230,6 @@ export function AdminApplicationDetailClient() {
                         >
                           Reject
                         </button>
-                        <button
-                          type="button"
-                          disabled={saving}
-                          onClick={() => patch({ status: "verified" })}
-                          className="inline-flex h-10 items-center justify-center rounded-xl bg-accent-gradient px-3 text-xs font-semibold text-accent-foreground shadow-accent-glow hover:opacity-95 disabled:opacity-60"
-                        >
-                          Verify
-                        </button>
                       </div>
                     </div>
 
@@ -237,37 +238,101 @@ export function AdminApplicationDetailClient() {
                         Documents
                       </p>
                       <div className="mt-3 space-y-2">
-                        {toArray(app.certification_paths).map((path, idx) => (
-                          <button
-                            key={path}
-                            type="button"
-                            disabled={saving}
-                            onClick={() => download(path)}
-                            className="inline-flex w-full items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 disabled:opacity-60"
-                          >
-                            <span className="truncate">Certification {idx + 1}</span>
-                            <Download className="h-4 w-4 shrink-0" />
-                          </button>
-                        ))}
-                        <button
-                          type="button"
-                          disabled={saving}
-                          onClick={() => download(app.insurance_path)}
-                          className="inline-flex w-full items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 disabled:opacity-60"
-                        >
-                          <span className="truncate">Insurance</span>
-                          <Download className="h-4 w-4 shrink-0" />
-                        </button>
+                        <div className="flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
+                          <div className="flex min-w-0 items-center gap-2">
+                            {app.verified_certification ? (
+                              <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                            ) : (
+                              <Circle className="h-4 w-4 text-white/40" />
+                            )}
+                            <span className="truncate text-sm text-white">
+                              Certifications ({toArray(app.certification_paths).length})
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              disabled={saving || toArray(app.certification_paths).length === 0}
+                              onClick={() => {
+                                const first = toArray(app.certification_paths)[0];
+                                if (first) void download(first);
+                              }}
+                              className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                              title="Download first certification"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() =>
+                                patch({ verified_certification: !app.verified_certification })
+                              }
+                              className="inline-flex h-9 items-center justify-center rounded-lg bg-accent-gradient px-3 text-xs font-semibold text-accent-foreground shadow-accent-glow hover:opacity-95 disabled:opacity-60"
+                            >
+                              {app.verified_certification ? "Unverify" : "Verify"}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
+                          <div className="flex min-w-0 items-center gap-2">
+                            {app.verified_insurance ? (
+                              <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                            ) : (
+                              <Circle className="h-4 w-4 text-white/40" />
+                            )}
+                            <span className="truncate text-sm text-white">Insurance</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() => download(app.insurance_path)}
+                              className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() => patch({ verified_insurance: !app.verified_insurance })}
+                              className="inline-flex h-9 items-center justify-center rounded-lg bg-accent-gradient px-3 text-xs font-semibold text-accent-foreground shadow-accent-glow hover:opacity-95 disabled:opacity-60"
+                            >
+                              {app.verified_insurance ? "Unverify" : "Verify"}
+                            </button>
+                          </div>
+                        </div>
+
                         {app.dbs_path ? (
-                          <button
-                            type="button"
-                            disabled={saving}
-                            onClick={() => download(app.dbs_path!)}
-                            className="inline-flex w-full items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 disabled:opacity-60"
-                          >
-                            <span className="truncate">DBS</span>
-                            <Download className="h-4 w-4 shrink-0" />
-                          </button>
+                          <div className="flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
+                            <div className="flex min-w-0 items-center gap-2">
+                              {app.identity_checked ? (
+                                <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                              ) : (
+                                <Circle className="h-4 w-4 text-white/40" />
+                              )}
+                              <span className="truncate text-sm text-white">DBS</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                disabled={saving}
+                                onClick={() => download(app.dbs_path!)}
+                                className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                              >
+                                <Download className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                disabled={saving}
+                                onClick={() => patch({ identity_checked: !app.identity_checked })}
+                                className="inline-flex h-9 items-center justify-center rounded-lg bg-accent-gradient px-3 text-xs font-semibold text-accent-foreground shadow-accent-glow hover:opacity-95 disabled:opacity-60"
+                              >
+                                {app.identity_checked ? "Unverify" : "Verify"}
+                              </button>
+                            </div>
+                          </div>
                         ) : null}
                       </div>
                       <p className="mt-3 text-xs text-white/60">

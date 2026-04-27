@@ -26,7 +26,7 @@ export async function GET(
   const { data, error } = await supabase
     .from("affiliate_applications")
     .select(
-      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,reviewed_at,reviewed_by,updated_at",
+      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,reviewed_at,reviewed_by,updated_at,verified_insurance,verified_certification,identity_checked",
     )
     .eq("id", id)
     .single();
@@ -47,19 +47,38 @@ export async function PATCH(
 
   const { id } = await params;
   const body = (await request.json().catch(() => null)) as
-    | { status?: string; internal_notes?: string }
+    | {
+        status?: string;
+        internal_notes?: string;
+        verified_insurance?: boolean;
+        verified_certification?: boolean;
+        identity_checked?: boolean;
+      }
     | null;
 
   const status = body?.status;
   const internal_notes = body?.internal_notes;
+  const verified_insurance = body?.verified_insurance;
+  const verified_certification = body?.verified_certification;
+  const identity_checked = body?.identity_checked;
 
-  if (typeof status !== "string" && typeof internal_notes !== "string") {
+  if (
+    typeof status !== "string" &&
+    typeof internal_notes !== "string" &&
+    typeof verified_insurance !== "boolean" &&
+    typeof verified_certification !== "boolean" &&
+    typeof identity_checked !== "boolean"
+  ) {
     return NextResponse.json({ error: "No changes" }, { status: 400 });
   }
 
   const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
   if (typeof status === "string") patch.status = status;
   if (typeof internal_notes === "string") patch.internal_notes = internal_notes;
+  if (typeof verified_insurance === "boolean") patch.verified_insurance = verified_insurance;
+  if (typeof verified_certification === "boolean")
+    patch.verified_certification = verified_certification;
+  if (typeof identity_checked === "boolean") patch.identity_checked = identity_checked;
 
   if (status === "approved" || status === "rejected" || status === "verified") {
     patch.reviewed_at = new Date().toISOString();
@@ -71,7 +90,7 @@ export async function PATCH(
     .update(patch)
     .eq("id", id)
     .select(
-      "id,status,internal_notes,reviewed_at,updated_at,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,created_at",
+      "id,status,internal_notes,reviewed_at,updated_at,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,created_at,verified_insurance,verified_certification,identity_checked",
     )
     .single();
 
