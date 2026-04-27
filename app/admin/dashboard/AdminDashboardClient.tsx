@@ -253,8 +253,8 @@ export function AdminDashboardClient() {
                 <p className="text-xs text-white/60">{filtered.length} shown</p>
               </div>
 
-              <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                <div className="sm:col-span-2">
+              <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-end">
+                <div className="flex-1">
                   <label className="text-xs font-semibold tracking-wider text-white/60 uppercase">
                     Search
                   </label>
@@ -269,7 +269,7 @@ export function AdminDashboardClient() {
                   </div>
                 </div>
 
-                <div>
+                <div className="lg:w-[11.5rem]">
                   <label className="text-xs font-semibold tracking-wider text-white/60 uppercase">
                     Status
                   </label>
@@ -280,7 +280,7 @@ export function AdminDashboardClient() {
                         e.target.value as typeof statusFilter,
                       )
                     }
-                    className="mt-2 h-11 w-full rounded-2xl border border-white/15 bg-white/5 px-4 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
+                    className="mt-2 h-11 w-full rounded-2xl border border-white/15 bg-black/60 px-4 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
                   >
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
@@ -290,14 +290,14 @@ export function AdminDashboardClient() {
                   </select>
                 </div>
 
-                <div className="sm:col-span-3">
+                <div className="lg:w-[12.5rem]">
                   <label className="text-xs font-semibold tracking-wider text-white/60 uppercase">
                     Submitted
                   </label>
                   <select
                     value={dateFilter}
                     onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                    className="mt-2 h-11 w-full rounded-2xl border border-white/15 bg-white/5 px-4 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
+                    className="mt-2 h-11 w-full rounded-2xl border border-white/15 bg-black/60 px-4 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
                   >
                     <option value="all">All time</option>
                     <option value="7d">Last 7 days</option>

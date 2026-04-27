@@ -88,7 +88,7 @@ export async function PATCH(
   if (isDocVerificationPatch) {
     const { data: current, error: currentErr } = await supabase
       .from("affiliate_applications")
-      .select("status,verified_insurance,verified_certification,identity_checked")
+      .select("status,dbs_path,verified_insurance,verified_certification,identity_checked")
       .eq("id", id)
       .single();
     if (currentErr) {
@@ -119,8 +119,10 @@ export async function PATCH(
       patch.verified_certification = verified_certification;
     if (typeof identity_checked === "boolean") patch.identity_checked = identity_checked;
 
-    const allVerified =
-      nextVerifiedInsurance && nextVerifiedCertification && nextIdentityChecked;
+    const identityRequired = Boolean(current.dbs_path);
+    const allVerified = identityRequired
+      ? nextVerifiedInsurance && nextVerifiedCertification && nextIdentityChecked
+      : nextVerifiedInsurance && nextVerifiedCertification;
 
     // Auto-promote to verified when all checks are complete.
     if (allVerified) {
