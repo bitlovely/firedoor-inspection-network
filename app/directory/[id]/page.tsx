@@ -10,8 +10,8 @@ type AffiliateProfile = {
   status: "approved" | "verified" | string;
   full_name: string;
   company_name: string;
-  email: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
   postcode: string;
   years_experience: number;
   areas_covered: string;
@@ -25,6 +25,8 @@ type AffiliateProfile = {
   identity_checked: boolean;
   review_count: number;
   review_rating: number | null;
+  plan_type?: string | null;
+  subscription_status?: string | null;
 };
 
 export const metadata: Metadata = {
@@ -40,19 +42,46 @@ export default async function DirectoryAffiliateProfilePage({
   const { id } = await params;
   const supabase = createAdminClient();
 
-  const { data, error } = await supabase
-    .from("affiliate_applications")
-    .select(
-      "id,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,profile_photo_path,bio,services,sample_report_paths,verified_insurance,verified_certification,identity_checked,review_count,review_rating",
-    )
-    .eq("id", id)
-    .in("status", ["approved", "verified"])
-    .maybeSingle();
+  const baseSelect =
+    "id,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,profile_photo_path,bio,services,sample_report_paths,verified_insurance,verified_certification,identity_checked,review_count,review_rating";
+  const planSelect = `${baseSelect},plan_type,subscription_status`;
+
+  let data: unknown = null;
+  let error: { message: string } | null = null;
+
+  {
+    const r = await supabase
+      .from("affiliate_applications")
+      .select(planSelect)
+      .eq("id", id)
+      .in("status", ["approved", "verified"])
+      .maybeSingle();
+    data = r.data;
+    error = r.error ? { message: r.error.message } : null;
+  }
+
+  if (error && /plan_type|subscription_status/i.test(error.message)) {
+    const r = await supabase
+      .from("affiliate_applications")
+      .select(baseSelect)
+      .eq("id", id)
+      .in("status", ["approved", "verified"])
+      .maybeSingle();
+    data = r.data
+      ? {
+          ...(r.data as Record<string, unknown>),
+          plan_type: "basic",
+          subscription_status: "inactive",
+        }
+      : r.data;
+    error = r.error ? { message: r.error.message } : null;
+  }
 
   if (error) throw new Error(error.message);
   if (!data) notFound();
 
   const p = data as AffiliateProfile;
+  const contactEnabled = p.plan_type === "advanced" && p.subscription_status === "active";
   const samples = Array.isArray(p.sample_report_paths)
     ? (p.sample_report_paths.filter((v): v is string => typeof v === "string") as string[])
     : [];
@@ -87,14 +116,20 @@ export default async function DirectoryAffiliateProfilePage({
                 <p className="mt-1 text-white/80">{p.company_name}</p>
               </div>
             </div>
-            <a
-              href={`mailto:${encodeURIComponent(p.email)}?subject=${encodeURIComponent(
-                "Request inspection",
-              )}`}
-              className="inline-flex h-12 items-center justify-center rounded-2xl bg-accent-gradient px-6 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
-            >
-              Request inspection
-            </a>
+            {contactEnabled && p.email ? (
+              <a
+                href={`mailto:${encodeURIComponent(p.email)}?subject=${encodeURIComponent(
+                  "Request inspection",
+                )}`}
+                className="inline-flex h-12 items-center justify-center rounded-2xl bg-accent-gradient px-6 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
+              >
+                Request inspection
+              </a>
+            ) : (
+              <div className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-6 text-sm font-semibold text-white/80">
+                Contact locked (Advanced)
+              </div>
+            )}
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -164,10 +199,12 @@ export default async function DirectoryAffiliateProfilePage({
               <h2 className="font-display text-lg font-bold">Contact details</h2>
               <div className="mt-3 space-y-2 text-sm text-white/90">
                 <p>
-                  <span className="text-white/70">Email:</span> {p.email}
+                  <span className="text-white/70">Email:</span>{" "}
+                  {contactEnabled ? p.email : "Upgrade required"}
                 </p>
                 <p>
-                  <span className="text-white/70">Phone:</span> {p.phone}
+                  <span className="text-white/70">Phone:</span>{" "}
+                  {contactEnabled ? p.phone : "Upgrade required"}
                 </p>
                 <p>
                   <span className="text-white/70">Postcode:</span> {p.postcode}
@@ -175,12 +212,21 @@ export default async function DirectoryAffiliateProfilePage({
               </div>
 
               <div className="mt-6">
-                <a
-                  href={`mailto:${encodeURIComponent(p.email)}`}
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-accent-gradient px-4 py-3 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
-                >
-                  Contact via email
-                </a>
+                {contactEnabled && p.email ? (
+                  <a
+                    href={`mailto:${encodeURIComponent(p.email)}`}
+                    className="inline-flex w-full items-center justify-center rounded-xl bg-accent-gradient px-4 py-3 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
+                  >
+                    Contact via email
+                  </a>
+                ) : (
+                  <Link
+                    href="/signup"
+                    className="inline-flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                  >
+                    Upgrade to contact
+                  </Link>
+                )}
               </div>
             </aside>
           </div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { MapPin, Search, ShieldCheck } from "lucide-react";
+import { createBrowserClient } from "@/lib/supabase/browser";
 
 type Affiliate = {
   id: string;
@@ -10,8 +11,9 @@ type Affiliate = {
   full_name: string;
   company_name: string;
   postcode: string;
-  email: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
+  contact_enabled: boolean;
   created_at: string;
 };
 
@@ -34,6 +36,7 @@ export function DirectoryClient() {
   const [pending, setPending] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<Affiliate[]>([]);
+  const [signedIn, setSignedIn] = useState(false);
 
   const params = useMemo(() => {
     const sp = new URLSearchParams();
@@ -67,6 +70,22 @@ export function DirectoryClient() {
       window.clearTimeout(t);
     };
   }, [params]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = createBrowserClient();
+        const { data } = await supabase.auth.getSession();
+        if (!cancelled) setSignedIn(Boolean(data.session));
+      } catch {
+        if (!cancelled) setSignedIn(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const field =
     "mt-2 h-11 w-full rounded-2xl border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/50 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20";
@@ -199,12 +218,21 @@ export function DirectoryClient() {
                   >
                     View profile
                   </Link>
-                  <a
-                    href={`mailto:${encodeURIComponent(a.email)}`}
-                    className="inline-flex h-11 flex-1 items-center justify-center rounded-2xl bg-accent-gradient px-4 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
-                  >
-                    Contact
-                  </a>
+                  {a.contact_enabled && a.email ? (
+                    <a
+                      href={`mailto:${encodeURIComponent(a.email)}`}
+                      className="inline-flex h-11 flex-1 items-center justify-center rounded-2xl bg-accent-gradient px-4 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
+                    >
+                      Contact
+                    </a>
+                  ) : (
+                    <Link
+                      href={signedIn ? "/dashboard?tab=subscription" : "/signin"}
+                      className="inline-flex h-11 flex-1 items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white hover:bg-white/10"
+                    >
+                      Upgrade to contact
+                    </Link>
+                  )}
                 </div>
               </article>
             ))}

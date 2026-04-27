@@ -33,15 +33,45 @@ export async function GET(request: Request) {
   }
 
   const admin = createAdminClient();
-  const { data, error } = await admin
-    .from("affiliate_applications")
-    .select(
-      "id,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,certification_paths,insurance_path,dbs_path,profile_photo_path",
-    )
-    .eq("user_id", userData.user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const baseSelect =
+    "id,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,certification_paths,insurance_path,dbs_path,profile_photo_path";
+  const planSelect = `${baseSelect},plan_type,subscription_status,subscription_current_period_end`;
+
+  let data: unknown = null;
+  let error: { message: string } | null = null;
+
+  // Backwards-compatible: if the subscription columns haven't been migrated yet,
+  // retry without them and default to Basic in the UI.
+  {
+    const r = await admin
+      .from("affiliate_applications")
+      .select(planSelect)
+      .eq("user_id", userData.user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    data = r.data;
+    error = r.error ? { message: r.error.message } : null;
+  }
+
+  if (error && /plan_type|subscription_status|subscription_current_period_end/i.test(error.message)) {
+    const r = await admin
+      .from("affiliate_applications")
+      .select(baseSelect)
+      .eq("user_id", userData.user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    data = r.data
+      ? {
+          ...(r.data as Record<string, unknown>),
+          plan_type: "basic",
+          subscription_status: "inactive",
+          subscription_current_period_end: null,
+        }
+      : r.data;
+    error = r.error ? { message: r.error.message } : null;
+  }
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

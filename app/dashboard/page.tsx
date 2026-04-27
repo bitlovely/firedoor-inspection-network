@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase/browser";
 import {
   BarChart3,
+  CreditCard,
   LayoutDashboard,
   LogOut,
   UserRound,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import { CompleteRegistrationDialog } from "./CompleteRegistrationDialog";
 import { ProfilePanel } from "./ProfilePanel";
+import { SubscriptionPanel } from "./SubscriptionPanel";
 
 type Application = {
   id: string;
@@ -31,6 +33,9 @@ type Application = {
   insurance_path: string;
   dbs_path: string | null;
   profile_photo_path?: string | null;
+  plan_type?: "basic" | "advanced" | string | null;
+  subscription_status?: "active" | "inactive" | string | null;
+  subscription_current_period_end?: string | null;
 };
 
 function toArray(v: unknown): string[] {
@@ -64,7 +69,15 @@ export default function DashboardPage() {
   const [downloading, setDownloading] = useState<string | null>(null);
   const [showRegister, setShowRegister] = useState(false);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<"overview" | "profile">("overview");
+  const [activeView, setActiveView] = useState<
+    "overview" | "profile" | "subscription"
+  >("overview");
+
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const tab = sp.get("tab");
+    if (tab === "subscription") setActiveView("subscription");
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -246,6 +259,18 @@ export default function DashboardPage() {
               <UserRound className="h-4 w-4" />
               Profile
             </button>
+            <button
+              type="button"
+              onClick={() => setActiveView("subscription")}
+              className={`flex w-full items-center gap-3 rounded-2xl border border-white/10 px-4 py-3 text-left ${
+                activeView === "subscription"
+                  ? "bg-white/10 text-white"
+                  : "bg-white/5 text-white/90 hover:bg-white/10"
+              }`}
+            >
+              <CreditCard className="h-4 w-4" />
+              Subscription
+            </button>
           </nav>
 
           <div className="mt-6 border-t border-white/10 pt-6 space-y-3">
@@ -271,18 +296,28 @@ export default function DashboardPage() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-                  {activeView === "profile" ? "Profile" : "Affiliate dashboard"}
+                  {activeView === "profile"
+                    ? "Profile"
+                    : activeView === "subscription"
+                      ? "Subscription"
+                      : "Affiliate dashboard"}
                 </h1>
                 <p className="mt-1 text-sm text-white/80">
                   {activeView === "profile"
                     ? "Manage your account details and company profile."
-                    : "Your application status, profile details, and documents."}
+                    : activeView === "subscription"
+                      ? "Upgrade for full visibility and contact access."
+                      : "Your application status, profile details, and documents."}
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="hidden sm:flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
                   <BarChart3 className="h-4 w-4 text-white/60" />
-                  {activeView === "profile" ? "Profile" : "Overview"}
+                  {activeView === "profile"
+                    ? "Profile"
+                    : activeView === "subscription"
+                      ? "Subscription"
+                      : "Overview"}
                 </div>
               </div>
             </div>
@@ -491,11 +526,20 @@ export default function DashboardPage() {
             )}
           </div>
             </>
-          ) : (
+          ) : activeView === "profile" ? (
             <div className="mt-6">
               <ProfilePanel
                 initial={{ company_name: app?.company_name, phone: app?.phone }}
                 onSaved={() => {
+                  void refreshApplication();
+                }}
+              />
+            </div>
+          ) : (
+            <div className="mt-6">
+              <SubscriptionPanel
+                app={app}
+                onChanged={() => {
                   void refreshApplication();
                 }}
               />
