@@ -3,22 +3,24 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Loader2, Shield } from "lucide-react";
+import { Eye, EyeOff, Loader2, Shield } from "lucide-react";
 import { authPrimaryButtonClassName } from "@/components/auth/authPrimaryButtonClassName";
 
 export function AdminSignInClient() {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setPending(true);
 
-    const fd = new FormData(e.currentTarget);
-    const email = typeof fd.get("email") === "string" ? String(fd.get("email")).trim() : "";
-    const password = typeof fd.get("password") === "string" ? String(fd.get("password")) : "";
+    const email = emailValue.trim();
+    const password = passwordValue;
 
     try {
       const res = await fetch("/api/admin/session", {
@@ -36,6 +38,8 @@ export function AdminSignInClient() {
       setPending(false);
     }
   }
+
+  const canSubmit = !pending && emailValue.trim().length > 3 && passwordValue.length > 0;
 
   return (
     <div className="w-full max-w-md">
@@ -67,9 +71,10 @@ export function AdminSignInClient() {
             <input
               type="email"
               name="email"
-              defaultValue="bitlovely555@gmail.com"
               className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/70 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20"
               required
+              value={emailValue}
+              onChange={(e) => setEmailValue(e.target.value)}
             />
           </div>
 
@@ -77,16 +82,32 @@ export function AdminSignInClient() {
             <label className="text-xs font-semibold tracking-wider text-white uppercase">
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              defaultValue="111111"
-              className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/70 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/5 px-4 pr-11 text-sm text-white placeholder:text-white/70 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20"
+                required
+                value={passwordValue}
+                onChange={(e) => setPasswordValue(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-2 inline-flex w-9 items-center justify-center text-white/70 hover:text-white"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
-          <button type="submit" className={authPrimaryButtonClassName} disabled={pending}>
+          <button
+            type="submit"
+            className={authPrimaryButtonClassName}
+            disabled={!canSubmit}
+            aria-disabled={!canSubmit}
+          >
             {pending ? (
               <span className="inline-flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
