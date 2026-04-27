@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { MapPin, Search, ShieldCheck } from "lucide-react";
+import { Filter, MapPin, Search, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 type Affiliate = {
@@ -35,6 +35,7 @@ export function DirectoryClient() {
   const [pending, setPending] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<Affiliate[]>([]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const params = useMemo(() => {
     const sp = new URLSearchParams();
@@ -73,88 +74,122 @@ export function DirectoryClient() {
     "mt-2 h-11 w-full rounded-2xl border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/50 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20";
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+    <div className="mx-auto max-w-6xl">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
             Public directory
           </h1>
-          <p className="mt-2 text-sm text-white/80">
-            Search approved and verified affiliates.
-          </p>
+          <p className="mt-2 text-sm text-white/80">Search approved and verified affiliates.</p>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setMobileFiltersOpen((v) => !v)}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white hover:bg-white/10 lg:hidden"
+        >
+          <Filter className="h-4 w-4" />
+          Filters
+        </button>
       </header>
 
-      <section className="mt-8 rounded-3xl border border-white/15 bg-white/8 p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-8">
-        <div className="grid gap-4 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <label className="text-xs font-semibold tracking-wider text-white uppercase">
-              Search
-            </label>
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
+      <div className="mt-8 grid gap-6 lg:grid-cols-[320px_1fr]">
+        <aside
+          className={`rounded-3xl border border-white/15 bg-white/8 p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md lg:sticky lg:top-28 lg:self-start ${
+            mobileFiltersOpen ? "block" : "hidden lg:block"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold tracking-wider text-white/70 uppercase">
+              Filters
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setQ("");
+                setName("");
+                setCompany("");
+                setPostcode("");
+                setRadius("10");
+              }}
+              className="text-xs font-semibold text-white/70 underline-offset-4 hover:underline"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div className="mt-5 space-y-4">
+            <div>
+              <label className="text-xs font-semibold tracking-wider text-white uppercase">
+                Search
+              </label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
+                <input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Name or company…"
+                  className={`${field} pl-10`}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold tracking-wider text-white uppercase">
+                Postcode
+              </label>
               <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Name or company…"
-                className={`${field} pl-10`}
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                placeholder="e.g. SW1A 1AA"
+                className={field}
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold tracking-wider text-white uppercase">
+                Radius (miles)
+              </label>
+              <select
+                value={radius}
+                onChange={(e) => setRadius(e.target.value)}
+                className={`${field} [color-scheme:dark]`}
+              >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold tracking-wider text-white uppercase">
+                Name
+              </label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Filter by name…"
+                className={field}
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold tracking-wider text-white uppercase">
+                Company
+              </label>
+              <input
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Filter by company…"
+                className={field}
               />
             </div>
           </div>
-          <div className="lg:col-span-3">
-            <label className="text-xs font-semibold tracking-wider text-white uppercase">
-              Postcode
-            </label>
-            <input
-              value={postcode}
-              onChange={(e) => setPostcode(e.target.value)}
-              placeholder="e.g. SW1A 1AA"
-              className={field}
-            />
-          </div>
-          <div className="lg:col-span-3">
-            <label className="text-xs font-semibold tracking-wider text-white uppercase">
-              Radius (miles)
-            </label>
-            <select
-              value={radius}
-              onChange={(e) => setRadius(e.target.value)}
-              className={`${field} [color-scheme:dark]`}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </div>
+        </aside>
 
-          <div className="lg:col-span-6">
-            <label className="text-xs font-semibold tracking-wider text-white uppercase">
-              Name
-            </label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Filter by name…"
-              className={field}
-            />
-          </div>
-          <div className="lg:col-span-6">
-            <label className="text-xs font-semibold tracking-wider text-white uppercase">
-              Company
-            </label>
-            <input
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder="Filter by company…"
-              className={field}
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-8">
+        <section className="min-w-0">
         {pending ? (
           <div className="rounded-3xl border border-white/15 bg-white/8 p-7 backdrop-blur-md">
             <p className="text-sm text-white/80">Loading…</p>
@@ -171,7 +206,7 @@ export function DirectoryClient() {
             <p className="text-sm text-white/80">No affiliates found.</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 xl:grid-cols-2">
             {items.map((a) => (
               <article
                 key={a.id}
@@ -214,6 +249,7 @@ export function DirectoryClient() {
           </div>
         )}
       </section>
+      </div>
     </div>
   );
 }
