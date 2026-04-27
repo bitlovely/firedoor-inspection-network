@@ -41,11 +41,13 @@ export function SignUpClient() {
 
     try {
       const supabase = createBrowserClient();
+      const emailRedirectTo = `${window.location.origin}/dashboard`;
       const { data, error } = await supabase.auth.signUp({
         email: normalizedEmail,
         password,
         options: {
           data: { full_name },
+          emailRedirectTo,
         },
       });
       if (error) {

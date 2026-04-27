@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { createBrowserClient } from "@/lib/supabase/browser";
 
 const nav = [
   { label: "How it works", href: "#how" },
@@ -14,6 +15,27 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const supabase = useMemo(() => createBrowserClient(), []);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!cancelled) setSignedIn(Boolean(data.session));
+      } catch {
+        if (!cancelled) setSignedIn(false);
+      }
+    })();
+    const { data: sub } = supabase.auth.onAuthStateChange((_evt, session) => {
+      setSignedIn(Boolean(session));
+    });
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
@@ -52,12 +74,21 @@ export function Header() {
             </div>
 
             <div className="hidden items-center gap-3 md:flex">
-              <Link
-                href="/signin"
-                className="rounded-lg px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-white/10"
-              >
-                Sign in
-              </Link>
+              {signedIn ? (
+                <Link
+                  href="/dashboard"
+                  className="rounded-lg px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-white/10"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <Link
+                  href="/signin"
+                  className="rounded-lg px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-white/10"
+                >
+                  Sign in
+                </Link>
+              )}
               <Link
                 href="/signup"
                 className="rounded-lg bg-accent-gradient px-4 py-2 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
@@ -90,13 +121,23 @@ export function Header() {
                     {item.label}
                   </a>
                 ))}
-                <Link
-                  href="/signin"
-                  className="w-full rounded-lg border border-white/15 bg-white/5 py-3 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-white/10"
-                  onClick={() => setOpen(false)}
-                >
-                  Sign in
-                </Link>
+                {signedIn ? (
+                  <Link
+                    href="/dashboard"
+                    className="w-full rounded-lg border border-white/15 bg-white/5 py-3 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-white/10"
+                    onClick={() => setOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    href="/signin"
+                    className="w-full rounded-lg border border-white/15 bg-white/5 py-3 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-white/10"
+                    onClick={() => setOpen(false)}
+                  >
+                    Sign in
+                  </Link>
+                )}
                 <Link
                   href="/signup"
                   className="w-full rounded-lg bg-accent-gradient py-3 text-center text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"

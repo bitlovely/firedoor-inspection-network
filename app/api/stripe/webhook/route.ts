@@ -8,13 +8,16 @@ export const runtime = "nodejs";
 function toPlan(sub: Stripe.Subscription) {
   const activeLike = ["active", "trialing", "past_due"];
   const isActive = activeLike.includes(sub.status);
+  const itemPeriodEnds = sub.items?.data
+    ?.map((i) => i.current_period_end)
+    .filter((v): v is number => typeof v === "number");
+  const maxEnd =
+    itemPeriodEnds && itemPeriodEnds.length > 0 ? Math.max(...itemPeriodEnds) : null;
   return {
     plan_type: isActive ? "advanced" : "basic",
     subscription_status: isActive ? "active" : "inactive",
     stripe_subscription_id: sub.id,
-    subscription_current_period_end: sub.current_period_end
-      ? new Date(sub.current_period_end * 1000).toISOString()
-      : null,
+    subscription_current_period_end: maxEnd ? new Date(maxEnd * 1000).toISOString() : null,
   } as const;
 }
 
