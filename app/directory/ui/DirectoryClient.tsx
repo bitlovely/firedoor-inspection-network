@@ -206,7 +206,7 @@ export function DirectoryClient() {
             <p className="text-sm text-white/80">No affiliates found.</p>
           </div>
         ) : (
-          <div className="grid gap-4 xl:grid-cols-2">
+          <div className="grid gap-4">
             {items.map((a) => (
               <article
                 key={a.id}
