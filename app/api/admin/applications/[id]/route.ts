@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { adminCookieName, verifyAdminSession } from "@/lib/admin/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { BUCKET } from "@/lib/affiliate-application";
+import { sendApplicationStatusUpdatedEmail } from "@/lib/email/send-application-status-updated";
 
 export const runtime = "nodejs";
 
@@ -85,6 +86,14 @@ export async function PATCH(
   }
 
   const supabase = createAdminClient();
+  const { data: before, error: beforeErr } = await supabase
+    .from("affiliate_applications")
+    .select("status,email,full_name,company_name")
+    .eq("id", id)
+    .single();
+  if (beforeErr) {
+    return NextResponse.json({ error: beforeErr.message }, { status: 500 });
+  }
 
   // Approving when every required doc check is already true → verified (same rule as doc toggles).
   if (status === "approved") {
@@ -166,6 +175,28 @@ export async function PATCH(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  // Status change email (best-effort).
+  try {
+    const prevStatus = typeof before?.status === "string" ? before.status : "";
+    const nextStatus = typeof data?.status === "string" ? data.status : "";
+    if (prevStatus && nextStatus && prevStatus !== nextStatus) {
+      const to = typeof before?.email === "string" ? before.email : "";
+      const applicantName = typeof before?.full_name === "string" ? before.full_name : "";
+      const companyName = typeof before?.company_name === "string" ? before.company_name : "";
+      if (to && applicantName) {
+        await sendApplicationStatusUpdatedEmail({
+          to,
+          applicantName,
+          companyName,
+          status: nextStatus,
+        });
+      }
+    }
+  } catch (emailErr) {
+    console.error("[admin/applications] status email failed:", emailErr);
+  }
+
   return NextResponse.json({ application: data }, { status: 200 });
 }
 
