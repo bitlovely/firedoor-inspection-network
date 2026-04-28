@@ -56,6 +56,7 @@ export function AdminApplicationDetailClient() {
   const [error, setError] = useState<string | null>(null);
   const [app, setApp] = useState<Application | null>(null);
   const allowDocVerify = app?.status === "approved" || app?.status === "verified";
+  const certs = useMemo(() => toArray(app?.certification_paths), [app?.certification_paths]);
 
   async function load() {
     setError(null);
@@ -109,14 +110,28 @@ export function AdminApplicationDetailClient() {
   }
 
   async function download(path: string) {
-    const res = await fetch(`/api/admin/applications/${encodeURIComponent(id)}`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ path }),
-    });
-    const json = (await res.json().catch(() => null)) as { url?: string; error?: string } | null;
-    if (!res.ok || !json?.url) throw new Error(json?.error ?? "Unable to download");
-    window.open(json.url, "_blank", "noopener,noreferrer");
+    setError(null);
+    // Open a window synchronously to avoid popup blocking.
+    const w = window.open("", "_blank", "noopener,noreferrer");
+    try {
+      const res = await fetch(`/api/admin/applications/${encodeURIComponent(id)}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ path }),
+      });
+      const json = (await res.json().catch(() => null)) as
+        | { url?: string; error?: string }
+        | null;
+      if (!res.ok || !json?.url) throw new Error(json?.error ?? "Unable to download");
+      if (w) {
+        w.location.href = json.url;
+      } else {
+        window.location.assign(json.url);
+      }
+    } catch (e) {
+      if (w) w.close();
+      setError(e instanceof Error ? e.message : "Unable to download");
+    }
   }
 
   return (
@@ -239,30 +254,18 @@ export function AdminApplicationDetailClient() {
                         Documents
                       </p>
                       <div className="mt-3 space-y-2">
-                        <div className="flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
-                          <div className="flex min-w-0 items-center gap-2">
-                            {app.verified_certification ? (
-                              <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                            ) : (
-                              <Circle className="h-4 w-4 text-white/40" />
-                            )}
-                            <span className="truncate text-sm text-white">
-                              Certifications ({toArray(app.certification_paths).length})
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              disabled={saving || toArray(app.certification_paths).length === 0}
-                              onClick={() => {
-                                const first = toArray(app.certification_paths)[0];
-                                if (first) void download(first);
-                              }}
-                              className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
-                              title="Download first certification"
-                            >
-                              <Download className="h-4 w-4" />
-                            </button>
+                        <div className="rounded-xl border border-white/15 bg-white/5 px-3 py-2">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex min-w-0 items-center gap-2">
+                              {app.verified_certification ? (
+                                <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                              ) : (
+                                <Circle className="h-4 w-4 text-white/40" />
+                              )}
+                              <span className="truncate text-sm text-white">
+                                Certifications ({certs.length})
+                              </span>
+                            </div>
                             <button
                               type="button"
                               disabled={saving || !allowDocVerify}
@@ -274,6 +277,32 @@ export function AdminApplicationDetailClient() {
                               {app.verified_certification ? "Unverify" : "Verify"}
                             </button>
                           </div>
+
+                          {certs.length > 0 ? (
+                            <div className="mt-2 space-y-2">
+                              {certs.map((p, idx) => (
+                                <div
+                                  key={`${p}-${idx}`}
+                                  className="flex items-center justify-between gap-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2"
+                                >
+                                  <span className="min-w-0 truncate text-xs font-semibold text-white/80">
+                                    Certification {idx + 1}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    disabled={saving}
+                                    onClick={() => void download(p)}
+                                    className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                                    title="Download"
+                                  >
+                                    <Download className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="mt-2 text-xs text-white/60">No certification files.</p>
+                          )}
                         </div>
 
                         <div className="flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
