@@ -47,12 +47,12 @@ function DoorModel() {
           <meshStandardMaterial color="#d6d3d1" roughness={0.25} metalness={0.92} />
         </mesh>
 
-        {/* Subtle orange accent (keeps system color) */}
+        {/* Subtle brand red accent */}
         <mesh position={[0.52, 0.1, 0.06]} castShadow>
           <boxGeometry args={[0.04, 2.02, 0.02]} />
           <meshStandardMaterial
-            color="#ff6a1a"
-            emissive="#ff6a1a"
+            color="#d10000"
+            emissive="#d10000"
             emissiveIntensity={0.18}
             roughness={0.35}
             metalness={0.15}

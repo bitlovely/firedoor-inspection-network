@@ -2,43 +2,43 @@
 
 :root {
   --background: 0 0% 100%;
-  --foreground: 222 47% 8%;
+  /* Palette */
+  --foreground: 0 13% 4.5%; /* #0d0a0a */
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 8%;
-  /* Closer to screenshot: deeper navy */
-  --primary: 220 25% 4%;
+  --card-foreground: 0 13% 4.5%; /* #0d0a0a */
+  --primary: 0 13% 4.5%; /* #0d0a0a */
   --primary-foreground: 0 0% 100%;
-  /* Brand: red accent (black + red) */
-  --accent: 0 84% 52%;
+  /* Brand red */
+  --accent: 0 100% 41%; /* #d10000 */
   --accent-foreground: 0 0% 100%;
-  --accent-glow: 0 90% 60%;
+  --accent-glow: 0 100% 50%;
   --secondary: 220 20% 96%;
-  --secondary-foreground: 222 47% 11%;
+  --secondary-foreground: 0 13% 4.5%;
   --muted: 220 20% 96%;
   --muted-foreground: 220 10% 34%;
   --border: 220 18% 90%;
   --input: 220 18% 90%;
-  --ring: 0 84% 52%;
+  --ring: 0 100% 41%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --radius: 0.75rem;
   --gradient-hero: linear-gradient(
     135deg,
-    hsl(220 25% 4%) 0%,
-    hsl(224 40% 9%) 52%,
-    hsl(226 48% 13%) 100%
+    hsl(0 13% 4.5%) 0%,
+    hsl(0 13% 7%) 52%,
+    hsl(0 13% 9.5%) 100%
   );
   --gradient-accent: linear-gradient(
     135deg,
-    hsl(0 84% 52%) 0%,
-    hsl(0 90% 60%) 100%
+    hsl(0 100% 41%) 0%,
+    hsl(0 100% 50%) 100%
   );
   --gradient-glow: radial-gradient(
     circle at 50% 0%,
-    hsl(0 84% 52% / 0.16),
+    hsl(0 100% 41% / 0.16),
     transparent 62%
   );
-  --shadow-accent: 0 14px 38px -12px hsl(0 84% 52% / 0.42);
+  --shadow-accent: 0 14px 38px -12px hsl(0 100% 41% / 0.42);
 
   /* Neumorphism surfaces (light mode) */
   --neu-surface: 220 20% 96%;

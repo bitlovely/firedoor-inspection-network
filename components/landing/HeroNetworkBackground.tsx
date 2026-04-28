@@ -29,7 +29,7 @@ export function HeroNetworkBackground() {
         <defs>
           <linearGradient id={`grad-${uid}`} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="rgb(255 255 255)" stopOpacity="0.12" />
-            <stop offset="35%" stopColor="rgb(255 106 26)" stopOpacity="0.26" />
+            <stop offset="35%" stopColor="rgb(209 0 0)" stopOpacity="0.26" />
             <stop offset="100%" stopColor="rgb(255 255 255)" stopOpacity="0.12" />
           </linearGradient>
           <filter id={`glow-${uid}`} x="-40%" y="-40%" width="180%" height="180%">
@@ -92,21 +92,21 @@ export function HeroNetworkBackground() {
         {/* nodes (3 clusters: pros / network / work) */}
         <g filter={`url(#glow-${uid})`}>
           {/* pros cluster */}
-          <circle cx="12" cy="62" r="2.1" fill="rgb(255 106 26)" opacity="0.16" />
+          <circle cx="12" cy="62" r="2.1" fill="rgb(209 0 0)" opacity="0.16" />
           <circle cx="15" cy="58" r="1.2" fill="rgb(255 255 255)" opacity="0.12" />
           <circle cx="16" cy="66" r="1.1" fill="rgb(255 255 255)" opacity="0.10" />
 
           {/* network hub */}
           <circle cx="36" cy="46" r="1.6" fill="rgb(255 255 255)" opacity="0.12" />
           <circle cx="38" cy="78" r="1.6" fill="rgb(255 255 255)" opacity="0.12" />
-          <circle cx="64" cy="52" r="2.4" fill="rgb(255 106 26)" opacity="0.14" />
+          <circle cx="64" cy="52" r="2.4" fill="rgb(209 0 0)" opacity="0.14" />
           <circle cx="60" cy="47" r="1.1" fill="rgb(255 255 255)" opacity="0.10" />
           <circle cx="61" cy="59" r="1.1" fill="rgb(255 255 255)" opacity="0.10" />
 
           {/* work / clients cluster */}
           <circle cx="92" cy="36" r="2.2" fill="rgb(255 255 255)" opacity="0.14" />
           <circle cx="92" cy="64" r="2.2" fill="rgb(255 255 255)" opacity="0.14" />
-          <circle cx="88" cy="50" r="1.1" fill="rgb(255 106 26)" opacity="0.12" />
+          <circle cx="88" cy="50" r="1.1" fill="rgb(209 0 0)" opacity="0.12" />
         </g>
 
         {/* moving "leads" particles */}
@@ -120,7 +120,7 @@ export function HeroNetworkBackground() {
               { path: `#p5-${uid}`, delay: "0.6s" },
               { path: `#p6-${uid}`, delay: "1.4s" },
             ].map((p, i) => (
-              <circle key={i} r="0.7" fill="rgb(255 106 26)" opacity="0.45">
+              <circle key={i} r="0.7" fill="rgb(209 0 0)" opacity="0.45">
                 <animateMotion
                   dur={particleDur}
                   repeatCount="indefinite"
