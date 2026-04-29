@@ -5,14 +5,17 @@ import {
   BadgeCheck,
   FileBadge,
   Filter,
+  Briefcase,
+  ClipboardCheck,
   IdCard,
   MapPin,
+  ScrollText,
   Search,
   ShieldCheck,
   Star,
+  Timer,
   X,
 } from "lucide-react";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type Affiliate = {
@@ -35,7 +38,6 @@ type Affiliate = {
   identity_checked?: boolean;
   review_count?: number;
   review_rating?: number | null;
-  sample_report_paths?: unknown;
 };
 
 function initialsFromName(fullName: string) {
@@ -55,11 +57,6 @@ function badge(status: string) {
       Verified Affiliate
     </span>
   );
-}
-
-function sampleReportCount(v: unknown) {
-  if (!Array.isArray(v)) return 0;
-  return v.filter((x) => typeof x === "string" && x.length > 0).length;
 }
 
 export function DirectoryClient() {
@@ -391,7 +388,7 @@ export function DirectoryClient() {
             aria-hidden="true"
           />
           <aside
-            className="absolute right-0 top-0 z-50 h-full w-full max-w-md bg-white shadow-2xl ring-1 ring-black/10"
+            className="absolute right-0 top-0 z-50 h-full w-full bg-white shadow-2xl ring-1 ring-black/10 lg:w-1/2"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex h-16 items-center justify-between border-b border-black/10 px-5">
@@ -435,12 +432,11 @@ export function DirectoryClient() {
                   <div className="flex items-start gap-4">
                     <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-black/10 bg-black/5">
                       {drawerAffiliate.profile_photo_path ? (
-                        <Image
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
                           src={`/api/public/profile-photo?id=${encodeURIComponent(drawerAffiliate.id)}`}
                           alt=""
-                          fill
-                          className="object-cover"
-                          sizes="56px"
+                          className="h-full w-full object-cover"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-black/70">
@@ -480,7 +476,10 @@ export function DirectoryClient() {
 
                   {drawerAffiliate.bio?.trim() ? (
                     <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
-                      <h3 className="font-display text-sm font-bold">Bio</h3>
+                      <h3 className="flex items-center gap-2 font-display text-sm font-bold">
+                        <ScrollText className="h-4 w-4 text-accent" />
+                        Bio
+                      </h3>
                       <p className="mt-2 whitespace-pre-wrap text-sm text-black/70">
                         {drawerAffiliate.bio.trim()}
                       </p>
@@ -489,7 +488,10 @@ export function DirectoryClient() {
 
                   {drawerAffiliate.services?.trim() ? (
                     <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
-                      <h3 className="font-display text-sm font-bold">Services</h3>
+                      <h3 className="flex items-center gap-2 font-display text-sm font-bold">
+                        <Briefcase className="h-4 w-4 text-accent" />
+                        Services
+                      </h3>
                       <p className="mt-2 whitespace-pre-wrap text-sm text-black/70">
                         {drawerAffiliate.services.trim()}
                       </p>
@@ -498,27 +500,45 @@ export function DirectoryClient() {
 
                   {drawerAffiliate.areas_covered ? (
                     <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
-                      <h3 className="font-display text-sm font-bold">Coverage</h3>
-                      {typeof drawerAffiliate.years_experience === "number" ? (
-                        <p className="mt-2 text-sm text-black/70">
-                          Experience:{" "}
-                          <span className="font-semibold text-black">
-                            {drawerAffiliate.years_experience}
-                          </span>{" "}
-                          years
-                        </p>
-                      ) : null}
-                      <p className="mt-2 whitespace-pre-wrap text-sm text-black/70">
-                        Areas covered:{" "}
-                        <span className="font-semibold text-black">
-                          {drawerAffiliate.areas_covered}
-                        </span>
-                      </p>
+                      <h3 className="flex items-center gap-2 font-display text-sm font-bold">
+                        <MapPin className="h-4 w-4 text-accent" />
+                        Coverage
+                      </h3>
+                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                          <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-black/60 uppercase">
+                            <Timer className="h-4 w-4 text-black/50" />
+                            Experience
+                          </div>
+                          <div className="mt-2 font-display text-2xl font-extrabold text-black">
+                            {typeof drawerAffiliate.years_experience === "number"
+                              ? drawerAffiliate.years_experience
+                              : "—"}
+                            {typeof drawerAffiliate.years_experience === "number" ? (
+                              <span className="ml-1 align-baseline text-sm font-semibold text-black/60">
+                                yrs
+                              </span>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                          <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-black/60 uppercase">
+                            <MapPin className="h-4 w-4 text-black/50" />
+                            Areas covered
+                          </div>
+                          <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-black/75">
+                            {drawerAffiliate.areas_covered}
+                          </p>
+                        </div>
+                      </div>
                     </section>
                   ) : null}
 
                   <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
-                    <h3 className="font-display text-sm font-bold">Trust</h3>
+                    <h3 className="flex items-center gap-2 font-display text-sm font-bold">
+                      <ClipboardCheck className="h-4 w-4 text-accent" />
+                      Trust
+                    </h3>
                     <div className="mt-3 space-y-2">
                       <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
                         <div className="flex items-center gap-2 text-sm">
@@ -581,15 +601,6 @@ export function DirectoryClient() {
                     </div>
                   </section>
 
-                  <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
-                    <h3 className="font-display text-sm font-bold">Documents</h3>
-                    <p className="mt-2 text-sm text-black/70">
-                      Sample reports:{" "}
-                      <span className="font-semibold text-black">
-                        {sampleReportCount(drawerAffiliate.sample_report_paths)}
-                      </span>
-                    </p>
-                  </section>
                 </div>
               ) : null}
             </div>
