@@ -96,14 +96,14 @@ export function ProfilePanel({
   }
 
   const field =
-    "mt-2 w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none ring-0 transition focus:border-white/25 focus:bg-white/7";
+    "mt-2 w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-black placeholder:text-black/40 outline-none ring-0 transition focus:border-accent/60 focus:ring-2 focus:ring-accent/20";
 
   return (
-    <section className="rounded-3xl border border-white/15 bg-white/8 p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-8">
+    <section className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-display text-xl font-extrabold tracking-tight">Profile</h2>
-          <p className="mt-1 text-sm text-white/80">
+          <p className="mt-1 text-sm text-black/70">
             Update your account and public-facing details.
           </p>
         </div>
@@ -112,7 +112,7 @@ export function ProfilePanel({
       <form onSubmit={onSubmit} className="mt-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="text-sm">
-            <span className="text-white/90">Full name</span>
+            <span className="text-black/80">Full name</span>
             <input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -122,7 +122,7 @@ export function ProfilePanel({
           </label>
 
           <label className="text-sm">
-            <span className="text-white/90">Contact email</span>
+            <span className="text-black/80">Contact email</span>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -133,7 +133,7 @@ export function ProfilePanel({
           </label>
 
           <label className="text-sm">
-            <span className="text-white/90">Company name</span>
+            <span className="text-black/80">Company name</span>
             <input
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
@@ -142,7 +142,7 @@ export function ProfilePanel({
           </label>
 
           <label className="text-sm">
-            <span className="text-white/90">Phone</span>
+            <span className="text-black/80">Phone</span>
             <input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -155,28 +155,28 @@ export function ProfilePanel({
 
         <div className="mt-4">
           <label className="text-sm">
-            <span className="text-white/90">Company logo / photo</span>
+            <span className="text-black/80">Company logo / photo</span>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setPhoto(e.target.files?.item(0) ?? null)}
-              className="mt-2 w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white file:mr-4 file:rounded-xl file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15"
+              className="mt-2 w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-black file:mr-4 file:rounded-xl file:border-0 file:bg-black/5 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-black/10"
             />
           </label>
-          <p className="mt-2 text-xs text-white/60">
+          <p className="mt-2 text-xs text-black/70">
             Tip: this is used as your dashboard logo and can appear on your directory
             profile.
           </p>
         </div>
 
         {error ? (
-          <div className="mt-4 rounded-2xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+          <div className="mt-4 rounded-2xl border border-rose-600/25 bg-rose-600/10 px-4 py-3 text-sm text-rose-800">
             {error}
           </div>
         ) : null}
 
         {success ? (
-          <div className="mt-4 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">
+          <div className="mt-4 rounded-2xl border border-emerald-600/25 bg-emerald-600/10 px-4 py-3 text-sm text-emerald-800">
             {success}
           </div>
         ) : null}
