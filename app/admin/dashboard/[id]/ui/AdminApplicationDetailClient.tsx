@@ -47,10 +47,16 @@ function badge(status: string) {
   }
 }
 
-export function AdminApplicationDetailClient() {
+export function AdminApplicationDetailClient({
+  applicationId,
+  embedded,
+}: {
+  applicationId?: string;
+  embedded?: boolean;
+}) {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const id = params?.id ?? "";
+  const id = applicationId ?? params?.id ?? "";
   const [pending, setPending] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -134,32 +140,19 @@ export function AdminApplicationDetailClient() {
     }
   }
 
-  return (
-    <main className="min-h-dvh w-full bg-black text-white">
-      <div className="container mx-auto px-4 py-10 sm:px-6 lg:py-14">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <Link
-              href="/admin/dashboard"
-              className="inline-flex items-center gap-2 text-sm text-white/80 underline-offset-4 hover:text-white hover:underline"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Back to dashboard
-            </Link>
-          </div>
-
-          <div className="mt-6 rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9">
-            {pending ? (
-              <p className="text-sm text-white/80">Loading…</p>
-            ) : error ? (
-              <div
-                role="alert"
-                className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-              >
-                {error}
-              </div>
-            ) : app ? (
-              <div className="space-y-8">
+  const content = (
+    <div className="rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9">
+      {pending ? (
+        <p className="text-sm text-white/80">Loading…</p>
+      ) : error ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
+          {error}
+        </div>
+      ) : app ? (
+        <div className="space-y-8">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <p className="text-xs font-semibold tracking-wider text-white uppercase">
@@ -372,10 +365,30 @@ export function AdminApplicationDetailClient() {
                   </aside>
                 </div>
               </div>
-            ) : (
-              <p className="text-sm text-white/80">Not found.</p>
-            )}
+      ) : (
+        <p className="text-sm text-white/80">Not found.</p>
+      )}
+    </div>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <main className="min-h-dvh w-full bg-black text-white">
+      <div className="container mx-auto px-4 py-10 sm:px-6 lg:py-14">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Link
+              href="/admin/dashboard"
+              className="inline-flex items-center gap-2 text-sm text-white/80 underline-offset-4 hover:text-white hover:underline"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Back to dashboard
+            </Link>
           </div>
+          <div className="mt-6">{content}</div>
         </div>
       </div>
     </main>

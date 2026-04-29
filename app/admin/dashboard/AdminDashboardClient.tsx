@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ChevronRight, LogOut, Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronRight, LogOut, Search, X } from "lucide-react";
 import { authPrimaryButtonClassName } from "@/components/auth/authPrimaryButtonClassName";
+import { AdminApplicationDetailClient } from "./[id]/ui/AdminApplicationDetailClient";
 
 type Application = {
   id: string;
@@ -34,6 +35,8 @@ function countBy(apps: Application[], status: string) {
 
 export function AdminDashboardClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedId = searchParams.get("application") ?? "";
   const [pending, setPending] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [apps, setApps] = useState<Application[]>([]);
@@ -43,6 +46,29 @@ export function AdminDashboardClient() {
     "all" | "pending" | "approved" | "verified" | "rejected"
   >("all");
   const [dateFilter, setDateFilter] = useState<"all" | "7d" | "30d" | "90d">("all");
+
+  function openDrawer(id: string) {
+    const sp = new URLSearchParams(searchParams.toString());
+    sp.set("application", id);
+    router.push(`/admin/dashboard?${sp.toString()}`);
+  }
+
+  function closeDrawer() {
+    const sp = new URLSearchParams(searchParams.toString());
+    sp.delete("application");
+    const qs = sp.toString();
+    router.push(qs ? `/admin/dashboard?${qs}` : "/admin/dashboard");
+  }
+
+  useEffect(() => {
+    if (!selectedId) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeDrawer();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
 
   async function load() {
     setError(null);
@@ -310,10 +336,11 @@ export function AdminDashboardClient() {
             <div className="max-h-[70dvh] overflow-auto px-1 pb-1">
               <div className="space-y-3">
                 {filtered.map((a) => (
-                  <Link
+                  <button
                     key={a.id}
-                    href={`/admin/dashboard/${encodeURIComponent(a.id)}`}
-                    className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 transition-colors hover:bg-white/10"
+                    type="button"
+                    onClick={() => openDrawer(a.id)}
+                    className="flex w-full items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-left transition-colors hover:bg-white/10"
                   >
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-white">
@@ -330,13 +357,42 @@ export function AdminDashboardClient() {
                       </span>
                       <ChevronRight className="h-4 w-4 text-white/60" />
                     </div>
-                  </Link>
+                  </button>
                 ))}
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {selectedId ? (
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 z-40 bg-black/55"
+            onClick={closeDrawer}
+            aria-hidden="true"
+          />
+          <aside
+            className="absolute right-0 top-0 z-50 h-full w-full bg-black text-white shadow-2xl ring-1 ring-white/10 lg:w-1/2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
+              <div className="font-display text-base font-bold">Application</div>
+              <button
+                type="button"
+                onClick={closeDrawer}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition-colors hover:bg-white/10"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="h-[calc(100%-4rem)] overflow-y-auto px-5 py-6">
+              <AdminApplicationDetailClient applicationId={selectedId} embedded />
+            </div>
+          </aside>
+        </div>
+      ) : null}
     </main>
   );
 }
