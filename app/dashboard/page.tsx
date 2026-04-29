@@ -53,26 +53,26 @@ function statusBadge(status: string) {
     "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold tracking-wide";
   switch (status) {
     case "approved":
-      return `${base} border-emerald-400/30 bg-emerald-400/10 text-emerald-200`;
+      return `${base} border-emerald-600/25 bg-emerald-600/10 text-emerald-800`;
     case "verified":
-      return `${base} border-cyan-400/30 bg-cyan-400/10 text-cyan-200`;
+      return `${base} border-emerald-600/25 bg-emerald-600/10 text-emerald-800`;
     case "rejected":
-      return `${base} border-rose-400/30 bg-rose-400/10 text-rose-200`;
+      return `${base} border-rose-600/25 bg-rose-600/10 text-rose-800`;
     case "pending":
-      return `${base} border-amber-400/30 bg-amber-400/10 text-amber-200`;
+      return `${base} border-amber-600/25 bg-amber-600/10 text-amber-900`;
     default:
-      return `${base} border-white/20 bg-white/5 text-white/90`;
+      return `${base} border-black/10 bg-black/5 text-black/80`;
   }
 }
 
 function verifyPill(ok: boolean | undefined) {
   return ok ? (
-    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-200">
+    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
       <BadgeCheck className="h-3.5 w-3.5" />
       Verified
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-[11px] font-semibold text-white/70">
+    <span className="inline-flex items-center gap-1 rounded-full border border-black/10 bg-black/5 px-2 py-0.5 text-[11px] font-semibold text-black/70">
       <Circle className="h-3.5 w-3.5" />
       Pending
     </span>
@@ -234,9 +234,9 @@ export default function DashboardPage() {
   const docCount = app ? certCount + 1 + (app.dbs_path ? 1 : 0) : 0;
 
   return (
-    <main className="relative min-h-dvh w-full overflow-hidden bg-black text-white">
+    <main className="relative min-h-dvh w-full overflow-hidden bg-[#f3f4f6] text-black">
       <div className="relative z-10 mx-auto grid min-h-dvh max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[260px_1fr] lg:gap-8 lg:px-8 lg:py-8">
-        <aside className="rounded-3xl border border-white/15 bg-white/8 p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md lg:sticky lg:top-8 lg:self-start">
+        <aside className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.18)] lg:sticky lg:top-8 lg:self-start">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent-gradient shadow-accent-glow">
               {profilePhotoUrl ? (
@@ -259,7 +259,7 @@ export default function DashboardPage() {
             </span>
             <div>
               <p className="font-display text-lg font-extrabold leading-none">Dashboard</p>
-              <p className="mt-1 text-xs text-white/70">Affiliate</p>
+              <p className="mt-1 text-xs text-black/60">Affiliate</p>
             </div>
           </div>
 
@@ -267,10 +267,10 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={() => setActiveView("overview")}
-              className={`flex w-full items-center gap-3 rounded-2xl border border-white/10 px-4 py-3 text-left ${
+              className={`flex w-full items-center gap-3 rounded-2xl border border-black/10 px-4 py-3 text-left transition-colors ${
                 activeView === "overview"
-                  ? "bg-white/10 text-white"
-                  : "bg-white/5 text-white/90 hover:bg-white/10"
+                  ? "bg-black/5 text-black"
+                  : "bg-white text-black/80 hover:bg-black/5"
               }`}
             >
               <LayoutDashboard className="h-4 w-4" />
@@ -279,10 +279,10 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={() => setActiveView("profile")}
-              className={`flex w-full items-center gap-3 rounded-2xl border border-white/10 px-4 py-3 text-left ${
+              className={`flex w-full items-center gap-3 rounded-2xl border border-black/10 px-4 py-3 text-left transition-colors ${
                 activeView === "profile"
-                  ? "bg-white/10 text-white"
-                  : "bg-white/5 text-white/90 hover:bg-white/10"
+                  ? "bg-black/5 text-black"
+                  : "bg-white text-black/80 hover:bg-black/5"
               }`}
             >
               <UserRound className="h-4 w-4" />
@@ -291,10 +291,10 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={() => setActiveView("subscription")}
-              className={`flex w-full items-center gap-3 rounded-2xl border border-white/10 px-4 py-3 text-left ${
+              className={`flex w-full items-center gap-3 rounded-2xl border border-black/10 px-4 py-3 text-left transition-colors ${
                 activeView === "subscription"
-                  ? "bg-white/10 text-white"
-                  : "bg-white/5 text-white/90 hover:bg-white/10"
+                  ? "bg-black/5 text-black"
+                  : "bg-white text-black/80 hover:bg-black/5"
               }`}
             >
               <CreditCard className="h-4 w-4" />
@@ -302,7 +302,7 @@ export default function DashboardPage() {
             </button>
           </nav>
 
-          <div className="mt-6 border-t border-white/10 pt-6 space-y-3">
+          <div className="mt-6 border-t border-black/10 pt-6 space-y-3">
             <button
               type="button"
               onClick={signOut}
@@ -313,7 +313,7 @@ export default function DashboardPage() {
             </button>
             <Link
               href="/"
-              className="inline-flex w-full items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10"
+              className="inline-flex w-full items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-black/5"
             >
               Back to home
             </Link>
@@ -321,7 +321,7 @@ export default function DashboardPage() {
         </aside>
 
         <section className="min-w-0">
-          <header className="rounded-3xl border border-white/15 bg-white/8 p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-6">
+          <header className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.18)] sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
@@ -331,7 +331,7 @@ export default function DashboardPage() {
                       ? "Subscription"
                       : "Affiliate dashboard"}
                 </h1>
-                <p className="mt-1 text-sm text-white/80">
+                <p className="mt-1 text-sm text-black/70">
                   {activeView === "profile"
                     ? "Manage your account details and company profile."
                     : activeView === "subscription"
@@ -340,8 +340,8 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="hidden sm:flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
-                  <BarChart3 className="h-4 w-4 text-white/60" />
+                <div className="hidden sm:flex items-center gap-2 rounded-2xl border border-black/10 bg-black/5 px-4 py-2 text-sm text-black/70">
+                  <BarChart3 className="h-4 w-4 text-black/50" />
                   {activeView === "profile"
                     ? "Profile"
                     : activeView === "subscription"
@@ -355,46 +355,46 @@ export default function DashboardPage() {
           {activeView === "overview" ? (
             <>
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl border border-white/15 bg-white/8 p-5 backdrop-blur-md">
-              <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                 Status
               </p>
               <div className="mt-2">{app ? <span className={statusBadge(app.status)}>{app.status}</span> : <span className={statusBadge("pending")}>—</span>}</div>
             </div>
-            <div className="rounded-3xl border border-white/15 bg-white/8 p-5 backdrop-blur-md">
-              <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                 Documents
               </p>
               <p className="mt-2 font-display text-3xl font-extrabold">{app ? docCount : "—"}</p>
-              <p className="mt-1 text-xs text-white/60">Certs, insurance, DBS</p>
+              <p className="mt-1 text-xs text-black/60">Certs, insurance, DBS</p>
             </div>
-            <div className="rounded-3xl border border-white/15 bg-white/8 p-5 backdrop-blur-md">
-              <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                 Coverage
               </p>
-              <p className="mt-2 text-sm text-white/90 line-clamp-2">{app ? app.areas_covered : "—"}</p>
+              <p className="mt-2 text-sm text-black/80 line-clamp-2">{app ? app.areas_covered : "—"}</p>
             </div>
-            <div className="rounded-3xl border border-white/15 bg-white/8 p-5 backdrop-blur-md">
-              <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                 Public profile
               </p>
               {app && (app.status === "approved" || app.status === "verified") ? (
                 <Link
                   href={`/directory?profile=${encodeURIComponent(app.id)}`}
-                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white hover:bg-white/10"
+                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-2xl border border-black/10 bg-white px-4 text-sm font-semibold text-black transition-colors hover:bg-black/5"
                 >
                   View profile
                 </Link>
               ) : (
-                <p className="mt-2 text-sm text-white/70">Available after approval.</p>
+                <p className="mt-2 text-sm text-black/60">Available after approval.</p>
               )}
             </div>
           </div>
 
           <div className="mt-6 space-y-6">
             {pending ? (
-              <div className="rounded-3xl border border-white/15 bg-white/8 p-7 backdrop-blur-md">
-                <p className="text-sm text-white/80">Loading…</p>
+              <div className="rounded-3xl border border-black/10 bg-white p-7 shadow-sm">
+                <p className="text-sm text-black/60">Loading…</p>
               </div>
             ) : error ? (
               <div
@@ -406,11 +406,11 @@ export default function DashboardPage() {
             ) : app ? (
               <div className="grid gap-6 lg:grid-cols-12">
                 <section
-                  className="rounded-3xl border border-white/15 bg-white/8 p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md lg:col-span-7 sm:p-8"
+                  className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm lg:col-span-7 sm:p-8"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Status
                       </p>
                       <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -418,7 +418,7 @@ export default function DashboardPage() {
                         {(app.status === "approved" || app.status === "verified") && (
                           <Link
                             href={`/directory?profile=${encodeURIComponent(app.id)}`}
-                            className="text-sm text-white underline-offset-4 hover:underline"
+                            className="text-sm text-black underline-offset-4 hover:underline"
                           >
                             View public profile
                           </Link>
@@ -426,82 +426,82 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Application ID
                       </p>
-                      <p className="mt-2 font-mono text-xs text-white/80">{app.id}</p>
+                      <p className="mt-2 font-mono text-xs text-black/60">{app.id}</p>
                     </div>
                   </div>
 
                   <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Name
                       </p>
-                      <p className="mt-1 text-sm text-white/90">{app.full_name}</p>
+                      <p className="mt-1 text-sm text-black/80">{app.full_name}</p>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Company
                       </p>
-                      <p className="mt-1 text-sm text-white/90">{app.company_name}</p>
+                      <p className="mt-1 text-sm text-black/80">{app.company_name}</p>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Email
                       </p>
-                      <p className="mt-1 text-sm text-white/90">{app.email}</p>
+                      <p className="mt-1 text-sm text-black/80">{app.email}</p>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Phone
                       </p>
-                      <p className="mt-1 text-sm text-white/90">{app.phone}</p>
+                      <p className="mt-1 text-sm text-black/80">{app.phone}</p>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Location
                       </p>
-                      <p className="mt-1 inline-flex items-center gap-2 text-sm text-white/90">
-                        <MapPin className="h-4 w-4 text-white/70" />
+                      <p className="mt-1 inline-flex items-center gap-2 text-sm text-black/80">
+                        <MapPin className="h-4 w-4 text-black/50" />
                         {app.postcode}
                       </p>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Experience
                       </p>
-                      <p className="mt-1 text-sm text-white/90">{app.years_experience} years</p>
+                      <p className="mt-1 text-sm text-black/80">{app.years_experience} years</p>
                     </div>
                   </div>
 
-                  <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                  <div className="mt-6 rounded-2xl border border-black/10 bg-black/5 p-4">
+                    <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                       Coverage area
                     </p>
-                    <p className="mt-2 whitespace-pre-wrap text-sm text-white/90">
+                    <p className="mt-2 whitespace-pre-wrap text-sm text-black/80">
                       {app.areas_covered}
                     </p>
                   </div>
                 </section>
 
                 <section
-                  className="rounded-3xl border border-white/15 bg-white/8 p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md lg:col-span-5 sm:p-8"
+                  className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm lg:col-span-5 sm:p-8"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                         Documents
                       </p>
-                      <p className="mt-1 text-sm text-white/80">
+                      <p className="mt-1 text-sm text-black/70">
                         Download your uploaded files.
                       </p>
                     </div>
                   </div>
 
                   <div className="mt-5 space-y-2">
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3">
-                      <span className="text-sm text-white">Certifications</span>
+                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-black/10 bg-black/5 px-4 py-3">
+                      <span className="text-sm text-black/80">Certifications</span>
                       <div className="flex items-center gap-2">
                         {verifyPill(app.verified_certification)}
                       </div>
@@ -512,21 +512,21 @@ export default function DashboardPage() {
                         type="button"
                         onClick={() => downloadDoc(path)}
                         disabled={downloading === path}
-                        className="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white hover:bg-white/10 disabled:opacity-60"
+                        className="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-black transition-colors hover:bg-black/5 disabled:opacity-60"
                       >
                         <span className="truncate">Certification {idx + 1}</span>
                         <Download className="h-4 w-4 shrink-0" />
                       </button>
                     ))}
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3">
-                      <span className="text-sm text-white">Insurance</span>
+                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-black/10 bg-black/5 px-4 py-3">
+                      <span className="text-sm text-black/80">Insurance</span>
                       <div className="flex items-center gap-2">
                         {verifyPill(app.verified_insurance)}
                         <button
                           type="button"
                           onClick={() => downloadDoc(app.insurance_path)}
                           disabled={downloading === app.insurance_path}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white hover:bg-white/10 disabled:opacity-60"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-black/10 bg-white text-black transition-colors hover:bg-black/5 disabled:opacity-60"
                           aria-label="Download insurance"
                         >
                           <Download className="h-4 w-4" />
@@ -534,15 +534,15 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     {app.dbs_path ? (
-                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3">
-                        <span className="text-sm text-white">DBS</span>
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-black/10 bg-black/5 px-4 py-3">
+                        <span className="text-sm text-black/80">DBS</span>
                         <div className="flex items-center gap-2">
                           {verifyPill(app.identity_checked)}
                           <button
                             type="button"
                             onClick={() => downloadDoc(app.dbs_path!)}
                             disabled={downloading === app.dbs_path}
-                            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white hover:bg-white/10 disabled:opacity-60"
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-black/10 bg-white text-black transition-colors hover:bg-black/5 disabled:opacity-60"
                             aria-label="Download DBS"
                           >
                             <Download className="h-4 w-4" />
@@ -552,14 +552,14 @@ export default function DashboardPage() {
                     ) : null}
                   </div>
 
-                  <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-white/70">
+                  <div className="mt-5 rounded-2xl border border-black/10 bg-black/5 p-4 text-xs text-black/60">
                     Downloads are secure links that expire quickly.
                   </div>
                 </section>
               </div>
             ) : (
-              <div className="rounded-3xl border border-white/15 bg-white/8 p-7 backdrop-blur-md">
-                <p className="text-sm text-white/80">
+              <div className="rounded-3xl border border-black/10 bg-white p-7 shadow-sm">
+                <p className="text-sm text-black/70">
                   You’re signed in, but not registered as an affiliate yet.
                 </p>
                 <button
