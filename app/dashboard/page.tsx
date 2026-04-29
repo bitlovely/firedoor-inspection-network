@@ -191,7 +191,10 @@ export default function DashboardPage() {
   async function downloadDoc(path: string) {
     setDownloading(path);
     setError(null);
-    const w = window.open("", "_blank", "noopener,noreferrer");
+    // Open a tab synchronously to avoid popup blocking.
+    // Don't pass `noopener` here; some browsers return a window handle that can't be navigated.
+    const w = window.open("about:blank", "_blank");
+    if (w) w.opener = null;
     try {
       const { data } = await supabase.auth.getSession();
       const token = data.session?.access_token;
@@ -215,7 +218,9 @@ export default function DashboardPage() {
       if (w) {
         w.location.href = json.url;
       } else {
-        window.location.assign(json.url);
+        // Popup blocked: try opening directly; if still blocked, fall back to current tab.
+        const w2 = window.open(json.url, "_blank", "noopener,noreferrer");
+        if (!w2) window.location.assign(json.url);
       }
     } catch (e) {
       if (w) w.close();
