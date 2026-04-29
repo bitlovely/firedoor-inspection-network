@@ -363,41 +363,90 @@ export default function DashboardPage() {
           {activeView === "overview" ? (
             <>
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
-              <p className="text-xs font-semibold tracking-wider text-black/70 uppercase">
-                Status
-              </p>
-              <div className="mt-2">{app ? <span className={statusBadge(app.status)}>{app.status}</span> : <span className={statusBadge("pending")}>—</span>}</div>
-            </div>
-            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
-              <p className="text-xs font-semibold tracking-wider text-black/70 uppercase">
-                Documents
-              </p>
-              <p className="mt-2 font-display text-3xl font-extrabold">{app ? docCount : "—"}</p>
-              <p className="mt-1 text-xs text-black/70">Certs, insurance, DBS</p>
-            </div>
-            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
-              <p className="text-xs font-semibold tracking-wider text-black/70 uppercase">
-                Coverage
-              </p>
-              <p className="mt-2 text-sm text-black/80 line-clamp-2">{app ? app.areas_covered : "—"}</p>
-            </div>
-            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
-              <p className="text-xs font-semibold tracking-wider text-black/70 uppercase">
-                Public profile
-              </p>
-              {app && (app.status === "approved" || app.status === "verified") ? (
-                <Link
-                  href={`/directory?profile=${encodeURIComponent(app.id)}`}
-                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-2xl border border-black/10 bg-white px-4 text-sm font-semibold text-black transition-colors hover:bg-black/5"
-                >
-                  View profile
-                </Link>
-              ) : (
-                <p className="mt-2 text-sm text-black/70">Available after approval.</p>
-              )}
-            </div>
-          </div>
+                <div className="group rounded-3xl border border-black/10 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-black/5">
+                        <BadgeCheck className="h-5 w-5 text-accent" />
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                          Status
+                        </p>
+                        <div className="mt-1">
+                          {app ? (
+                            <span className={statusBadge(app.status)}>{app.status}</span>
+                          ) : (
+                            <span className={statusBadge("pending")}>—</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group rounded-3xl border border-black/10 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-black/5">
+                      <Download className="h-5 w-5 text-accent" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                        Documents
+                      </p>
+                      <div className="mt-1 flex items-end gap-2">
+                        <p className="font-display text-3xl font-extrabold leading-none">
+                          {app ? docCount : "—"}
+                        </p>
+                        <p className="text-xs font-semibold text-black/60">
+                          Certs, insurance, DBS
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group rounded-3xl border border-black/10 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-black/5">
+                      <MapPin className="h-5 w-5 text-accent" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                        Coverage
+                      </p>
+                      <p className="mt-1 text-sm leading-relaxed text-black/80 line-clamp-2">
+                        {app ? app.areas_covered : "—"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group rounded-3xl border border-black/10 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-black/5">
+                      <UserRound className="h-5 w-5 text-accent" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                        Public profile
+                      </p>
+                      {app && (app.status === "approved" || app.status === "verified") ? (
+                        <Link
+                          href={`/directory?profile=${encodeURIComponent(app.id)}`}
+                          className="mt-2 inline-flex h-11 w-full items-center justify-center rounded-2xl border border-black/10 bg-white px-4 text-sm font-semibold text-black transition-colors hover:bg-black/5"
+                        >
+                          View profile
+                        </Link>
+                      ) : (
+                        <p className="mt-2 text-sm text-black/80">
+                          Available after approval.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
           <div className="mt-6 space-y-6">
             {pending ? (
