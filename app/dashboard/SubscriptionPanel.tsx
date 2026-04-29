@@ -28,10 +28,10 @@ export function SubscriptionPanel({
     ? new Date(app.subscription_current_period_end)
     : null;
 
-  const planCardBase = "rounded-2xl bg-white/5 p-4 transition-colors";
+  const planCardBase = "rounded-2xl bg-black/5 p-4 transition-colors";
   const planCardActive =
     "border-2 border-accent/70 shadow-[0_0_0_1px_rgba(239,68,68,0.25),0_18px_50px_-28px_rgba(239,68,68,0.45)]";
-  const planCardIdle = "border border-white/10";
+  const planCardIdle = "border border-black/10";
 
   async function startCheckout() {
     setError(null);
@@ -81,49 +81,49 @@ export function SubscriptionPanel({
   }
 
   return (
-    <section className="rounded-3xl border border-white/15 bg-white/8 p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-8">
+    <section className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-display text-xl font-extrabold tracking-tight">Subscription</h2>
-          <p className="mt-1 text-sm text-white/80">
+          <p className="mt-1 text-sm text-black/70">
             Upgrade to Advanced for full visibility and contact access.
           </p>
         </div>
-        <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/15 bg-white/5">
-          <CreditCard className="h-5 w-5 text-white/80" />
+        <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-black/5">
+          <CreditCard className="h-5 w-5 text-black/70" />
         </div>
       </div>
 
       {!app ? (
-        <div className="mt-6 rounded-2xl border border-white/15 bg-white/5 p-5 text-sm text-white/80">
+        <div className="mt-6 rounded-2xl border border-black/10 bg-black/5 p-5 text-sm text-black/70">
           Complete registration first to manage your plan.
         </div>
       ) : (
         <>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className={`${planCardBase} ${!isAdvanced ? planCardActive : planCardIdle}`}>
-              <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">Basic</p>
+              <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">Basic</p>
               <p className="mt-2 font-display text-2xl font-extrabold">Standard</p>
-              <p className="mt-2 text-xs text-white/60">
+              <p className="mt-2 text-xs text-black/70">
                 Limited directory visibility. Contact details are not shown publicly.
               </p>
             </div>
             <div className={`${planCardBase} ${isAdvanced ? planCardActive : planCardIdle}`}>
-              <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+              <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
                 Advanced
               </p>
               <p className="mt-2 font-display text-2xl font-extrabold">£9 / month</p>
-              <p className="mt-2 inline-flex items-center gap-2 text-sm text-white/90">
-                <ShieldCheck className="h-4 w-4 text-white/70" />
+              <p className="mt-2 inline-flex items-center gap-2 text-sm text-black/80">
+                <ShieldCheck className="h-4 w-4 text-black/60" />
                 {isAdvanced ? "Active" : isAdvancedInactive ? "Inactive" : "Not subscribed"}
               </p>
               {isAdvanced && renewal ? (
-                <p className="mt-2 text-xs text-white/60">
+                <p className="mt-2 text-xs text-black/70">
                   Renews on {renewal.toLocaleDateString()}
                 </p>
               ) : null}
               {isAdvancedInactive ? (
-                <p className="mt-2 text-xs text-white/60">
+                <p className="mt-2 text-xs text-black/70">
                   Your Advanced subscription is not active right now.
                 </p>
               ) : null}
@@ -131,13 +131,13 @@ export function SubscriptionPanel({
           </div>
 
           {!approved ? (
-            <div className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5 text-sm text-amber-200">
+            <div className="mt-6 rounded-2xl border border-amber-600/25 bg-amber-600/10 p-5 text-sm text-amber-900">
               You can upgrade after your application is approved.
             </div>
           ) : null}
 
           {error ? (
-            <div className="mt-6 rounded-2xl border border-rose-400/30 bg-rose-400/10 p-5 text-sm text-rose-200">
+            <div className="mt-6 rounded-2xl border border-rose-600/25 bg-rose-600/10 p-5 text-sm text-rose-800">
               {error}
             </div>
           ) : null}
@@ -148,7 +148,7 @@ export function SubscriptionPanel({
                 type="button"
                 onClick={openPortal}
                 disabled={pending}
-                className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-5 text-sm font-semibold text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-12 items-center justify-center rounded-2xl border border-black/10 bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {pending ? (
                   <span className="inline-flex items-center gap-2">
