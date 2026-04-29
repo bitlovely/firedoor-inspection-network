@@ -190,10 +190,13 @@ export default function DashboardPage() {
 
   async function downloadDoc(path: string) {
     setDownloading(path);
+    setError(null);
+    const w = window.open("", "_blank", "noopener,noreferrer");
     try {
       const { data } = await supabase.auth.getSession();
       const token = data.session?.access_token;
       if (!token) {
+        if (w) w.close();
         router.push("/signin");
         return;
       }
@@ -209,7 +212,14 @@ export default function DashboardPage() {
       if (!res.ok || !json.url) {
         throw new Error(json.error ?? "Unable to download document");
       }
-      window.open(json.url, "_blank", "noopener,noreferrer");
+      if (w) {
+        w.location.href = json.url;
+      } else {
+        window.location.assign(json.url);
+      }
+    } catch (e) {
+      if (w) w.close();
+      setError(e instanceof Error ? e.message : "Unable to download document");
     } finally {
       setDownloading(null);
     }
