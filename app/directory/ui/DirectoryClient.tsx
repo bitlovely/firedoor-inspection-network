@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Filter, MapPin, Search, ShieldCheck, X } from "lucide-react";
+import {
+  BadgeCheck,
+  FileBadge,
+  Filter,
+  IdCard,
+  MapPin,
+  Search,
+  ShieldCheck,
+  Star,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -23,6 +33,9 @@ type Affiliate = {
   verified_insurance?: boolean;
   verified_certification?: boolean;
   identity_checked?: boolean;
+  review_count?: number;
+  review_rating?: number | null;
+  sample_report_paths?: unknown;
 };
 
 function initialsFromName(fullName: string) {
@@ -42,6 +55,11 @@ function badge(status: string) {
       Verified Affiliate
     </span>
   );
+}
+
+function sampleReportCount(v: unknown) {
+  if (!Array.isArray(v)) return 0;
+  return v.filter((x) => typeof x === "string" && x.length > 0).length;
 }
 
 export function DirectoryClient() {
@@ -132,6 +150,16 @@ export function DirectoryClient() {
       cancelled = true;
     };
   }, [items, selectedId]);
+
+  useEffect(() => {
+    if (!selectedId) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeDrawer();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
 
   function openDrawer(id: string) {
     const sp = new URLSearchParams(searchParams.toString());
@@ -356,23 +384,32 @@ export function DirectoryClient() {
       </div>
 
       {selectedId ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50"
-          onKeyDown={(e) => {
-            if (e.key === "Escape") closeDrawer();
-          }}
-        >
-          <button
-            type="button"
-            aria-label="Close profile"
-            className="absolute inset-0 bg-black/40"
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 z-40 bg-black/40"
             onClick={closeDrawer}
+            aria-hidden="true"
           />
-          <aside className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl ring-1 ring-black/10">
+          <aside
+            className="absolute right-0 top-0 z-50 h-full w-full max-w-md bg-white shadow-2xl ring-1 ring-black/10"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex h-16 items-center justify-between border-b border-black/10 px-5">
-              <div className="font-display text-base font-bold">Profile</div>
+              <div className="flex items-center gap-2">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
+                  <Image
+                    src="/logo-mark.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="h-5 w-5"
+                    priority
+                  />
+                </span>
+                <div className="font-display text-sm font-bold leading-tight">
+                  FireDoor <span className="text-accent">Inspection</span> Network
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={closeDrawer}
@@ -461,21 +498,98 @@ export function DirectoryClient() {
 
                   {drawerAffiliate.areas_covered ? (
                     <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
-                      <h3 className="font-display text-sm font-bold">Areas covered</h3>
+                      <h3 className="font-display text-sm font-bold">Coverage</h3>
+                      {typeof drawerAffiliate.years_experience === "number" ? (
+                        <p className="mt-2 text-sm text-black/70">
+                          Experience:{" "}
+                          <span className="font-semibold text-black">
+                            {drawerAffiliate.years_experience}
+                          </span>{" "}
+                          years
+                        </p>
+                      ) : null}
                       <p className="mt-2 whitespace-pre-wrap text-sm text-black/70">
-                        {drawerAffiliate.areas_covered}
+                        Areas covered:{" "}
+                        <span className="font-semibold text-black">
+                          {drawerAffiliate.areas_covered}
+                        </span>
                       </p>
                     </section>
                   ) : null}
 
-                  <div className="text-center">
-                    <a
-                      href={`/directory/${encodeURIComponent(drawerAffiliate.id)}`}
-                      className="text-sm font-semibold text-black underline-offset-4 hover:underline"
-                    >
-                      Open full profile page
-                    </a>
-                  </div>
+                  <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                    <h3 className="font-display text-sm font-bold">Trust</h3>
+                    <div className="mt-3 space-y-2">
+                      <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                            <FileBadge className="h-4 w-4 text-black/60" />
+                          </span>
+                          <span className="text-black/80">Insurance verified</span>
+                        </div>
+                        {drawerAffiliate.verified_insurance ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                            <BadgeCheck className="h-3.5 w-3.5" />
+                            Verified
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                            <BadgeCheck className="h-4 w-4 text-black/60" />
+                          </span>
+                          <span className="text-black/80">Certification verified</span>
+                        </div>
+                        {drawerAffiliate.verified_certification ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                            <BadgeCheck className="h-3.5 w-3.5" />
+                            Verified
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                            <IdCard className="h-4 w-4 text-black/60" />
+                          </span>
+                          <span className="text-black/80">Identity checked</span>
+                        </div>
+                        {drawerAffiliate.identity_checked ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                            <BadgeCheck className="h-3.5 w-3.5" />
+                            Verified
+                          </span>
+                        ) : null}
+                      </div>
+                      {typeof drawerAffiliate.review_count === "number" &&
+                      drawerAffiliate.review_count > 0 ? (
+                        <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                              <Star className="h-4 w-4 text-black/60" />
+                            </span>
+                            <span className="text-black/80">
+                              Reviews{" "}
+                              {drawerAffiliate.review_rating
+                                ? `(${Number(drawerAffiliate.review_rating).toFixed(1)} · ${drawerAffiliate.review_count})`
+                                : `(${drawerAffiliate.review_count})`}
+                            </span>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </section>
+
+                  <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                    <h3 className="font-display text-sm font-bold">Documents</h3>
+                    <p className="mt-2 text-sm text-black/70">
+                      Sample reports:{" "}
+                      <span className="font-semibold text-black">
+                        {sampleReportCount(drawerAffiliate.sample_report_paths)}
+                      </span>
+                    </p>
+                  </section>
                 </div>
               ) : null}
             </div>

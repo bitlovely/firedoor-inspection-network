@@ -26,6 +26,6 @@ export default async function AffiliateProfilePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  redirect(`/directory/${encodeURIComponent(id)}`);
+  redirect(`/directory?profile=${encodeURIComponent(id)}`);
 }
 

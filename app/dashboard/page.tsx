@@ -370,7 +370,7 @@ export default function DashboardPage() {
               </p>
               {app && (app.status === "approved" || app.status === "verified") ? (
                 <Link
-                  href={`/directory/${encodeURIComponent(app.id)}`}
+                  href={`/directory?profile=${encodeURIComponent(app.id)}`}
                   className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white hover:bg-white/10"
                 >
                   View profile
@@ -407,7 +407,7 @@ export default function DashboardPage() {
                         <span className={statusBadge(app.status)}>{app.status}</span>
                         {(app.status === "approved" || app.status === "verified") && (
                           <Link
-                            href={`/directory/${encodeURIComponent(app.id)}`}
+                            href={`/directory?profile=${encodeURIComponent(app.id)}`}
                             className="text-sm text-white underline-offset-4 hover:underline"
                           >
                             View public profile
