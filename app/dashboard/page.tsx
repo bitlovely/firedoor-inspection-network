@@ -428,9 +428,6 @@ export default function DashboardPage() {
                       <UserRound className="h-5 w-5 text-accent" />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
-                        Profile
-                      </p>
                       {app && (app.status === "approved" || app.status === "verified") ? (
                         <Link
                           href={`/directory?profile=${encodeURIComponent(app.id)}`}
@@ -439,9 +436,14 @@ export default function DashboardPage() {
                           View profile
                         </Link>
                       ) : (
-                        <p className="mt-2 text-sm text-black/80">
-                          Available after approval.
-                        </p>
+                        <>
+                          <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                            Profile
+                          </p>
+                          <p className="mt-2 text-sm text-black/80">
+                            Available after approval.
+                          </p>
+                        </>
                       )}
                     </div>
                   </div>

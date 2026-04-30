@@ -81,10 +81,10 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
   }
 
   const field =
-    "mt-1.5 min-h-12 w-full rounded-xl border border-black/10 bg-white px-3 py-2.5 text-sm text-black placeholder:text-black/40 outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20 sm:px-4";
+    "mt-1.5 min-h-12 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/60 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 sm:px-4";
 
   const selectField =
-    "mt-1.5 min-h-12 w-full rounded-xl border border-black/10 bg-white px-3 py-2.5 text-sm text-black outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20 sm:px-4";
+    "mt-1.5 min-h-12 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 sm:px-4 [color-scheme:dark] [&>option]:bg-black [&>option]:text-white";
 
   if (!open) return null;
 
@@ -92,20 +92,20 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
     <div className="fixed inset-0 z-[60] overflow-y-auto">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-[2px]" onClick={onClose} />
       <div className="relative mx-auto flex min-h-dvh max-w-3xl items-start px-4 py-6 sm:py-10">
-        <div className="w-full overflow-hidden rounded-3xl border border-black/10 bg-white text-black shadow-[0_30px_90px_-60px_rgba(0,0,0,0.35)]">
-          <div className="flex items-start justify-between gap-4 border-b border-black/10 p-6 sm:p-7">
+        <div className="w-full overflow-hidden rounded-3xl border border-white/15 bg-black text-white shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)]">
+          <div className="flex items-start justify-between gap-4 border-b border-white/10 p-6 sm:p-7">
             <div>
               <h2 className="font-display text-xl font-extrabold tracking-tight">
                 Complete registration
               </h2>
-              <p className="mt-1 text-sm text-black/70">
+              <p className="mt-1 text-sm text-white/70">
                 Add your company details and upload your documents to be verified.
               </p>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl p-2 text-black/70 transition-colors hover:bg-black/5 hover:text-black"
+              className="rounded-xl p-2 text-white/80 hover:bg-white/10 hover:text-white"
               aria-label="Close"
             >
               <X className="h-5 w-5" />
@@ -127,13 +127,13 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="company_name" className="text-sm font-medium text-black/80">
+                <label htmlFor="company_name" className="text-sm font-medium text-white">
                   Company name <span className="text-accent">*</span>
                 </label>
                 <input id="company_name" name="company_name" required className={field} />
               </div>
               <div>
-                <label htmlFor="phone" className="text-sm font-medium text-black/80">
+                <label htmlFor="phone" className="text-sm font-medium text-white">
                   Phone <span className="text-accent">*</span>
                 </label>
                 <input
@@ -148,7 +148,7 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
             </div>
 
             <div>
-              <label htmlFor="bio" className="text-sm font-medium text-black/80">
+              <label htmlFor="bio" className="text-sm font-medium text-white">
                 Bio <span className="text-accent">*</span>
               </label>
               <textarea
@@ -162,7 +162,7 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
             </div>
 
             <div>
-              <label htmlFor="services" className="text-sm font-medium text-black/80">
+              <label htmlFor="services" className="text-sm font-medium text-white">
                 Services <span className="text-accent">*</span>
               </label>
               <textarea
@@ -177,7 +177,7 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="postcode" className="text-sm font-medium text-black/80">
+                <label htmlFor="postcode" className="text-sm font-medium text-white">
                   Location (postcode) <span className="text-accent">*</span>
                 </label>
                 <input
@@ -190,7 +190,7 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
                 />
               </div>
               <div>
-                <label htmlFor="years_experience" className="text-sm font-medium text-black/80">
+                <label htmlFor="years_experience" className="text-sm font-medium text-white">
                   Years of experience <span className="text-accent">*</span>
                 </label>
                 <select
@@ -213,7 +213,7 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
             </div>
 
             <div>
-              <label htmlFor="areas_covered" className="text-sm font-medium text-black/80">
+              <label htmlFor="areas_covered" className="text-sm font-medium text-white">
                 Areas you cover <span className="text-accent">*</span>
               </label>
               <textarea
@@ -226,15 +226,15 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
               />
             </div>
 
-            <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
-              <p className="text-sm font-semibold text-black">Documents</p>
-              <p className="mt-1 text-xs text-black/70">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-semibold text-white">Documents</p>
+              <p className="mt-1 text-xs text-white/70">
                 PDF, JPEG, PNG, or WebP. Max 5MB per file.
               </p>
 
               <div className="mt-4 space-y-4">
                 <div>
-                  <label htmlFor="profile_photo" className="text-sm font-medium text-black/80">
+                  <label htmlFor="profile_photo" className="text-sm font-medium text-white">
                     Photo / logo (optional)
                   </label>
                   <input
@@ -242,14 +242,14 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
                     name="profile_photo"
                     type="file"
                     accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-black/5 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-black hover:file:bg-black/10`}
+                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white`}
                   />
-                  <p className="mt-2 text-xs text-black/70">
+                  <p className="mt-2 text-xs text-white/60">
                     Upload a logo or profile photo to show on your public page.
                   </p>
                 </div>
                 <div>
-                  <label htmlFor="certifications" className="text-sm font-medium text-black/80">
+                  <label htmlFor="certifications" className="text-sm font-medium text-white">
                     Certifications <span className="text-accent">*</span>
                   </label>
                   <input
@@ -259,11 +259,11 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
                     required
                     multiple
                     accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
-                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-black/5 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-black hover:file:bg-black/10`}
+                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white`}
                   />
                 </div>
                 <div>
-                  <label htmlFor="insurance" className="text-sm font-medium text-black/80">
+                  <label htmlFor="insurance" className="text-sm font-medium text-white">
                     Insurance proof <span className="text-accent">*</span>
                   </label>
                   <input
@@ -272,11 +272,11 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
                     type="file"
                     required
                     accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
-                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-black/5 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-black hover:file:bg-black/10`}
+                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white`}
                   />
                 </div>
                 <div>
-                  <label htmlFor="dbs" className="text-sm font-medium text-black/80">
+                  <label htmlFor="dbs" className="text-sm font-medium text-white">
                     DBS check (optional)
                   </label>
                   <input
@@ -284,11 +284,11 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
                     name="dbs"
                     type="file"
                     accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
-                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-black/5 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-black hover:file:bg-black/10`}
+                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white`}
                   />
                 </div>
                 <div>
-                  <label htmlFor="sample_reports" className="text-sm font-medium text-black/80">
+                  <label htmlFor="sample_reports" className="text-sm font-medium text-white">
                     Sample reports (optional)
                   </label>
                   <input
@@ -297,9 +297,9 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
                     type="file"
                     multiple
                     accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
-                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-black/5 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-black hover:file:bg-black/10`}
+                    className={`${field} file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white`}
                   />
-                  <p className="mt-2 text-xs text-black/70">
+                  <p className="mt-2 text-xs text-white/60">
                     Upload 1–3 examples (redacted) to help clients trust your work.
                   </p>
                 </div>
@@ -324,7 +324,7 @@ export function CompleteRegistrationDialog({ open, onClose, onCompleted }: Props
                   </>
                 )}
               </button>
-              <p className="text-xs text-black/70">
+              <p className="text-xs text-white/60">
                 We’ll review your documents before listing you.
               </p>
             </div>
