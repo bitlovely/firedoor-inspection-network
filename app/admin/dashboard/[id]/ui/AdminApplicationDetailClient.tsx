@@ -297,7 +297,7 @@ export function AdminApplicationDetailClient({
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
                         <FileBadge className="h-4 w-4 text-black/60" />
                       </span>
-                      <span className="text-black">Insurance verified</span>
+                      <span className="text-black">Insurance check</span>
                     </div>
                     {app.verified_insurance ? (
                       <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
@@ -311,7 +311,7 @@ export function AdminApplicationDetailClient({
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
                         <ShieldCheck className="h-4 w-4 text-black/60" />
                       </span>
-                      <span className="text-black">Certification verified</span>
+                      <span className="text-black">Certification check</span>
                     </div>
                     {app.verified_certification ? (
                       <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
@@ -320,20 +320,22 @@ export function AdminApplicationDetailClient({
                       </span>
                     ) : null}
                   </div>
-                  <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
-                        <IdCard className="h-4 w-4 text-black/60" />
-                      </span>
-                      <span className="text-black">Identity checked</span>
+                  {app.dbs_path ? (
+                    <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                          <IdCard className="h-4 w-4 text-black/60" />
+                        </span>
+                        <span className="text-black">DBS Check</span>
+                      </div>
+                      {app.identity_checked ? (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                          <BadgeCheck className="h-3.5 w-3.5" />
+                          Verified
+                        </span>
+                      ) : null}
                     </div>
-                    {app.identity_checked ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
-                        <BadgeCheck className="h-3.5 w-3.5" />
-                        Verified
-                      </span>
-                    ) : null}
-                  </div>
+                  ) : null}
                 </div>
               </section>
             </div>
