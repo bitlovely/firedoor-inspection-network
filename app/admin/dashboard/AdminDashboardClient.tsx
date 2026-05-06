@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronRight, LogOut, MapPin, Search, Star, Timer, X, Zap } from "lucide-react";
+import { ChevronRight, LogOut, MapPin, Menu, Search, SlidersHorizontal, Star, Timer, X, Zap } from "lucide-react";
 import { authPrimaryButtonClassName } from "@/components/auth/authPrimaryButtonClassName";
 import { AdminApplicationDetailClient } from "./[id]/ui/AdminApplicationDetailClient";
 
@@ -84,6 +84,9 @@ export function AdminDashboardClient() {
   const [apps, setApps] = useState<Application[]>([]);
   const [saving, setSaving] = useState<Record<string, boolean>>({});
   const [q, setQ] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileAdvancedOpen, setMobileAdvancedOpen] = useState(false);
+  const [mobileStatsOpen, setMobileStatsOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<
     "all" | "pending" | "approved" | "verified" | "rejected"
   >("all");
@@ -135,6 +138,15 @@ export function AdminDashboardClient() {
   useEffect(() => {
     void load();
   }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileMenuOpen]);
 
   async function signOut() {
     await fetch("/api/admin/session", { method: "DELETE" });
@@ -237,7 +249,8 @@ export function AdminDashboardClient() {
             </p>
           </div>
 
-          <div className="grid w-full gap-3 sm:w-auto sm:grid-cols-2">
+          {/* Desktop actions */}
+          <div className="hidden w-full gap-3 sm:grid sm:w-auto sm:grid-cols-2">
             <button
               type="button"
               className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-4 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
@@ -255,51 +268,185 @@ export function AdminDashboardClient() {
               Back to homepage
             </Link>
           </div>
+
+          {/* Mobile actions */}
+          <div className="flex w-full items-center justify-end gap-2 sm:hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileAdvancedOpen((v) => !v);
+                setMobileMenuOpen(false);
+              }}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-black/10 bg-white px-4 text-sm font-semibold text-black transition-colors hover:bg-black/5"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              Advanced search
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white text-black transition-colors hover:bg-black/5"
+              aria-label="Menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
-        {!pending && !error ? (
-          <div className="mt-8 grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <div className="rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-5">
-              <p className="text-xs font-semibold tracking-wider text-black uppercase">
-                Total
-              </p>
-              <p className="mt-1 font-display text-2xl font-extrabold sm:mt-2 sm:text-3xl">
-                {apps.length}
-              </p>
-            </div>
-            <div className="rounded-3xl border border-amber-600/25 bg-amber-600/10 p-4 sm:p-5">
-              <p className="text-xs font-semibold tracking-wider text-amber-900 uppercase">
-                Pending
-              </p>
-              <p className="mt-1 font-display text-2xl font-extrabold text-amber-950 sm:mt-2 sm:text-3xl">
-                {countBy(apps, "pending")}
-              </p>
-            </div>
-            <div className="rounded-3xl border border-emerald-600/25 bg-emerald-600/10 p-4 sm:p-5">
-              <p className="text-xs font-semibold tracking-wider text-emerald-900 uppercase">
-                Approved
-              </p>
-              <p className="mt-1 font-display text-2xl font-extrabold text-emerald-950 sm:mt-2 sm:text-3xl">
-                {countBy(apps, "approved")}
-              </p>
-            </div>
-            <div className="rounded-3xl border border-accent/25 bg-accent/10 p-4 sm:p-5">
-              <p className="text-xs font-semibold tracking-wider text-accent uppercase">
-                Verified
-              </p>
-              <p className="mt-1 font-display text-2xl font-extrabold text-black sm:mt-2 sm:text-3xl">
-                {countBy(apps, "verified")}
-              </p>
-            </div>
-            <div className="rounded-3xl border border-rose-600/25 bg-rose-600/10 p-4 sm:p-5">
-              <p className="text-xs font-semibold tracking-wider text-rose-900 uppercase">
-                Rejected
-              </p>
-              <p className="mt-1 font-display text-2xl font-extrabold text-rose-950 sm:mt-2 sm:text-3xl">
-                {countBy(apps, "rejected")}
-              </p>
+        {mobileMenuOpen ? (
+          <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 sm:hidden">
+            <div className="absolute inset-0 bg-white" />
+            <div className="relative flex h-full w-full flex-col">
+              <div className="flex h-16 items-center justify-between border-b border-black/10 px-4">
+                <p className="font-display text-lg font-extrabold text-black">Menu</p>
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white text-black transition-colors hover:bg-black/5"
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="grid gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      void signOut();
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-4 py-4 text-base font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    Sign out
+                  </button>
+                  <Link
+                    href="/"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex w-full items-center justify-between rounded-2xl border border-black/10 bg-white px-4 py-4 text-base font-semibold text-black transition-colors hover:bg-black/5"
+                  >
+                    Back to homepage
+                    <ChevronRight className="h-5 w-5" />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
+        ) : null}
+
+        {!pending && !error ? (
+          <>
+            {/* Mobile: stats are optional (toggle) */}
+            <div className="mt-6 sm:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileStatsOpen((v) => !v)}
+                className="inline-flex h-11 w-full items-center justify-between rounded-2xl border border-black/10 bg-white px-4 text-sm font-semibold text-black transition-colors hover:bg-black/5"
+              >
+                {mobileStatsOpen ? "Hide stats" : "Show stats"}
+                <ChevronRight
+                  className={`h-4 w-4 transition-transform ${mobileStatsOpen ? "rotate-90" : ""}`}
+                />
+              </button>
+            </div>
+
+            <div
+              className={`mt-3 flex w-full gap-3 overflow-x-auto pb-1 pr-1 sm:hidden ${
+                mobileStatsOpen ? "flex" : "hidden"
+              }`}
+            >
+              <div className="w-[11.5rem] shrink-0 rounded-2xl border border-black/10 bg-white px-4 py-3 shadow-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs font-semibold tracking-wider text-black/70 uppercase">
+                    Total
+                  </p>
+                  <p className="font-display text-2xl font-extrabold text-black">{apps.length}</p>
+                </div>
+              </div>
+              <div className="w-[11.5rem] shrink-0 rounded-2xl border border-amber-600/25 bg-amber-600/10 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs font-semibold tracking-wider text-amber-900 uppercase">
+                    Pending
+                  </p>
+                  <p className="font-display text-2xl font-extrabold text-amber-950">
+                    {countBy(apps, "pending")}
+                  </p>
+                </div>
+              </div>
+              <div className="w-[11.5rem] shrink-0 rounded-2xl border border-emerald-600/25 bg-emerald-600/10 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs font-semibold tracking-wider text-emerald-900 uppercase">
+                    Approved
+                  </p>
+                  <p className="font-display text-2xl font-extrabold text-emerald-950">
+                    {countBy(apps, "approved")}
+                  </p>
+                </div>
+              </div>
+              <div className="w-[11.5rem] shrink-0 rounded-2xl border border-accent/25 bg-accent/10 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs font-semibold tracking-wider text-accent uppercase">
+                    Verified
+                  </p>
+                  <p className="font-display text-2xl font-extrabold text-black">
+                    {countBy(apps, "verified")}
+                  </p>
+                </div>
+              </div>
+              <div className="w-[11.5rem] shrink-0 rounded-2xl border border-rose-600/25 bg-rose-600/10 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs font-semibold tracking-wider text-rose-900 uppercase">
+                    Rejected
+                  </p>
+                  <p className="font-display text-2xl font-extrabold text-rose-950">
+                    {countBy(apps, "rejected")}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop/tablet: grid */}
+            <div className="mt-8 hidden gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-5">
+              <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+                <p className="text-xs font-semibold tracking-wider text-black uppercase">Total</p>
+                <p className="mt-2 font-display text-3xl font-extrabold">{apps.length}</p>
+              </div>
+              <div className="rounded-3xl border border-amber-600/25 bg-amber-600/10 p-5">
+                <p className="text-xs font-semibold tracking-wider text-amber-900 uppercase">
+                  Pending
+                </p>
+                <p className="mt-2 font-display text-3xl font-extrabold text-amber-950">
+                  {countBy(apps, "pending")}
+                </p>
+              </div>
+              <div className="rounded-3xl border border-emerald-600/25 bg-emerald-600/10 p-5">
+                <p className="text-xs font-semibold tracking-wider text-emerald-900 uppercase">
+                  Approved
+                </p>
+                <p className="mt-2 font-display text-3xl font-extrabold text-emerald-950">
+                  {countBy(apps, "approved")}
+                </p>
+              </div>
+              <div className="rounded-3xl border border-accent/25 bg-accent/10 p-5">
+                <p className="text-xs font-semibold tracking-wider text-accent uppercase">
+                  Verified
+                </p>
+                <p className="mt-2 font-display text-3xl font-extrabold text-black">
+                  {countBy(apps, "verified")}
+                </p>
+              </div>
+              <div className="rounded-3xl border border-rose-600/25 bg-rose-600/10 p-5">
+                <p className="text-xs font-semibold tracking-wider text-rose-900 uppercase">
+                  Rejected
+                </p>
+                <p className="mt-2 font-display text-3xl font-extrabold text-rose-950">
+                  {countBy(apps, "rejected")}
+                </p>
+              </div>
+            </div>
+          </>
         ) : null}
 
         {pending ? (
@@ -315,7 +462,7 @@ export function AdminDashboardClient() {
           </div>
         ) : (
           <div className="mt-10 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
-            <div className="px-3 py-2">
+            <div className={`px-3 py-2 ${mobileAdvancedOpen ? "block" : "hidden sm:block"}`}>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs font-semibold tracking-wider text-black uppercase">
                   Applications
@@ -377,10 +524,8 @@ export function AdminDashboardClient() {
             <div className="max-h-[70dvh] overflow-auto px-1 pb-1">
               <div className="space-y-3">
                 {filtered.map((a) => (
-                  <button
+                  <article
                     key={a.id}
-                    type="button"
-                    onClick={() => openDrawer(a.id)}
                     className="w-full rounded-2xl border border-black/10 bg-white p-3 text-left transition-colors hover:bg-black/5 sm:rounded-3xl sm:p-6 sm:shadow-[0_30px_90px_-60px_rgba(0,0,0,0.18)]"
                   >
                     {(() => {
@@ -424,7 +569,13 @@ export function AdminDashboardClient() {
 
                               <div className="flex shrink-0 items-center gap-2">
                                 <span className={statusPill(a.status)}>{a.status}</span>
-                                <ChevronRight className="h-4 w-4 text-black" />
+                                <button
+                                  type="button"
+                                  onClick={() => openDrawer(a.id)}
+                                  className="inline-flex h-9 items-center justify-center rounded-xl border border-accent bg-white px-3 text-xs font-semibold text-accent transition-colors hover:bg-accent/10"
+                                >
+                                  View
+                                </button>
                               </div>
                             </div>
 
@@ -465,7 +616,7 @@ export function AdminDashboardClient() {
                             </div>
                           </div>
 
-                          <div className="flex items-start justify-between gap-4">
+                          <div className="hidden items-start justify-between gap-4 sm:flex">
                             <div className="flex min-w-0 items-start gap-4">
                               <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black sm:h-14 sm:w-14">
                                 {a.profile_photo_url ? (
@@ -592,13 +743,25 @@ export function AdminDashboardClient() {
                             </p>
                           ) : null}
 
-                          <span className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-accent bg-white px-4 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 sm:hidden">
+                          <button
+                            type="button"
+                            onClick={() => openDrawer(a.id)}
+                            className="inline-flex h-10 w-full items-center justify-center rounded-2xl border border-accent bg-white px-4 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 sm:hidden"
+                          >
                             View profile
-                          </span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => openDrawer(a.id)}
+                            className="hidden h-11 w-fit items-center justify-center rounded-2xl border border-accent bg-white px-5 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 sm:inline-flex"
+                          >
+                            View profile
+                          </button>
                         </div>
                       );
                     })()}
-                  </button>
+                  </article>
                 ))}
               </div>
             </div>

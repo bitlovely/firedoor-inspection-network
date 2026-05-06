@@ -3,7 +3,22 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Circle, Download, Loader2, ChevronLeft } from "lucide-react";
+import {
+  BadgeCheck,
+  Briefcase,
+  CheckCircle2,
+  ChevronLeft,
+  Circle,
+  ClipboardCheck,
+  Download,
+  FileBadge,
+  IdCard,
+  Loader2,
+  MapPin,
+  ScrollText,
+  ShieldCheck,
+  Timer,
+} from "lucide-react";
 
 type Application = {
   id: string;
@@ -29,6 +44,15 @@ type Application = {
   identity_checked?: boolean;
 };
 
+function initialsFromName(fullName: string) {
+  return fullName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((s) => s[0]?.toUpperCase())
+    .join("");
+}
+
 function toArray(v: unknown): string[] {
   if (Array.isArray(v)) return v.filter((x): x is string => typeof x === "string");
   return [];
@@ -42,7 +66,7 @@ function badge(status: string, light: boolean) {
       case "approved":
         return `${base} border-emerald-600/25 bg-emerald-600/10 text-emerald-900`;
       case "verified":
-        return `${base} border-emerald-600/25 bg-emerald-600/10 text-emerald-900`;
+        return `${base} border-accent/30 bg-accent/10 text-accent`;
       case "rejected":
         return `${base} border-rose-600/25 bg-rose-600/10 text-rose-900`;
       case "pending":
@@ -158,6 +182,328 @@ export function AdminApplicationDetailClient({
       setError(e instanceof Error ? e.message : "Unable to download");
     }
   }
+
+  const lightContent = (
+    <div className="space-y-6">
+      {pending ? (
+        <p className="text-sm text-black">Loading…</p>
+      ) : error ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
+          {error}
+        </div>
+      ) : app ? (
+        <>
+          <div className="flex items-start gap-4">
+            <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/api/public/profile-photo?id=${encodeURIComponent(app.id)}`}
+                alt=""
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-black/70">
+                {initialsFromName(app.full_name) || "—"}
+              </div>
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="min-w-0 truncate font-display text-xl font-extrabold text-black">
+                  {app.full_name}
+                </h2>
+                <span className={badge(app.status, true)}>{app.status}</span>
+                {saving ? <Loader2 className="h-4 w-4 animate-spin text-black" /> : null}
+              </div>
+              <p className="mt-1 text-sm font-semibold text-black">{app.company_name}</p>
+              <p className="mt-2 inline-flex items-center gap-2 text-sm text-black">
+                <MapPin className="h-4 w-4 shrink-0 text-black/50" />
+                {app.postcode}
+              </p>
+              <p className="mt-2 text-sm text-black">{app.email} · {app.phone}</p>
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="space-y-6 lg:col-span-2">
+              {app.bio?.trim() ? (
+                <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                  <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
+                    <ScrollText className="h-4 w-4 text-accent" />
+                    Bio
+                  </h3>
+                  <p className="mt-2 whitespace-pre-wrap text-sm text-black">
+                    {app.bio.trim()}
+                  </p>
+                </section>
+              ) : null}
+
+              {app.services?.trim() ? (
+                <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                  <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
+                    <Briefcase className="h-4 w-4 text-accent" />
+                    Services
+                  </h3>
+                  <p className="mt-2 whitespace-pre-wrap text-sm text-black">
+                    {app.services.trim()}
+                  </p>
+                </section>
+              ) : null}
+
+              <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
+                  <MapPin className="h-4 w-4 text-accent" />
+                  Coverage
+                </h3>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                    <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-black/60 uppercase">
+                      <Timer className="h-4 w-4 text-black/50" />
+                      Experience
+                    </div>
+                    <div className="mt-2 font-display text-2xl font-extrabold text-black">
+                      {Number.isFinite(app.years_experience) ? app.years_experience : "—"}
+                      {Number.isFinite(app.years_experience) ? (
+                        <span className="ml-1 align-baseline text-sm font-semibold text-black/60">
+                          yrs
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
+                    <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-black/60 uppercase">
+                      <MapPin className="h-4 w-4 text-black/50" />
+                      Areas covered
+                    </div>
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-black">
+                      {app.areas_covered}
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
+                  <ClipboardCheck className="h-4 w-4 text-accent" />
+                  Trust
+                </h3>
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                        <FileBadge className="h-4 w-4 text-black/60" />
+                      </span>
+                      <span className="text-black">Insurance verified</span>
+                    </div>
+                    {app.verified_insurance ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                        <BadgeCheck className="h-3.5 w-3.5" />
+                        Verified
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                        <ShieldCheck className="h-4 w-4 text-black/60" />
+                      </span>
+                      <span className="text-black">Certification verified</span>
+                    </div>
+                    {app.verified_certification ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                        <BadgeCheck className="h-3.5 w-3.5" />
+                        Verified
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                        <IdCard className="h-4 w-4 text-black/60" />
+                      </span>
+                      <span className="text-black">Identity checked</span>
+                    </div>
+                    {app.identity_checked ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                        <BadgeCheck className="h-3.5 w-3.5" />
+                        Verified
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside className="space-y-6">
+              <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
+                  <ClipboardCheck className="h-4 w-4 text-accent" />
+                  Admin actions
+                </h3>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    disabled={saving}
+                    onClick={() => patch({ status: "approved" })}
+                    className="inline-flex h-10 items-center justify-center rounded-xl border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    type="button"
+                    disabled={saving}
+                    onClick={() => patch({ status: "rejected" })}
+                    className="inline-flex h-10 items-center justify-center rounded-xl border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                  >
+                    Reject
+                  </button>
+                </div>
+                <div className="mt-4">
+                  <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                    Internal notes
+                  </p>
+                  <textarea
+                    defaultValue={app.internal_notes ?? ""}
+                    rows={4}
+                    className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-black outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
+                    placeholder="Notes for reviewers…"
+                    onBlur={(e) => patch({ internal_notes: e.currentTarget.value })}
+                  />
+                </div>
+              </section>
+
+              <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
+                <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
+                  <FileBadge className="h-4 w-4 text-accent" />
+                  Documents
+                </h3>
+
+                <div className="mt-3 space-y-2">
+                  <div className="rounded-xl border border-black/10 bg-white px-3 py-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex min-w-0 items-center gap-2">
+                        {app.verified_certification ? (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                        ) : (
+                          <Circle className="h-4 w-4 text-black/30" />
+                        )}
+                        <span className="truncate text-sm text-black">
+                          Certifications ({certs.length})
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        disabled={saving || !allowDocVerify}
+                        onClick={() =>
+                          patch({ verified_certification: !app.verified_certification })
+                        }
+                        className="inline-flex h-9 items-center justify-center rounded-lg bg-accent-gradient px-3 text-xs font-semibold text-accent-foreground shadow-accent-glow hover:opacity-95 disabled:opacity-60"
+                      >
+                        {app.verified_certification ? "Unverify" : "Verify"}
+                      </button>
+                    </div>
+
+                    {certs.length > 0 ? (
+                      <div className="mt-2 space-y-2">
+                        {certs.map((p, idx) => (
+                          <div
+                            key={`${p}-${idx}`}
+                            className="flex items-center justify-between gap-2 rounded-lg border border-black/10 bg-black/5 px-3 py-2"
+                          >
+                            <span className="min-w-0 truncate text-xs font-semibold text-black">
+                              Certification {idx + 1}
+                            </span>
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() => void download(p)}
+                              className="inline-flex h-9 items-center justify-center rounded-lg border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                              title="Download"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="mt-2 text-xs text-black">No certification files.</p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 rounded-xl border border-black/10 bg-white px-3 py-2">
+                    <div className="flex min-w-0 items-center gap-2">
+                      {app.verified_insurance ? (
+                        <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                      ) : (
+                        <Circle className="h-4 w-4 text-black/30" />
+                      )}
+                      <span className="truncate text-sm text-black">Insurance</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={saving}
+                        onClick={() => download(app.insurance_path)}
+                        className="inline-flex h-9 items-center justify-center rounded-lg border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                      >
+                        <Download className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={saving || !allowDocVerify}
+                        onClick={() => patch({ verified_insurance: !app.verified_insurance })}
+                        className="inline-flex h-9 items-center justify-center rounded-lg bg-accent-gradient px-3 text-xs font-semibold text-accent-foreground shadow-accent-glow hover:opacity-95 disabled:opacity-60"
+                      >
+                        {app.verified_insurance ? "Unverify" : "Verify"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {app.dbs_path ? (
+                    <div className="flex items-center justify-between gap-2 rounded-xl border border-black/10 bg-white px-3 py-2">
+                      <div className="flex min-w-0 items-center gap-2">
+                        {app.identity_checked ? (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                        ) : (
+                          <Circle className="h-4 w-4 text-black/30" />
+                        )}
+                        <span className="truncate text-sm text-black">DBS</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          disabled={saving}
+                          onClick={() => download(app.dbs_path!)}
+                          className="inline-flex h-9 items-center justify-center rounded-lg border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                        >
+                          <Download className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={saving || !allowDocVerify}
+                          onClick={() => patch({ identity_checked: !app.identity_checked })}
+                          className="inline-flex h-9 items-center justify-center rounded-lg bg-accent-gradient px-3 text-xs font-semibold text-accent-foreground shadow-accent-glow hover:opacity-95 disabled:opacity-60"
+                        >
+                          {app.identity_checked ? "Unverify" : "Verify"}
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+                <p className="mt-3 text-xs text-black">Downloads are secure links that expire quickly.</p>
+              </section>
+            </aside>
+          </div>
+        </>
+      ) : (
+        <p className="text-sm text-black">Not found.</p>
+      )}
+    </div>
+  );
 
   const content = (
     <div
@@ -595,7 +941,7 @@ export function AdminApplicationDetailClient({
   );
 
   if (embedded) {
-    return content;
+    return lightContent;
   }
 
   return (
