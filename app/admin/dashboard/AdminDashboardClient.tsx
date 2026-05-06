@@ -43,6 +43,23 @@ function countBy(apps: Application[], status: string) {
   return apps.reduce((acc, a) => (a.status === status ? acc + 1 : acc), 0);
 }
 
+function statusPill(status: string) {
+  const base =
+    "rounded-full border px-2.5 py-1 text-xs font-semibold capitalize tracking-wide";
+  switch (status) {
+    case "verified":
+      return `${base} border-accent/30 bg-accent/10 text-accent`;
+    case "approved":
+      return `${base} border-emerald-600/25 bg-emerald-600/10 text-emerald-900`;
+    case "pending":
+      return `${base} border-amber-600/25 bg-amber-600/10 text-amber-900`;
+    case "rejected":
+      return `${base} border-rose-600/25 bg-rose-600/10 text-rose-900`;
+    default:
+      return `${base} border-black/10 bg-black/5 text-black`;
+  }
+}
+
 export function AdminDashboardClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -250,10 +267,10 @@ export function AdminDashboardClient() {
               </p>
             </div>
             <div className="rounded-3xl border border-sky-600/25 bg-sky-600/10 p-5">
-              <p className="text-xs font-semibold tracking-wider text-sky-900 uppercase">
+              <p className="text-xs font-semibold tracking-wider text-accent uppercase">
                 Verified
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-sky-950">
+              <p className="mt-2 font-display text-3xl font-extrabold text-black">
                 {countBy(apps, "verified")}
               </p>
             </div>
@@ -371,9 +388,7 @@ export function AdminDashboardClient() {
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-3">
-                      <span className="rounded-full border border-black/10 bg-black/5 px-2.5 py-1 text-xs font-semibold text-black">
-                        {a.status}
-                      </span>
+                      <span className={statusPill(a.status)}>{a.status}</span>
                       <ChevronRight className="h-4 w-4 text-black" />
                     </div>
                   </button>

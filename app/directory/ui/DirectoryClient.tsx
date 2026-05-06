@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Star,
   Timer,
+  Zap,
   X,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -52,11 +53,22 @@ function initialsFromName(fullName: string) {
 function badge(status: string) {
   if (status !== "verified") return null;
   return (
-    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 sm:px-2.5 sm:py-1 sm:text-xs">
-      <ShieldCheck className="h-3 w-3 text-emerald-700 sm:h-3.5 sm:w-3.5" />
+    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent sm:px-2.5 sm:py-1 sm:text-xs">
+      <ShieldCheck className="h-3 w-3 text-accent sm:h-3.5 sm:w-3.5" />
       Verified Affiliate
     </span>
   );
+}
+
+function serviceChips(services: string | null | undefined) {
+  if (!services?.trim()) return { chips: [] as string[], remaining: 0 };
+  const parts = services
+    .split(/[\n,•|/]+/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const unique = Array.from(new Set(parts));
+  const chips = unique.slice(0, 6);
+  return { chips, remaining: Math.max(0, unique.length - chips.length) };
 }
 
 export function DirectoryClient() {
@@ -314,54 +326,156 @@ export function DirectoryClient() {
             {items.map((a) => (
               <article
                 key={a.id}
-                className="rounded-3xl border border-black/10 bg-white p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.22)]"
+                className="rounded-3xl border border-black/10 bg-white p-6 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.18)]"
               >
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-6">
-                  <div className="min-w-0">
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black/70">
-                        {a.profile_photo_path ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={`/api/public/profile-photo?id=${encodeURIComponent(a.id)}`}
-                            alt=""
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          initialsFromName(a.full_name) || "—"
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                          <h2 className="break-words font-display text-lg font-extrabold">
-                            {a.full_name}
-                          </h2>
-                          {badge(a.status)}
-                        </div>
-                        <p className="mt-1 break-words text-sm text-black/70">{a.company_name}</p>
-                        <p className="mt-2 inline-flex items-center gap-2 text-sm text-black/80">
-                          <MapPin className="h-4 w-4 shrink-0 text-black/50" />
-                          {a.postcode}
-                        </p>
-                        {a.bio?.trim() ? (
-                          <p className="mt-4 text-sm leading-relaxed text-black/70 line-clamp-5">
-                            {a.bio.trim()}
-                          </p>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
+                {(() => {
+                  const svc = serviceChips(a.services);
+                  const areasCount = a.areas_covered
+                    ? a.areas_covered.split(/\n+/).map((s) => s.trim()).filter(Boolean).length
+                    : 0;
+                  const rating =
+                    typeof a.review_rating === "number"
+                      ? Number(a.review_rating).toFixed(1)
+                      : null;
+                  const reviews =
+                    typeof a.review_count === "number" ? a.review_count : null;
 
-                  <div className="flex w-full sm:w-auto sm:shrink-0 sm:justify-end">
-                    <button
-                      type="button"
-                      onClick={() => openDrawer(a.id)}
-                      className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent-gradient px-4 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95 sm:h-10 sm:w-fit sm:px-4"
-                    >
-                      View profile
-                    </button>
-                  </div>
-                </div>
+                  return (
+                    <div className="space-y-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex min-w-0 items-start gap-4">
+                          <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black/70">
+                            {a.profile_photo_path ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={`/api/public/profile-photo?id=${encodeURIComponent(a.id)}`}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              initialsFromName(a.full_name) || "—"
+                            )}
+                          </div>
+
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                              <h2 className="truncate font-display text-lg font-extrabold text-black sm:text-xl">
+                                {a.full_name}
+                              </h2>
+                              {badge(a.status)}
+                            </div>
+                            <p className="mt-0.5 truncate text-sm font-semibold text-black">
+                              {a.company_name}
+                            </p>
+                            <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
+                              <MapPin className="h-4 w-4 shrink-0 text-black/50" />
+                              {a.postcode}
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => openDrawer(a.id)}
+                          className="hidden h-10 shrink-0 items-center justify-center rounded-xl border border-accent bg-white px-5 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 sm:inline-flex"
+                        >
+                          View profile
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6 border-t border-black/10 pt-4 sm:grid-cols-3">
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                            <Timer className="h-5 w-5 text-black" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                              Experience
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-black">
+                              {typeof a.years_experience === "number"
+                                ? `${a.years_experience}+ years`
+                                : "—"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                            <MapPin className="h-5 w-5 text-black" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                              Areas covered
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-black">
+                              {areasCount > 0 ? `${areasCount}+` : "—"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="hidden items-center gap-3 sm:flex">
+                          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                            <Star className="h-5 w-5 text-black" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                              Reviews
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-black">
+                              {rating && reviews ? `${rating} (${reviews})` : reviews ? `${reviews}` : "—"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={
+                            a.contact_enabled
+                              ? "inline-flex items-center rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold text-black"
+                              : "inline-flex items-center rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black/70"
+                          }
+                        >
+                          <Zap className="mr-2 h-3.5 w-3.5 text-accent" />
+                          {a.contact_enabled ? "Available now" : "Contact locked"}
+                        </span>
+                      </div>
+
+                      {svc.chips.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {svc.chips.map((c) => (
+                            <span
+                              key={c}
+                              className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                          {svc.remaining > 0 ? (
+                            <span className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black">
+                              +{svc.remaining}
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : null}
+
+                      {a.bio?.trim() ? (
+                        <p className="text-sm leading-relaxed text-black line-clamp-4">
+                          {a.bio.trim()}
+                        </p>
+                      ) : null}
+
+                      <button
+                        type="button"
+                        onClick={() => openDrawer(a.id)}
+                        className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-accent bg-white px-4 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 sm:hidden"
+                      >
+                        View profile
+                      </button>
+                    </div>
+                  );
+                })()}
 
                 {a.contact_enabled && a.email ? (
                   <div className="mt-4 flex justify-end border-t border-black/10 pt-4">
