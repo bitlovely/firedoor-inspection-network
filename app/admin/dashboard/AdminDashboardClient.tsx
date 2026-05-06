@@ -193,14 +193,14 @@ export function AdminDashboardClient() {
   }, [apps, q, statusFilter, dateFilter]);
 
   return (
-    <main className="min-h-dvh w-full bg-black text-white">
+    <main className="min-h-dvh w-full bg-white text-black">
       <div className="container mx-auto px-4 py-10 sm:px-6 lg:py-14">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="font-display text-3xl font-extrabold tracking-tight">
               Admin dashboard
             </h1>
-            <p className="mt-2 text-sm text-white/80">
+            <p className="mt-2 text-sm text-black">
               View applications, approve/reject, verify, and download documents.
             </p>
           </div>
@@ -218,7 +218,7 @@ export function AdminDashboardClient() {
             </button>
             <Link
               href="/"
-              className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+              className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-black/10 bg-white px-4 text-sm font-semibold text-black transition-colors hover:bg-black/5"
             >
               Back to homepage
             </Link>
@@ -227,41 +227,41 @@ export function AdminDashboardClient() {
 
         {!pending && !error ? (
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <div className="rounded-3xl border border-white/15 bg-white/8 p-5 backdrop-blur-md">
-              <p className="text-xs font-semibold tracking-wider text-white/70 uppercase">
+            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold tracking-wider text-black uppercase">
                 Total
               </p>
               <p className="mt-2 font-display text-3xl font-extrabold">{apps.length}</p>
             </div>
-            <div className="rounded-3xl border border-amber-400/25 bg-amber-400/10 p-5">
-              <p className="text-xs font-semibold tracking-wider text-amber-200/80 uppercase">
+            <div className="rounded-3xl border border-amber-600/25 bg-amber-600/10 p-5">
+              <p className="text-xs font-semibold tracking-wider text-amber-900 uppercase">
                 Pending
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-amber-100">
+              <p className="mt-2 font-display text-3xl font-extrabold text-amber-950">
                 {countBy(apps, "pending")}
               </p>
             </div>
-            <div className="rounded-3xl border border-emerald-400/25 bg-emerald-400/10 p-5">
-              <p className="text-xs font-semibold tracking-wider text-emerald-200/80 uppercase">
+            <div className="rounded-3xl border border-emerald-600/25 bg-emerald-600/10 p-5">
+              <p className="text-xs font-semibold tracking-wider text-emerald-900 uppercase">
                 Approved
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-emerald-100">
+              <p className="mt-2 font-display text-3xl font-extrabold text-emerald-950">
                 {countBy(apps, "approved")}
               </p>
             </div>
-            <div className="rounded-3xl border border-cyan-400/25 bg-cyan-400/10 p-5">
-              <p className="text-xs font-semibold tracking-wider text-cyan-200/80 uppercase">
+            <div className="rounded-3xl border border-sky-600/25 bg-sky-600/10 p-5">
+              <p className="text-xs font-semibold tracking-wider text-sky-900 uppercase">
                 Verified
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-cyan-100">
+              <p className="mt-2 font-display text-3xl font-extrabold text-sky-950">
                 {countBy(apps, "verified")}
               </p>
             </div>
-            <div className="rounded-3xl border border-rose-400/25 bg-rose-400/10 p-5">
-              <p className="text-xs font-semibold tracking-wider text-rose-200/80 uppercase">
+            <div className="rounded-3xl border border-rose-600/25 bg-rose-600/10 p-5">
+              <p className="text-xs font-semibold tracking-wider text-rose-900 uppercase">
                 Rejected
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-rose-100">
+              <p className="mt-2 font-display text-3xl font-extrabold text-rose-950">
                 {countBy(apps, "rejected")}
               </p>
             </div>
@@ -269,8 +269,8 @@ export function AdminDashboardClient() {
         ) : null}
 
         {pending ? (
-          <div className="mt-10 rounded-3xl border border-white/15 bg-white/8 p-7 backdrop-blur-md">
-            <p className="text-sm text-white/80">Loading…</p>
+          <div className="mt-10 rounded-3xl border border-black/10 bg-white p-7 shadow-sm">
+            <p className="text-sm text-black">Loading…</p>
           </div>
         ) : error ? (
           <div
@@ -280,39 +280,39 @@ export function AdminDashboardClient() {
             {error}
           </div>
         ) : (
-          <div className="mt-10 rounded-3xl border border-white/15 bg-white/8 p-4 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-5">
+          <div className="mt-10 rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-5">
             <div className="px-3 py-2">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-xs font-semibold tracking-wider text-white/70 uppercase">
+                <p className="text-xs font-semibold tracking-wider text-black uppercase">
                   Applications
                 </p>
-                <p className="text-xs text-white/60">{filtered.length} shown</p>
+                <p className="text-xs text-black">{filtered.length} shown</p>
               </div>
 
               <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-end">
                 <div className="flex-1">
-                  <label className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+                  <label className="text-xs font-semibold tracking-wider text-black uppercase">
                     Search
                   </label>
                   <div className="relative mt-2">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black" />
                     <input
                       value={q}
                       onChange={(e) => setQ(e.target.value)}
                       placeholder="Full name, company, email, postcode…"
-                      className="h-11 w-full rounded-2xl border border-white/15 bg-white/5 pl-10 pr-4 text-sm text-white placeholder:text-white/40 outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20"
+                      className="h-11 w-full rounded-2xl border border-black/10 bg-white pl-10 pr-4 text-sm text-black placeholder:text-black outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
                     />
                   </div>
                 </div>
 
                 <div className="lg:w-[11.5rem]">
-                  <label className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+                  <label className="text-xs font-semibold tracking-wider text-black uppercase">
                     Status
                   </label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                    className="mt-2 h-11 w-full rounded-2xl border border-white/15 bg-black/60 px-4 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
+                    className="mt-2 h-11 w-full rounded-2xl border border-black/10 bg-white px-4 text-sm text-black outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
                   >
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
@@ -323,13 +323,13 @@ export function AdminDashboardClient() {
                 </div>
 
                 <div className="lg:w-[12.5rem]">
-                  <label className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+                  <label className="text-xs font-semibold tracking-wider text-black uppercase">
                     Submitted
                   </label>
                   <select
                     value={dateFilter}
                     onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                    className="mt-2 h-11 w-full rounded-2xl border border-white/15 bg-black/60 px-4 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
+                    className="mt-2 h-11 w-full rounded-2xl border border-black/10 bg-white px-4 text-sm text-black outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
                   >
                     <option value="all">All time</option>
                     <option value="7d">Last 7 days</option>
@@ -347,10 +347,10 @@ export function AdminDashboardClient() {
                     key={a.id}
                     type="button"
                     onClick={() => openDrawer(a.id)}
-                    className="flex w-full items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-left transition-colors hover:bg-white/10"
+                    className="flex w-full items-center justify-between gap-4 rounded-2xl border border-black/10 bg-white px-4 py-4 text-left transition-colors hover:bg-black/5"
                   >
                     <div className="min-w-0 flex items-center gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-white/8 text-xs font-semibold text-white/80">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black">
                         {a.profile_photo_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -363,18 +363,18 @@ export function AdminDashboardClient() {
                         )}
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-white">{a.full_name}</p>
-                        <p className="mt-1 truncate text-xs text-white/70">
+                        <p className="truncate text-sm font-semibold text-black">{a.full_name}</p>
+                        <p className="mt-1 truncate text-xs text-black">
                           {a.company_name} · {a.postcode}
                         </p>
-                        <p className="mt-1 truncate text-xs text-white/60">{a.email}</p>
+                        <p className="mt-1 truncate text-xs text-black">{a.email}</p>
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-3">
-                      <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-semibold text-white/90">
+                      <span className="rounded-full border border-black/10 bg-black/5 px-2.5 py-1 text-xs font-semibold text-black">
                         {a.status}
                       </span>
-                      <ChevronRight className="h-4 w-4 text-white/60" />
+                      <ChevronRight className="h-4 w-4 text-black" />
                     </div>
                   </button>
                 ))}
@@ -387,20 +387,20 @@ export function AdminDashboardClient() {
       {selectedId ? (
         <div role="dialog" aria-modal="true" className="fixed inset-0 z-50">
           <div
-            className="absolute inset-0 z-40 bg-black/55"
+            className="absolute inset-0 z-40 bg-black/40"
             onClick={closeDrawer}
             aria-hidden="true"
           />
           <aside
-            className="absolute right-0 top-0 z-50 h-full w-full bg-black text-white shadow-2xl ring-1 ring-white/10 lg:w-1/2"
+            className="absolute right-0 top-0 z-50 h-full w-full bg-white text-black shadow-2xl ring-1 ring-black/10 lg:w-1/2"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
+            <div className="flex h-16 items-center justify-between border-b border-black/10 px-5">
               <div className="font-display text-base font-bold">Application</div>
               <button
                 type="button"
                 onClick={closeDrawer}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition-colors hover:bg-white/10"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black transition-colors hover:bg-black/5"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />

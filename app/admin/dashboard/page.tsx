@@ -21,10 +21,10 @@ export default async function AdminDashboardPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-dvh w-full bg-black text-white">
+        <main className="min-h-dvh w-full bg-white text-black">
           <div className="container mx-auto px-4 py-10 sm:px-6 lg:py-14">
-            <div className="rounded-3xl border border-white/15 bg-white/8 p-7 backdrop-blur-md">
-              <p className="text-sm text-white/80">Loading…</p>
+            <div className="rounded-3xl border border-black/10 bg-white p-7 shadow-sm">
+              <p className="text-sm text-black">Loading…</p>
             </div>
           </div>
         </main>
