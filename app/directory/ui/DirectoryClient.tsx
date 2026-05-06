@@ -664,7 +664,7 @@ export function DirectoryClient() {
                           <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
                             <FileBadge className="h-4 w-4 text-black/60" />
                           </span>
-                          <span className="text-black/80">Insurance verified</span>
+                          <span className="text-black/80">Insurance check</span>
                         </div>
                         {drawerAffiliate.verified_insurance ? (
                           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
@@ -678,7 +678,7 @@ export function DirectoryClient() {
                           <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
                             <BadgeCheck className="h-4 w-4 text-black/60" />
                           </span>
-                          <span className="text-black/80">Certification verified</span>
+                          <span className="text-black/80">Certification check</span>
                         </div>
                         {drawerAffiliate.verified_certification ? (
                           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
@@ -692,7 +692,7 @@ export function DirectoryClient() {
                           <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
                             <IdCard className="h-4 w-4 text-black/60" />
                           </span>
-                          <span className="text-black/80">Identity checked</span>
+                          <span className="text-black/80">DBS Check</span>
                         </div>
                         {drawerAffiliate.identity_checked ? (
                           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2.5 py-1 text-xs font-semibold text-emerald-800">
