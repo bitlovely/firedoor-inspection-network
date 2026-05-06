@@ -499,13 +499,18 @@ export function DirectoryClient() {
           <div
             className="absolute inset-0 z-40 bg-black/40"
             onClick={closeDrawer}
+            onPointerDown={closeDrawer}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              closeDrawer();
+            }}
             aria-hidden="true"
           />
           <aside
             className="absolute right-0 top-0 z-50 h-full w-full bg-white shadow-2xl ring-1 ring-black/10 lg:w-1/2"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex h-16 items-center justify-between border-b border-black/10 px-5">
+            <div className="relative z-10 flex h-16 items-center justify-between border-b border-black/10 px-5">
               <div className="flex items-center gap-2">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -518,7 +523,13 @@ export function DirectoryClient() {
               <button
                 type="button"
                 onClick={closeDrawer}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black transition-colors hover:bg-black/5"
+                onPointerUp={closeDrawer}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  closeDrawer();
+                }}
+                className="relative z-20 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-black/10 bg-white text-black transition-colors hover:bg-black/5 active:bg-black/10"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
