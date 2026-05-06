@@ -69,7 +69,7 @@ function statusPill(status: string) {
     case "pending":
       return `${base} border-amber-600/25 bg-amber-600/10 text-amber-900`;
     case "rejected":
-      return `${base} border-rose-600/25 bg-rose-600/10 text-rose-900`;
+      return `${base} border-black/25 bg-black/5 text-black`;
     default:
       return `${base} border-black/10 bg-black/5 text-black`;
   }
@@ -769,7 +769,15 @@ export function AdminDashboardClient() {
               </button>
             </div>
             <div className="h-[calc(100%-4rem)] overflow-y-auto px-5 py-6">
-              <AdminApplicationDetailClient applicationId={selectedId} embedded />
+              <AdminApplicationDetailClient
+                applicationId={selectedId}
+                embedded
+                onApplicationUpdated={(next) => {
+                  setApps((prev) =>
+                    prev.map((a) => (a.id === next.id ? { ...a, ...next } : a)),
+                  );
+                }}
+              />
             </div>
           </aside>
         </div>

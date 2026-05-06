@@ -68,7 +68,7 @@ function badge(status: string, light: boolean) {
       case "verified":
         return `${base} border-accent/30 bg-accent/10 text-accent`;
       case "rejected":
-        return `${base} border-rose-600/25 bg-rose-600/10 text-rose-900`;
+        return `${base} border-black/25 bg-black/5 text-black`;
       case "pending":
         return `${base} border-amber-600/25 bg-amber-600/10 text-amber-950`;
       default:
@@ -81,7 +81,7 @@ function badge(status: string, light: boolean) {
     case "verified":
       return `${base} border-cyan-400/30 bg-cyan-400/10 text-cyan-200`;
     case "rejected":
-      return `${base} border-rose-400/30 bg-rose-400/10 text-rose-200`;
+      return `${base} border-white/25 bg-neutral-950 text-neutral-50`;
     case "pending":
       return `${base} border-amber-400/30 bg-amber-400/10 text-amber-200`;
     default:
@@ -92,9 +92,11 @@ function badge(status: string, light: boolean) {
 export function AdminApplicationDetailClient({
   applicationId,
   embedded,
+  onApplicationUpdated,
 }: {
   applicationId?: string;
   embedded?: boolean;
+  onApplicationUpdated?: (next: Application) => void;
 }) {
   const router = useRouter();
   const params = useParams<{ id: string }>();
@@ -151,6 +153,7 @@ export function AdminApplicationDetailClient({
         | null;
       if (!res.ok || !json?.application) throw new Error(json?.error ?? "Update failed");
       setApp(json.application);
+      onApplicationUpdated?.(json.application);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Update failed");
     } finally {
@@ -161,7 +164,8 @@ export function AdminApplicationDetailClient({
   async function download(path: string) {
     setError(null);
     // Open a window synchronously to avoid popup blocking.
-    const w = window.open("", "_blank", "noopener,noreferrer");
+    const w = window.open("about:blank", "_blank");
+    if (w) w.opener = null;
     try {
       const res = await fetch(`/api/admin/applications/${encodeURIComponent(id)}`, {
         method: "POST",
@@ -173,9 +177,13 @@ export function AdminApplicationDetailClient({
         | null;
       if (!res.ok || !json?.url) throw new Error(json?.error ?? "Unable to download");
       if (w) {
-        w.location.href = json.url;
-      } else {
-        window.location.assign(json.url);
+        w.location.replace(json.url);
+        return;
+      }
+      // Popup blocked: do NOT navigate away from admin dashboard.
+      const opened = window.open(json.url, "_blank", "noopener,noreferrer");
+      if (!opened) {
+        throw new Error("Popup blocked. Please allow popups to download documents.");
       }
     } catch (e) {
       if (w) w.close();

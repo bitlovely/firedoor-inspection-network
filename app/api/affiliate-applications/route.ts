@@ -162,6 +162,7 @@ export async function POST(request: Request) {
       .insert({
         id: applicationId,
         user_id: userId,
+        status: "pending",
         full_name: fields.full_name,
         company_name: fields.company_name,
         email: fields.email,
