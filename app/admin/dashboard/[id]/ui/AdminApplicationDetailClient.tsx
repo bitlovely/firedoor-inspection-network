@@ -16,6 +16,10 @@ type Application = {
   postcode: string;
   years_experience: number;
   areas_covered: string;
+  bio?: string | null;
+  services?: string | null;
+  review_count?: number;
+  review_rating?: number | null;
   certification_paths: unknown;
   insurance_path: string;
   dbs_path: string | null;
@@ -281,6 +285,64 @@ export function AdminApplicationDetailClient({
                         {app.areas_covered}
                       </p>
                     </div>
+
+                    {app.bio?.trim() ? (
+                      <div
+                        className={
+                          light
+                            ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                            : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                        }
+                      >
+                        <p
+                          className={
+                            light
+                              ? "text-xs font-semibold tracking-wider text-black uppercase"
+                              : "text-xs font-semibold tracking-wider text-white uppercase"
+                          }
+                        >
+                          Bio
+                        </p>
+                        <p
+                          className={
+                            light
+                              ? "mt-2 whitespace-pre-wrap text-sm text-black"
+                              : "mt-2 whitespace-pre-wrap text-sm text-white/90"
+                          }
+                        >
+                          {app.bio.trim()}
+                        </p>
+                      </div>
+                    ) : null}
+
+                    {app.services?.trim() ? (
+                      <div
+                        className={
+                          light
+                            ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                            : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                        }
+                      >
+                        <p
+                          className={
+                            light
+                              ? "text-xs font-semibold tracking-wider text-black uppercase"
+                              : "text-xs font-semibold tracking-wider text-white uppercase"
+                          }
+                        >
+                          Services
+                        </p>
+                        <p
+                          className={
+                            light
+                              ? "mt-2 whitespace-pre-wrap text-sm text-black"
+                              : "mt-2 whitespace-pre-wrap text-sm text-white/90"
+                          }
+                        >
+                          {app.services.trim()}
+                        </p>
+                      </div>
+                    ) : null}
 
                     <div
                       className={

@@ -25,7 +25,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("affiliate_applications")
     .select(
-      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,profile_photo_path",
+      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,profile_photo_path,bio,services,review_count,review_rating",
     )
     .order("created_at", { ascending: false })
     .limit(200);

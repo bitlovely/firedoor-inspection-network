@@ -27,7 +27,7 @@ export async function GET(
   const { data, error } = await supabase
     .from("affiliate_applications")
     .select(
-      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,reviewed_at,reviewed_by,updated_at,verified_insurance,verified_certification,identity_checked",
+      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,reviewed_at,reviewed_by,updated_at,verified_insurance,verified_certification,identity_checked,bio,services,review_count,review_rating",
     )
     .eq("id", id)
     .single();
@@ -168,7 +168,7 @@ export async function PATCH(
     .update(patch)
     .eq("id", id)
     .select(
-      "id,status,internal_notes,reviewed_at,updated_at,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,created_at,verified_insurance,verified_certification,identity_checked",
+      "id,status,internal_notes,reviewed_at,updated_at,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,created_at,verified_insurance,verified_certification,identity_checked,bio,services,review_count,review_rating",
     )
     .single();
 

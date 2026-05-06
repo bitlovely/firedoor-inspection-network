@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronRight, LogOut, Search, X } from "lucide-react";
+import { ChevronRight, LogOut, MapPin, Search, Star, Timer, X, Zap } from "lucide-react";
 import { authPrimaryButtonClassName } from "@/components/auth/authPrimaryButtonClassName";
 import { AdminApplicationDetailClient } from "./[id]/ui/AdminApplicationDetailClient";
 
@@ -23,6 +23,10 @@ type Application = {
   dbs_path: string | null;
   internal_notes: string | null;
   profile_photo_url?: string | null;
+  bio?: string | null;
+  services?: string | null;
+  review_count?: number;
+  review_rating?: number | null;
 };
 
 function toArray(v: unknown): string[] {
@@ -41,6 +45,17 @@ function initialsFromName(fullName: string) {
 
 function countBy(apps: Application[], status: string) {
   return apps.reduce((acc, a) => (a.status === status ? acc + 1 : acc), 0);
+}
+
+function serviceChips(services: string | null | undefined) {
+  if (!services?.trim()) return { chips: [] as string[], remaining: 0 };
+  const parts = services
+    .split(/[\n,•|/]+/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const unique = Array.from(new Set(parts));
+  const chips = unique.slice(0, 6);
+  return { chips, remaining: Math.max(0, unique.length - chips.length) };
 }
 
 function statusPill(status: string) {
@@ -364,33 +379,154 @@ export function AdminDashboardClient() {
                     key={a.id}
                     type="button"
                     onClick={() => openDrawer(a.id)}
-                    className="flex w-full items-center justify-between gap-4 rounded-2xl border border-black/10 bg-white px-4 py-4 text-left transition-colors hover:bg-black/5"
+                    className="w-full rounded-3xl border border-black/10 bg-white p-6 text-left shadow-[0_30px_90px_-60px_rgba(0,0,0,0.18)] transition-colors hover:bg-black/5"
                   >
-                    <div className="min-w-0 flex items-center gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black">
-                        {a.profile_photo_url ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={a.profile_photo_url}
-                            alt=""
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          initialsFromName(a.full_name) || "—"
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-black">{a.full_name}</p>
-                        <p className="mt-1 truncate text-xs text-black">
-                          {a.company_name} · {a.postcode}
-                        </p>
-                        <p className="mt-1 truncate text-xs text-black">{a.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-3">
-                      <span className={statusPill(a.status)}>{a.status}</span>
-                      <ChevronRight className="h-4 w-4 text-black" />
-                    </div>
+                    {(() => {
+                      const svc = serviceChips(a.services);
+                      const areasCount = a.areas_covered
+                        ? a.areas_covered.split(/\n+/).map((s) => s.trim()).filter(Boolean).length
+                        : 0;
+                      const rating =
+                        typeof a.review_rating === "number"
+                          ? Number(a.review_rating).toFixed(1)
+                          : null;
+                      const reviews = typeof a.review_count === "number" ? a.review_count : null;
+
+                      return (
+                        <div className="space-y-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex min-w-0 items-start gap-4">
+                              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black">
+                                {a.profile_photo_url ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img
+                                    src={a.profile_photo_url}
+                                    alt=""
+                                    className="h-full w-full object-cover"
+                                  />
+                                ) : (
+                                  initialsFromName(a.full_name) || "—"
+                                )}
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                  <p className="truncate font-display text-lg font-extrabold text-black sm:text-xl">
+                                    {a.full_name}
+                                  </p>
+                                  <span className={statusPill(a.status)}>{a.status}</span>
+                                </div>
+                                <p className="mt-0.5 truncate text-sm font-semibold text-black">
+                                  {a.company_name}
+                                </p>
+                                <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
+                                  <MapPin className="h-4 w-4 shrink-0 text-black/50" />
+                                  {a.postcode}
+                                </p>
+                              </div>
+                            </div>
+
+                            <span className="hidden items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-black sm:inline-flex">
+                              View profile
+                              <ChevronRight className="h-4 w-4 text-black" />
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-6 border-t border-black/10 pt-4 sm:grid-cols-3">
+                            <div className="flex items-center gap-3">
+                              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                                <Timer className="h-5 w-5 text-black" />
+                              </span>
+                              <div className="min-w-0">
+                                <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                                  Experience
+                                </p>
+                                <p className="mt-1 text-sm font-semibold text-black">
+                                  {Number.isFinite(a.years_experience)
+                                    ? `${a.years_experience}+ years`
+                                    : "—"}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                                <MapPin className="h-5 w-5 text-black" />
+                              </span>
+                              <div className="min-w-0">
+                                <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                                  Areas covered
+                                </p>
+                                <p className="mt-1 text-sm font-semibold text-black">
+                                  {areasCount > 0 ? `${areasCount}+` : "—"}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="hidden items-center gap-3 sm:flex">
+                              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                                <Star className="h-5 w-5 text-black" />
+                              </span>
+                              <div className="min-w-0">
+                                <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
+                                  Reviews
+                                </p>
+                                <p className="mt-1 text-sm font-semibold text-black">
+                                  {rating && reviews
+                                    ? `${rating} (${reviews})`
+                                    : reviews
+                                      ? `${reviews}`
+                                      : "—"}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span
+                              className={
+                                a.status === "verified" || a.status === "approved"
+                                  ? "inline-flex items-center rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold text-black"
+                                  : "inline-flex items-center rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black/70"
+                              }
+                            >
+                              <Zap className="mr-2 h-3.5 w-3.5 text-accent" />
+                              {a.status === "verified" || a.status === "approved"
+                                ? "Available now"
+                                : "Pending review"}
+                            </span>
+                          </div>
+
+                          {svc.chips.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {svc.chips.map((c) => (
+                                <span
+                                  key={c}
+                                  className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black"
+                                >
+                                  {c}
+                                </span>
+                              ))}
+                              {svc.remaining > 0 ? (
+                                <span className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black">
+                                  +{svc.remaining}
+                                </span>
+                              ) : null}
+                            </div>
+                          ) : null}
+
+                          {a.bio?.trim() ? (
+                            <p className="text-sm leading-relaxed text-black line-clamp-4">
+                              {a.bio.trim()}
+                            </p>
+                          ) : null}
+
+                          <span className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-accent bg-white px-4 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 sm:hidden">
+                            View profile
+                          </span>
+                        </div>
+                      );
+                    })()}
                   </button>
                 ))}
               </div>
