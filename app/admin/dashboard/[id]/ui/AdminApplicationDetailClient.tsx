@@ -359,7 +359,7 @@ export function AdminApplicationDetailClient({
                     type="button"
                     disabled={saving}
                     onClick={() => patch({ status: "approved" })}
-                    className="inline-flex h-10 items-center justify-center rounded-xl border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                    className="inline-flex h-10 items-center justify-center rounded-xl bg-emerald-600 px-3 text-xs font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
                   >
                     Approve
                   </button>
