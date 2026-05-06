@@ -30,9 +30,23 @@ function toArray(v: unknown): string[] {
   return [];
 }
 
-function badge(status: string) {
+function badge(status: string, light: boolean) {
   const base =
     "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold tracking-wide";
+  if (light) {
+    switch (status) {
+      case "approved":
+        return `${base} border-emerald-600/25 bg-emerald-600/10 text-emerald-900`;
+      case "verified":
+        return `${base} border-emerald-600/25 bg-emerald-600/10 text-emerald-900`;
+      case "rejected":
+        return `${base} border-rose-600/25 bg-rose-600/10 text-rose-900`;
+      case "pending":
+        return `${base} border-amber-600/25 bg-amber-600/10 text-amber-950`;
+      default:
+        return `${base} border-black/10 bg-black/5 text-black`;
+    }
+  }
   switch (status) {
     case "approved":
       return `${base} border-emerald-400/30 bg-emerald-400/10 text-emerald-200`;
@@ -63,6 +77,7 @@ export function AdminApplicationDetailClient({
   const [app, setApp] = useState<Application | null>(null);
   const allowDocVerify = app?.status === "approved" || app?.status === "verified";
   const certs = useMemo(() => toArray(app?.certification_paths), [app?.certification_paths]);
+  const light = Boolean(embedded);
 
   async function load() {
     setError(null);
@@ -141,9 +156,15 @@ export function AdminApplicationDetailClient({
   }
 
   const content = (
-    <div className="rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9">
+    <div
+      className={
+        light
+          ? "rounded-3xl border border-black/10 bg-white p-7 shadow-sm sm:p-9"
+          : "rounded-3xl border border-white/15 bg-white/8 p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.75)] backdrop-blur-md sm:p-9"
+      }
+    >
       {pending ? (
-        <p className="text-sm text-white/80">Loading…</p>
+        <p className={light ? "text-sm text-black" : "text-sm text-white/80"}>Loading…</p>
       ) : error ? (
         <div
           role="alert"
@@ -155,24 +176,42 @@ export function AdminApplicationDetailClient({
         <div className="space-y-8">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <p
+                      className={
+                        light
+                          ? "text-xs font-semibold tracking-wider text-black uppercase"
+                          : "text-xs font-semibold tracking-wider text-white uppercase"
+                      }
+                    >
                       Applicant
                     </p>
                     <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight">
                       {app.full_name}
                     </h1>
-                    <p className="mt-1 text-sm text-white/80">{app.company_name}</p>
-                    <p className="mt-2 text-sm text-white/90">
+                    <p className={light ? "mt-1 text-sm text-black" : "mt-1 text-sm text-white/80"}>
+                      {app.company_name}
+                    </p>
+                    <p className={light ? "mt-2 text-sm text-black" : "mt-2 text-sm text-white/90"}>
                       {app.email} · {app.phone}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <p
+                      className={
+                        light
+                          ? "text-xs font-semibold tracking-wider text-black uppercase"
+                          : "text-xs font-semibold tracking-wider text-white uppercase"
+                      }
+                    >
                       Status
                     </p>
                     <div className="mt-2 flex items-center justify-end gap-2">
-                      <span className={badge(app.status)}>{app.status}</span>
-                      {saving ? <Loader2 className="h-4 w-4 animate-spin text-white/70" /> : null}
+                      <span className={badge(app.status, light)}>{app.status}</span>
+                      {saving ? (
+                        <Loader2
+                          className={`h-4 w-4 animate-spin ${light ? "text-black" : "text-white/70"}`}
+                        />
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -180,37 +219,93 @@ export function AdminApplicationDetailClient({
                 <div className="grid gap-6 lg:grid-cols-3">
                   <section className="lg:col-span-2 space-y-6">
                     <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                        <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                      <div
+                        className={
+                          light
+                            ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                            : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                        }
+                      >
+                        <p
+                          className={
+                            light
+                              ? "text-xs font-semibold tracking-wider text-black uppercase"
+                              : "text-xs font-semibold tracking-wider text-white uppercase"
+                          }
+                        >
                           Postcode
                         </p>
-                        <p className="mt-1 text-sm text-white/90">{app.postcode}</p>
+                        <p className={light ? "mt-1 text-sm text-black" : "mt-1 text-sm text-white/90"}>
+                          {app.postcode}
+                        </p>
                       </div>
-                      <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                        <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                      <div
+                        className={
+                          light
+                            ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                            : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                        }
+                      >
+                        <p
+                          className={
+                            light
+                              ? "text-xs font-semibold tracking-wider text-black uppercase"
+                              : "text-xs font-semibold tracking-wider text-white uppercase"
+                          }
+                        >
                           Experience
                         </p>
-                        <p className="mt-1 text-sm text-white/90">{app.years_experience} years</p>
+                        <p className={light ? "mt-1 text-sm text-black" : "mt-1 text-sm text-white/90"}>
+                          {app.years_experience} years
+                        </p>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div
+                      className={
+                        light
+                          ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                          : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                      }
+                    >
+                      <p
+                        className={
+                          light
+                            ? "text-xs font-semibold tracking-wider text-black uppercase"
+                            : "text-xs font-semibold tracking-wider text-white uppercase"
+                        }
+                      >
                         Coverage area
                       </p>
-                      <p className="mt-2 whitespace-pre-wrap text-sm text-white/90">
+                      <p className={light ? "mt-2 whitespace-pre-wrap text-sm text-black" : "mt-2 whitespace-pre-wrap text-sm text-white/90"}>
                         {app.areas_covered}
                       </p>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div
+                      className={
+                        light
+                          ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                          : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                      }
+                    >
+                      <p
+                        className={
+                          light
+                            ? "text-xs font-semibold tracking-wider text-black uppercase"
+                            : "text-xs font-semibold tracking-wider text-white uppercase"
+                        }
+                      >
                         Internal notes
                       </p>
                       <textarea
                         defaultValue={app.internal_notes ?? ""}
                         rows={4}
-                        className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20"
+                        className={
+                          light
+                            ? "mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-black outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
+                            : "mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/20"
+                        }
                         placeholder="Notes for reviewers…"
                         onBlur={(e) => patch({ internal_notes: e.currentTarget.value })}
                       />
@@ -218,8 +313,20 @@ export function AdminApplicationDetailClient({
                   </section>
 
                   <aside className="space-y-6">
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div
+                      className={
+                        light
+                          ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                          : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                      }
+                    >
+                      <p
+                        className={
+                          light
+                            ? "text-xs font-semibold tracking-wider text-black uppercase"
+                            : "text-xs font-semibold tracking-wider text-white uppercase"
+                        }
+                      >
                         Actions
                       </p>
                       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -227,7 +334,11 @@ export function AdminApplicationDetailClient({
                           type="button"
                           disabled={saving}
                           onClick={() => patch({ status: "approved" })}
-                          className="inline-flex h-10 items-center justify-center rounded-xl bg-white/10 px-3 text-xs font-semibold text-white hover:bg-white/15 disabled:opacity-60"
+                          className={
+                            light
+                              ? "inline-flex h-10 items-center justify-center rounded-xl border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                              : "inline-flex h-10 items-center justify-center rounded-xl bg-white/10 px-3 text-xs font-semibold text-white hover:bg-white/15 disabled:opacity-60"
+                          }
                         >
                           Approve
                         </button>
@@ -235,27 +346,49 @@ export function AdminApplicationDetailClient({
                           type="button"
                           disabled={saving}
                           onClick={() => patch({ status: "rejected" })}
-                          className="inline-flex h-10 items-center justify-center rounded-xl bg-white/10 px-3 text-xs font-semibold text-white hover:bg-white/15 disabled:opacity-60"
+                          className={
+                            light
+                              ? "inline-flex h-10 items-center justify-center rounded-xl border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                              : "inline-flex h-10 items-center justify-center rounded-xl bg-white/10 px-3 text-xs font-semibold text-white hover:bg-white/15 disabled:opacity-60"
+                          }
                         >
                           Reject
                         </button>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs font-semibold tracking-wider text-white uppercase">
+                    <div
+                      className={
+                        light
+                          ? "rounded-2xl border border-black/10 bg-black/5 p-4"
+                          : "rounded-2xl border border-white/10 bg-white/5 p-4"
+                      }
+                    >
+                      <p
+                        className={
+                          light
+                            ? "text-xs font-semibold tracking-wider text-black uppercase"
+                            : "text-xs font-semibold tracking-wider text-white uppercase"
+                        }
+                      >
                         Documents
                       </p>
                       <div className="mt-3 space-y-2">
-                        <div className="rounded-xl border border-white/15 bg-white/5 px-3 py-2">
+                        <div
+                          className={
+                            light
+                              ? "rounded-xl border border-black/10 bg-white px-3 py-2"
+                              : "rounded-xl border border-white/15 bg-white/5 px-3 py-2"
+                          }
+                        >
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex min-w-0 items-center gap-2">
                               {app.verified_certification ? (
-                                <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                                <CheckCircle2 className={`h-4 w-4 ${light ? "text-emerald-700" : "text-emerald-300"}`} />
                               ) : (
-                                <Circle className="h-4 w-4 text-white/40" />
+                                <Circle className={`h-4 w-4 ${light ? "text-black/30" : "text-white/40"}`} />
                               )}
-                              <span className="truncate text-sm text-white">
+                              <span className={`truncate text-sm ${light ? "text-black" : "text-white"}`}>
                                 Certifications ({certs.length})
                               </span>
                             </div>
@@ -276,16 +409,24 @@ export function AdminApplicationDetailClient({
                               {certs.map((p, idx) => (
                                 <div
                                   key={`${p}-${idx}`}
-                                  className="flex items-center justify-between gap-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2"
+                                  className={
+                                    light
+                                      ? "flex items-center justify-between gap-2 rounded-lg border border-black/10 bg-black/5 px-3 py-2"
+                                      : "flex items-center justify-between gap-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2"
+                                  }
                                 >
-                                  <span className="min-w-0 truncate text-xs font-semibold text-white/80">
+                                  <span className={`min-w-0 truncate text-xs font-semibold ${light ? "text-black" : "text-white/80"}`}>
                                     Certification {idx + 1}
                                   </span>
                                   <button
                                     type="button"
                                     disabled={saving}
                                     onClick={() => void download(p)}
-                                    className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                                    className={
+                                      light
+                                        ? "inline-flex h-9 items-center justify-center rounded-lg border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                                        : "inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                                    }
                                     title="Download"
                                   >
                                     <Download className="h-4 w-4" />
@@ -294,25 +435,35 @@ export function AdminApplicationDetailClient({
                               ))}
                             </div>
                           ) : (
-                            <p className="mt-2 text-xs text-white/60">No certification files.</p>
+                            <p className={`mt-2 text-xs ${light ? "text-black" : "text-white/60"}`}>No certification files.</p>
                           )}
                         </div>
 
-                        <div className="flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
+                        <div
+                          className={
+                            light
+                              ? "flex items-center justify-between gap-2 rounded-xl border border-black/10 bg-white px-3 py-2"
+                              : "flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2"
+                          }
+                        >
                           <div className="flex min-w-0 items-center gap-2">
                             {app.verified_insurance ? (
-                              <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                              <CheckCircle2 className={`h-4 w-4 ${light ? "text-emerald-700" : "text-emerald-300"}`} />
                             ) : (
-                              <Circle className="h-4 w-4 text-white/40" />
+                              <Circle className={`h-4 w-4 ${light ? "text-black/30" : "text-white/40"}`} />
                             )}
-                            <span className="truncate text-sm text-white">Insurance</span>
+                            <span className={`truncate text-sm ${light ? "text-black" : "text-white"}`}>Insurance</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
                               disabled={saving}
                               onClick={() => download(app.insurance_path)}
-                              className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                              className={
+                                light
+                                  ? "inline-flex h-9 items-center justify-center rounded-lg border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                                  : "inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                              }
                             >
                               <Download className="h-4 w-4" />
                             </button>
@@ -328,21 +479,31 @@ export function AdminApplicationDetailClient({
                         </div>
 
                         {app.dbs_path ? (
-                          <div className="flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
+                          <div
+                            className={
+                              light
+                                ? "flex items-center justify-between gap-2 rounded-xl border border-black/10 bg-white px-3 py-2"
+                                : "flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2"
+                            }
+                          >
                             <div className="flex min-w-0 items-center gap-2">
                               {app.identity_checked ? (
-                                <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                                <CheckCircle2 className={`h-4 w-4 ${light ? "text-emerald-700" : "text-emerald-300"}`} />
                               ) : (
-                                <Circle className="h-4 w-4 text-white/40" />
+                                <Circle className={`h-4 w-4 ${light ? "text-black/30" : "text-white/40"}`} />
                               )}
-                              <span className="truncate text-sm text-white">DBS</span>
+                              <span className={`truncate text-sm ${light ? "text-black" : "text-white"}`}>DBS</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <button
                                 type="button"
                                 disabled={saving}
                                 onClick={() => download(app.dbs_path!)}
-                                className="inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                                className={
+                                  light
+                                    ? "inline-flex h-9 items-center justify-center rounded-lg border border-black/10 bg-white px-3 text-xs font-semibold text-black transition-colors hover:bg-black/5 disabled:opacity-60"
+                                    : "inline-flex h-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                                }
                               >
                                 <Download className="h-4 w-4" />
                               </button>
@@ -358,7 +519,7 @@ export function AdminApplicationDetailClient({
                           </div>
                         ) : null}
                       </div>
-                      <p className="mt-3 text-xs text-white/60">
+                      <p className={`mt-3 text-xs ${light ? "text-black" : "text-white/60"}`}>
                         Downloads are secure links that expire quickly.
                       </p>
                     </div>
@@ -366,7 +527,7 @@ export function AdminApplicationDetailClient({
                 </div>
               </div>
       ) : (
-        <p className="text-sm text-white/80">Not found.</p>
+        <p className={light ? "text-sm text-black" : "text-sm text-white/80"}>Not found.</p>
       )}
     </div>
   );
