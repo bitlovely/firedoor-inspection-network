@@ -53,8 +53,8 @@ function initialsFromName(fullName: string) {
 function badge(status: string) {
   if (status !== "verified") return null;
   return (
-    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent sm:px-2.5 sm:py-1 sm:text-xs">
-      <ShieldCheck className="h-3 w-3 text-accent sm:h-3.5 sm:w-3.5" />
+    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 sm:px-2.5 sm:py-1 sm:text-xs">
+      <ShieldCheck className="h-3 w-3 text-emerald-700 sm:h-3.5 sm:w-3.5" />
       Verified Affiliate
     </span>
   );
