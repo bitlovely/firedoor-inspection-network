@@ -258,42 +258,44 @@ export function AdminDashboardClient() {
         </div>
 
         {!pending && !error ? (
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+          <div className="mt-8 grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-5">
               <p className="text-xs font-semibold tracking-wider text-black uppercase">
                 Total
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold">{apps.length}</p>
+              <p className="mt-1 font-display text-2xl font-extrabold sm:mt-2 sm:text-3xl">
+                {apps.length}
+              </p>
             </div>
-            <div className="rounded-3xl border border-amber-600/25 bg-amber-600/10 p-5">
+            <div className="rounded-3xl border border-amber-600/25 bg-amber-600/10 p-4 sm:p-5">
               <p className="text-xs font-semibold tracking-wider text-amber-900 uppercase">
                 Pending
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-amber-950">
+              <p className="mt-1 font-display text-2xl font-extrabold text-amber-950 sm:mt-2 sm:text-3xl">
                 {countBy(apps, "pending")}
               </p>
             </div>
-            <div className="rounded-3xl border border-emerald-600/25 bg-emerald-600/10 p-5">
+            <div className="rounded-3xl border border-emerald-600/25 bg-emerald-600/10 p-4 sm:p-5">
               <p className="text-xs font-semibold tracking-wider text-emerald-900 uppercase">
                 Approved
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-emerald-950">
+              <p className="mt-1 font-display text-2xl font-extrabold text-emerald-950 sm:mt-2 sm:text-3xl">
                 {countBy(apps, "approved")}
               </p>
             </div>
-            <div className="rounded-3xl border border-sky-600/25 bg-sky-600/10 p-5">
+            <div className="rounded-3xl border border-accent/25 bg-accent/10 p-4 sm:p-5">
               <p className="text-xs font-semibold tracking-wider text-accent uppercase">
                 Verified
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-black">
+              <p className="mt-1 font-display text-2xl font-extrabold text-black sm:mt-2 sm:text-3xl">
                 {countBy(apps, "verified")}
               </p>
             </div>
-            <div className="rounded-3xl border border-rose-600/25 bg-rose-600/10 p-5">
+            <div className="rounded-3xl border border-rose-600/25 bg-rose-600/10 p-4 sm:p-5">
               <p className="text-xs font-semibold tracking-wider text-rose-900 uppercase">
                 Rejected
               </p>
-              <p className="mt-2 font-display text-3xl font-extrabold text-rose-950">
+              <p className="mt-1 font-display text-2xl font-extrabold text-rose-950 sm:mt-2 sm:text-3xl">
                 {countBy(apps, "rejected")}
               </p>
             </div>
@@ -312,7 +314,7 @@ export function AdminDashboardClient() {
             {error}
           </div>
         ) : (
-          <div className="mt-10 rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-5">
+          <div className="mt-10 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
             <div className="px-3 py-2">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs font-semibold tracking-wider text-black uppercase">
@@ -379,7 +381,7 @@ export function AdminDashboardClient() {
                     key={a.id}
                     type="button"
                     onClick={() => openDrawer(a.id)}
-                    className="w-full rounded-3xl border border-black/10 bg-white p-6 text-left shadow-[0_30px_90px_-60px_rgba(0,0,0,0.18)] transition-colors hover:bg-black/5"
+                    className="w-full rounded-3xl border border-black/10 bg-white p-4 text-left shadow-[0_30px_90px_-60px_rgba(0,0,0,0.18)] transition-colors hover:bg-black/5 sm:p-6"
                   >
                     {(() => {
                       const svc = serviceChips(a.services);
@@ -393,10 +395,10 @@ export function AdminDashboardClient() {
                       const reviews = typeof a.review_count === "number" ? a.review_count : null;
 
                       return (
-                        <div className="space-y-4">
+                        <div className="space-y-3 sm:space-y-4">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex min-w-0 items-start gap-4">
-                              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black">
+                              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-black/5 text-xs font-semibold text-black sm:h-14 sm:w-14">
                                 {a.profile_photo_url ? (
                                   // eslint-disable-next-line @next/next/no-img-element
                                   <img
@@ -432,9 +434,9 @@ export function AdminDashboardClient() {
                             </span>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-6 border-t border-black/10 pt-4 sm:grid-cols-3">
+                          <div className="grid grid-cols-2 gap-4 border-t border-black/10 pt-4 sm:grid-cols-3 sm:gap-6">
                             <div className="flex items-center gap-3">
-                              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-white sm:h-11 sm:w-11">
                                 <Timer className="h-5 w-5 text-black" />
                               </span>
                               <div className="min-w-0">
@@ -450,7 +452,7 @@ export function AdminDashboardClient() {
                             </div>
 
                             <div className="flex items-center gap-3">
-                              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/10 bg-white sm:h-11 sm:w-11">
                                 <MapPin className="h-5 w-5 text-black" />
                               </span>
                               <div className="min-w-0">
@@ -516,7 +518,7 @@ export function AdminDashboardClient() {
                           ) : null}
 
                           {a.bio?.trim() ? (
-                            <p className="text-sm leading-relaxed text-black line-clamp-4">
+                            <p className="text-sm leading-relaxed text-black line-clamp-3 sm:line-clamp-4">
                               {a.bio.trim()}
                             </p>
                           ) : null}
