@@ -12,7 +12,7 @@ export async function GET(
 
   const supabase = createAdminClient();
   const baseSelect =
-    "id,status,full_name,company_name,postcode,email,phone,created_at,profile_photo_path,bio,services,areas_covered,years_experience,verified_insurance,verified_certification,identity_checked,review_count,review_rating,sample_report_paths";
+    "id,status,full_name,company_name,postcode,email,phone,created_at,profile_photo_path,bio,services,areas_covered,years_experience,verified_insurance,verified_certification,identity_checked,dbs_path,review_count,review_rating,sample_report_paths";
   const planSelect = `${baseSelect},plan_type,subscription_status`;
 
   let data: any | null = null;
