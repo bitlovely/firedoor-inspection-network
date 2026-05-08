@@ -12,7 +12,6 @@ import {
   ScrollText,
   Search,
   ShieldCheck,
-  Star,
   Timer,
   Zap,
   X,
@@ -72,6 +71,22 @@ function serviceChips(services: string | null | undefined) {
   return { chips, remaining: Math.max(0, unique.length - chips.length) };
 }
 
+function truncateBioTwoSentences(raw: string): string {
+  const text = raw.replace(/\s+/g, " ").trim();
+  if (!text) return "";
+
+  const sentences = text.match(/[^.!?]+[.!?]+(?:["')\]]+)?/g);
+  if (sentences && sentences.length > 0) {
+    const firstTwo = sentences.slice(0, 2).join(" ").trim();
+    const hasMore = sentences.length > 2 && text.length > firstTwo.length + 1;
+    return hasMore ? `${firstTwo}…` : firstTwo;
+  }
+
+  const max = 180;
+  if (text.length <= max) return text;
+  return `${text.slice(0, max).trimEnd()}…`;
+}
+
 export function DirectoryClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -80,7 +95,6 @@ export function DirectoryClient() {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [radius, setRadius] = useState("10");
   const [pending, setPending] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<Affiliate[]>([]);
@@ -95,9 +109,8 @@ export function DirectoryClient() {
     if (name.trim()) sp.set("name", name.trim());
     if (company.trim()) sp.set("company", company.trim());
     if (postcode.trim()) sp.set("postcode", postcode.trim());
-    if (radius.trim()) sp.set("radius", radius.trim());
     return sp.toString();
-  }, [q, name, company, postcode, radius]);
+  }, [q, name, company, postcode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -227,7 +240,6 @@ export function DirectoryClient() {
                 setName("");
                 setCompany("");
                 setPostcode("");
-                setRadius("10");
               }}
               className="text-xs font-semibold text-black/60 underline-offset-4 hover:underline"
             >
@@ -261,23 +273,6 @@ export function DirectoryClient() {
                 placeholder="e.g. SW1A 1AA"
                 className={field}
               />
-            </div>
-
-            <div>
-              <label className="text-xs font-semibold tracking-wider text-black/70 uppercase">
-                Radius (miles)
-              </label>
-              <select
-                value={radius}
-                onChange={(e) => setRadius(e.target.value)}
-                className={selectField}
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
             </div>
 
             <div>
@@ -334,12 +329,6 @@ export function DirectoryClient() {
                   const areasCount = a.areas_covered
                     ? a.areas_covered.split(/\n+/).map((s) => s.trim()).filter(Boolean).length
                     : 0;
-                  const rating =
-                    typeof a.review_rating === "number"
-                      ? Number(a.review_rating).toFixed(1)
-                      : null;
-                  const reviews =
-                    typeof a.review_count === "number" ? a.review_count : null;
 
                   return (
                     <div className="space-y-4">
@@ -415,33 +404,28 @@ export function DirectoryClient() {
                           </div>
                         </div>
 
-                        <div className="hidden items-center gap-3 sm:flex">
+                        <div className="flex items-center gap-3">
                           <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
-                            <Star className="h-5 w-5 text-black" />
+                            <Zap className="h-5 w-5 text-black" />
                           </span>
                           <div className="min-w-0">
                             <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
-                              Reviews
+                              Contact
                             </p>
                             <p className="mt-1 text-sm font-semibold text-black">
-                              {rating && reviews ? `${rating} (${reviews})` : reviews ? `${reviews}` : "—"}
+                              {a.contact_enabled ? "Available now" : "Contact locked"}
                             </p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span
-                          className={
-                            a.contact_enabled
-                              ? "inline-flex items-center rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold text-black"
-                              : "inline-flex items-center rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black/70"
-                          }
-                        >
-                          <Zap className="mr-2 h-3.5 w-3.5 text-accent" />
-                          {a.contact_enabled ? "Available now" : "Contact locked"}
-                        </span>
-                      </div>
+                      {a.bio?.trim() ? (
+                        <p className="text-sm leading-relaxed text-black line-clamp-2 min-h-[2.5rem]">
+                          {truncateBioTwoSentences(a.bio)}
+                        </p>
+                      ) : (
+                        <div className="min-h-[2.5rem]" aria-hidden="true" />
+                      )}
 
                       {svc.chips.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
@@ -459,12 +443,6 @@ export function DirectoryClient() {
                             </span>
                           ) : null}
                         </div>
-                      ) : null}
-
-                      {a.bio?.trim() ? (
-                        <p className="text-sm leading-relaxed text-black line-clamp-4">
-                          {a.bio.trim()}
-                        </p>
                       ) : null}
 
                       <button
@@ -702,22 +680,6 @@ export function DirectoryClient() {
                               Verified
                             </span>
                           ) : null}
-                        </div>
-                      ) : null}
-                      {typeof drawerAffiliate.review_count === "number" &&
-                      drawerAffiliate.review_count > 0 ? (
-                        <div className="flex items-center justify-between gap-3 rounded-xl border border-black/10 bg-black/5 px-3 py-2">
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
-                              <Star className="h-4 w-4 text-black/60" />
-                            </span>
-                            <span className="text-black/80">
-                              Reviews{" "}
-                              {drawerAffiliate.review_rating
-                                ? `(${Number(drawerAffiliate.review_rating).toFixed(1)} · ${drawerAffiliate.review_count})`
-                                : `(${drawerAffiliate.review_count})`}
-                            </span>
-                          </div>
                         </div>
                       ) : null}
                     </div>
