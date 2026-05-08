@@ -56,7 +56,7 @@ function badge(status: string) {
   return (
     <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 sm:px-2.5 sm:py-1 sm:text-xs">
       <ShieldCheck className="h-3 w-3 text-emerald-700 sm:h-3.5 sm:w-3.5" />
-      Verified Affiliate
+      Verified Inspector
     </span>
   );
 }
@@ -197,7 +197,7 @@ export function DirectoryClient() {
           <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
             Public directory
           </h1>
-          <p className="mt-2 text-sm text-black/70">Search approved and verified affiliates.</p>
+          <p className="mt-2 text-sm text-black/70">Search approved and verified inspectors.</p>
         </div>
 
         <button
@@ -320,7 +320,7 @@ export function DirectoryClient() {
           </div>
         ) : items.length === 0 ? (
           <div className="rounded-3xl border border-black/10 bg-white p-7 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.22)]">
-            <p className="text-sm text-black/60">No affiliates found.</p>
+            <p className="text-sm text-black/60">No inspectors found.</p>
           </div>
         ) : (
           <div className="grid gap-4">

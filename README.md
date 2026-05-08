@@ -2,15 +2,15 @@
 
 **A network that leads to work.**
 
-UK-focused platform for verified fire door surveyors and inspectors: **affiliate signup**, **admin review**, **public directory**, **per-affiliate profiles**, and **Stripe** for Advanced plan subscriptions. Marketing, auth, and dashboards are built with **Next.js** (App Router).
+UK-focused platform for verified fire door surveyors and inspectors: **inspector signup**, **admin review**, **public directory**, **per-inspector profiles**, and **Stripe** for Advanced plan subscriptions. Marketing, auth, and dashboards are built with **Next.js** (App Router).
 
 ---
 
 ## Features
 
 - **Landing** (`/`) — Hero, how it works, why join, trust, CTAs.
-- **Affiliate signup** (`/signup`) → **Dashboard** (`/dashboard`) — authenticated users complete registration and upload documents via **`POST /api/me/register-affiliate`**.
-- **Affiliate dashboard** — Application status, profile, documents, subscription (Stripe Checkout / Portal when configured).
+- **Inspector signup** (`/signup`) → **Dashboard** (`/dashboard`) — authenticated users complete registration and upload documents via **`POST /api/me/register-affiliate`**.
+- **Inspector dashboard** — Application status, profile, documents, subscription (Stripe Checkout / Portal when configured).
 - **Admin** (`/admin`) — Session-based login; list and detail views for applications, document verification toggles, approve / reject / verified workflow.
 - **Public directory** (`/directory`) — Search and filters; profile cards link to **`/directory/[id]`**.
 - **Email** — Optional **Resend** confirmation when an application is submitted successfully.
@@ -114,9 +114,9 @@ npm run dev
 | URL | Description |
 |-----|-------------|
 | [http://localhost:3000](http://localhost:3000) | Landing |
-| [http://localhost:3000/signup](http://localhost:3000/signup) | Affiliate signup |
+| [http://localhost:3000/signup](http://localhost:3000/signup) | Inspector signup |
 | [http://localhost:3000/signin](http://localhost:3000/signin) | Sign in |
-| [http://localhost:3000/dashboard](http://localhost:3000/dashboard) | Affiliate dashboard (auth required) |
+| [http://localhost:3000/dashboard](http://localhost:3000/dashboard) | Inspector dashboard (auth required) |
 | [http://localhost:3000/directory](http://localhost:3000/directory) | Public directory |
 | [http://localhost:3000/admin](http://localhost:3000/admin) | Admin login |
 
@@ -136,10 +136,10 @@ npm run lint
 |------|------|
 | `app/page.tsx` | Landing |
 | `app/signup/`, `app/signin/` | Auth |
-| `app/dashboard/` | Affiliate dashboard + registration completion |
+| `app/dashboard/` | Inspector dashboard + registration completion |
 | `app/directory/` | Public directory + profile |
 | `app/admin/` | Admin login + application dashboard |
-| `app/api/me/register-affiliate/` | Submit affiliate application + uploads |
+| `app/api/me/register-affiliate/` | Submit inspector application + uploads |
 | `app/api/me/application/` | Current user’s application JSON / PATCH |
 | `app/api/billing/checkout`, `portal` | Stripe Checkout / Customer Portal |
 | `app/api/stripe/webhook/` | Sync subscription status to Supabase |

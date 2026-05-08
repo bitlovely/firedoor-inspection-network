@@ -38,7 +38,7 @@ export function SiteFooter() {
           </div>
           <div>
             <h4 className="font-display text-sm font-bold tracking-wider uppercase">
-              For affiliates
+              For inspectors
             </h4>
             <ul className="mt-4 space-y-2 text-sm text-white/60">
               <li>

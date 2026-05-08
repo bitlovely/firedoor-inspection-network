@@ -65,7 +65,7 @@ export async function POST(request: Request) {
   }
   if (!(app.status === "approved" || app.status === "verified")) {
     return NextResponse.json(
-      { error: "Only approved affiliates can upgrade." },
+      { error: "Only approved inspectors can upgrade." },
       { status: 403 },
     );
   }

@@ -35,7 +35,7 @@ const howSteps = [
     step: "02",
     title: "Get verified",
     description:
-      "Once approved, your profile goes live with a 'Verified Affiliate' badge and full coverage map.",
+      "Once approved, your profile goes live with a 'Verified Inspector' badge and full coverage map.",
   },
   {
     icon: Briefcase,
@@ -96,7 +96,7 @@ const trustItems = [
     icon: Scale,
     title: "Compliance aligned",
     description:
-      "Affiliate criteria mirror the requirements of the Fire Safety (England) Regulations 2022.",
+      "Inspector criteria mirror the requirements of the Fire Safety (England) Regulations 2022.",
   },
   {
     icon: Lock,
@@ -319,7 +319,7 @@ export function LandingPage() {
                 The badge that means something.
               </h2>
               <p className="mt-4 text-lg text-white">
-                Becoming a Verified Affiliate isn&apos;t automatic. We check, we
+                Becoming a Verified Inspector isn&apos;t automatic. We check, we
                 approve, we vouch. That&apos;s why clients pick names from our
                 directory.
               </p>
@@ -329,7 +329,7 @@ export function LandingPage() {
                   <div className="text-xs font-semibold tracking-wider uppercase text-accent-foreground/90">
                     Fire Door Inspection Network
                   </div>
-                  <div className="font-display text-lg font-bold">Verified Affiliate</div>
+                  <div className="font-display text-lg font-bold">Verified Inspector</div>
                 </div>
               </div>
             </div>
@@ -369,7 +369,7 @@ export function LandingPage() {
                 Ready to turn your certifications into a queue of clients?
               </h2>
               <p className="mt-4 max-w-2xl text-lg text-white/75">
-                Apply today. Most affiliates are verified within 48 hours and listed
+                Apply today. Most inspectors are verified within 48 hours and listed
                 in the public directory the same week.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">

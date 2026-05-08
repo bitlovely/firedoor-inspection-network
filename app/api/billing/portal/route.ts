@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   }
   if (!(app.status === "approved" || app.status === "verified")) {
     return NextResponse.json(
-      { error: "Only approved affiliates can manage subscriptions." },
+      { error: "Only approved inspectors can manage subscriptions." },
       { status: 403 },
     );
   }

@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     const full_name =
       (userData.user.user_metadata?.full_name as string | undefined) ??
       userData.user.email ??
-      "Affiliate";
+      "Inspector";
 
     const raw = {
       full_name,

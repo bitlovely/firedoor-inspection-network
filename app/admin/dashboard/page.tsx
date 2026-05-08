@@ -7,7 +7,7 @@ import { AdminDashboardClient } from "./AdminDashboardClient";
 
 export const metadata: Metadata = {
   title: "Admin dashboard — Fire Door Inspection Network",
-  description: "Review affiliate applications.",
+  description: "Review inspector applications.",
 };
 
 export default async function AdminDashboardPage() {

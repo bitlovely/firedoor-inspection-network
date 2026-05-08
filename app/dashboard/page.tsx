@@ -273,7 +273,7 @@ export default function DashboardPage() {
             </span>
             <div>
               <p className="font-display text-lg font-extrabold leading-none">Dashboard</p>
-              <p className="mt-1 text-xs text-black">Affiliate</p>
+              <p className="mt-1 text-xs text-black">Inspector</p>
             </div>
           </div>
 
@@ -343,7 +343,7 @@ export default function DashboardPage() {
                     ? "Profile"
                     : activeView === "subscription"
                       ? "Subscription"
-                      : "Affiliate dashboard"}
+                      : "Inspector dashboard"}
                 </h1>
                 <p className="mt-1 text-sm text-black">
                   {activeView === "profile"
@@ -439,6 +439,9 @@ export default function DashboardPage() {
                       <UserRound className="h-5 w-5 text-accent" />
                     </span>
                     <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold tracking-wider text-black uppercase">
+                        Profile
+                      </p>
                       {app && (app.status === "approved" || app.status === "verified") ? (
                         <Link
                           href={`/directory?profile=${encodeURIComponent(app.id)}`}
@@ -447,14 +450,7 @@ export default function DashboardPage() {
                           View profile
                         </Link>
                       ) : (
-                        <>
-                        <p className="text-xs font-semibold tracking-wider text-black uppercase">
-                            Profile
-                          </p>
-                        <p className="mt-2 text-sm text-black">
-                            Available after approval.
-                          </p>
-                        </>
+                        <p className="mt-2 text-sm text-black">Available after approval.</p>
                       )}
                     </div>
                   </div>
@@ -622,7 +618,7 @@ export default function DashboardPage() {
             ) : (
               <div className="rounded-3xl border border-black/10 bg-white p-7 shadow-sm">
                 <p className="text-sm text-black">
-                  You’re signed in, but not registered as an affiliate yet.
+                  You’re signed in, but not registered as an inspector yet.
                 </p>
                 <button
                   type="button"

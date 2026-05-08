@@ -6,7 +6,7 @@ import { AdminApplicationDetailClient } from "./ui/AdminApplicationDetailClient"
 
 export const metadata: Metadata = {
   title: "Application — Admin — Fire Door Inspection Network",
-  description: "Review an affiliate application.",
+  description: "Review an inspector application.",
 };
 
 export default async function AdminApplicationDetailPage() {

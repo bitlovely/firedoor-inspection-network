@@ -51,7 +51,7 @@ export function AdminSignInClient() {
           Admin
         </h1>
         <p className="mt-2 text-center text-sm text-white">
-          Sign in to review and verify affiliate applications.
+          Sign in to review and verify inspector applications.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-5">

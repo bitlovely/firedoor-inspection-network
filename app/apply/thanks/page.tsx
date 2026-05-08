@@ -22,7 +22,7 @@ export default async function ThanksPage({ searchParams }: Props) {
           Application received
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          Thanks for applying. Our team will review your documents. Most affiliates hear back
+          Thanks for applying. Our team will review your documents. Most inspectors hear back
           within a few working days.
         </p>
         {id ? (

@@ -89,7 +89,7 @@ export async function POST(request: Request) {
   const full_name =
     (user.user_metadata?.full_name as string | undefined) ??
     user.email ??
-    "Affiliate";
+    "Inspector";
 
   const parsedFields = affiliateApplicationFieldSchema.safeParse({
     full_name,

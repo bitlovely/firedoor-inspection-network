@@ -24,7 +24,7 @@ export function RecoveryHashRedirect() {
       return;
     }
 
-    // Signup/magiclink should land on the affiliate dashboard.
+    // Signup/magiclink should land on the inspector dashboard.
     if (window.location.pathname.startsWith("/dashboard")) return;
     window.location.replace(`/dashboard${hash}`);
     return;

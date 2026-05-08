@@ -28,7 +28,7 @@ function statusCopy(status: string) {
         subject: "Application verified — Fire Door Inspection Network",
         heading: "You’re now verified",
         lines: [
-          "Great news — your documents have been verified and your affiliate status is now verified.",
+          "Great news — your documents have been verified and your inspector status is now verified.",
           "You should now be visible in the public directory (or will be shortly).",
         ],
       };
