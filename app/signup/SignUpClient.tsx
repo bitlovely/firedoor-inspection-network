@@ -24,6 +24,20 @@ export function SignUpClient() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
+  function friendlySignUpErrorMessage(message: string): string {
+    const m = message.trim().toLowerCase();
+    if (
+      m.includes("already registered") ||
+      m.includes("already signed") ||
+      m.includes("user already") ||
+      m.includes("email already") ||
+      m.includes("already exists")
+    ) {
+      return "You’ve already signed up. Please go to Sign in.";
+    }
+    return message;
+  }
+
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
@@ -51,7 +65,7 @@ export function SignUpClient() {
         },
       });
       if (error) {
-        setError(error.message);
+        setError(friendlySignUpErrorMessage(error.message));
         return;
       }
       // If email confirmations are enabled, Supabase returns no session and sends a confirmation email.
@@ -97,7 +111,14 @@ export function SignUpClient() {
               role="alert"
               className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
             >
-              {error}
+              {error}{" "}
+              {error.toLowerCase().includes("already signed up") ||
+              error.toLowerCase().includes("already signed") ||
+              error.toLowerCase().includes("already registered") ? (
+                <Link href="/signin" className="underline underline-offset-4">
+                  Sign in
+                </Link>
+              ) : null}
             </div>
           ) : null}
           {confirmationSentTo ? (
