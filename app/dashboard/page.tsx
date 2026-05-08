@@ -475,14 +475,6 @@ export default function DashboardPage() {
                   className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm lg:col-span-7 sm:p-8"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                    <p className="text-xs font-semibold tracking-wider text-black uppercase">
-                        Status
-                      </p>
-                      <div className="mt-2 flex flex-wrap items-center gap-3">
-                        <span className={statusBadge(app.status)}>{app.status}</span>
-                      </div>
-                    </div>
                     <div className="text-right">
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
                         Application ID
