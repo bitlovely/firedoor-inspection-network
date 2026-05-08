@@ -75,14 +75,26 @@ function truncateBioTwoSentences(raw: string): string {
   const text = raw.replace(/\s+/g, " ").trim();
   if (!text) return "";
 
-  const sentences = text.match(/[^.!?]+[.!?]+(?:["')\]]+)?/g);
-  if (sentences && sentences.length > 0) {
-    const firstTwo = sentences.slice(0, 2).join(" ").trim();
-    const hasMore = sentences.length > 2 && text.length > firstTwo.length + 1;
-    return hasMore ? `${firstTwo}…` : firstTwo;
+  // Prefer the platform sentence segmenter to avoid false stops like "U.S."
+  try {
+    const Seg = (Intl as unknown as { Segmenter?: typeof Intl.Segmenter }).Segmenter;
+    if (Seg) {
+      const seg = new Seg("en", { granularity: "sentence" });
+      const parts = Array.from(seg.segment(text))
+        .map((s) => s.segment.trim())
+        .filter(Boolean);
+      if (parts.length > 0) {
+        const firstTwo = parts.slice(0, 2).join(" ").trim();
+        const hasMore = parts.length > 2 && text.length > firstTwo.length + 1;
+        return hasMore ? `${firstTwo}…` : firstTwo;
+      }
+    }
+  } catch {
+    // fall back below
   }
 
-  const max = 180;
+  // Fallback: keep a reasonable preview length.
+  const max = 260;
   if (text.length <= max) return text;
   return `${text.slice(0, max).trimEnd()}…`;
 }
@@ -432,13 +444,13 @@ export function DirectoryClient() {
                           {svc.chips.map((c) => (
                             <span
                               key={c}
-                              className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black"
+                              className="rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent"
                             >
                               {c}
                             </span>
                           ))}
                           {svc.remaining > 0 ? (
-                            <span className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black">
+                            <span className="rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
                               +{svc.remaining}
                             </span>
                           ) : null}
