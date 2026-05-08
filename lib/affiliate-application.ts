@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+export const MAX_CERT_FILES = 8 as const;
+export const MAX_SAMPLE_REPORTS = 3 as const;
+
 const MAX_BYTES = 5 * 1024 * 1024;
 const allowedTypes = new Set([
   "application/pdf",
@@ -32,7 +35,41 @@ export function assertFileOk(
   if (file.size > MAX_BYTES) {
     return { ok: false, message: `${label}: file must be at most 5MB` };
   }
-  if (!allowedTypes.has(file.type)) {
+  const inferred = inferMimeFromFilename(file.name || "");
+  const mime = allowedTypes.has(file.type) ? file.type : inferred;
+  if (!allowedTypes.has(mime)) {
+    return {
+      ok: false,
+      message: `${label}: only PDF, JPEG, PNG, or WebP allowed`,
+    };
+  }
+  return { ok: true };
+}
+
+export function inferMimeFromFilename(filename: string): string {
+  const n = filename.trim().toLowerCase();
+  if (n.endsWith(".pdf")) return "application/pdf";
+  if (n.endsWith(".jpg") || n.endsWith(".jpeg")) return "image/jpeg";
+  if (n.endsWith(".png")) return "image/png";
+  if (n.endsWith(".webp")) return "image/webp";
+  return "";
+}
+
+/** Validate upload metadata returned from the browser before issuing signed URLs. */
+export function assertUploadMetaOk(
+  size: number,
+  mimeTypeHint: string | undefined,
+  filename: string,
+  label: string,
+): { ok: true } | { ok: false; message: string } {
+  if (size === 0) return { ok: false, message: `${label}: file is empty` };
+  if (size > MAX_BYTES) {
+    return { ok: false, message: `${label}: file must be at most 5MB` };
+  }
+  const raw = mimeTypeHint?.trim() ?? "";
+  const inferred = inferMimeFromFilename(filename);
+  const mime = raw && allowedTypes.has(raw) ? raw : inferred;
+  if (!allowedTypes.has(mime)) {
     return {
       ok: false,
       message: `${label}: only PDF, JPEG, PNG, or WebP allowed`,

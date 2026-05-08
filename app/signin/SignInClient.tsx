@@ -111,7 +111,7 @@ export function SignInClient() {
           <Lock className="h-7 w-7 text-white" strokeWidth={2} />
         </div>
         <h1 className="mt-6 text-center font-display text-3xl font-extrabold tracking-tight text-white">
-          Affiliate login
+          Inspector Login
         </h1>
         <p className="mt-2 text-center text-sm text-white">
           Sign in to access your profile and manage your account.
