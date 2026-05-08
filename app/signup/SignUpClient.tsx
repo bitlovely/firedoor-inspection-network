@@ -85,10 +85,10 @@ export function SignUpClient() {
           <UserPlus className="h-7 w-7 text-white" strokeWidth={2} />
         </div>
         <h1 className="mt-6 text-center font-display text-3xl font-extrabold tracking-tight text-white">
-          Become an Affiliate
+          Join the Network
         </h1>
         <p className="mt-2 text-center text-sm text-white">
-          Create your account first. You’ll complete registration next.
+          Create your account to complete your inspector registration.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-5">
