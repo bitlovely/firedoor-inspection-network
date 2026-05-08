@@ -55,7 +55,7 @@ function badge(status: string) {
   return (
     <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 sm:px-2.5 sm:py-1 sm:text-xs">
       <ShieldCheck className="h-3 w-3 text-emerald-700 sm:h-3.5 sm:w-3.5" />
-      Verified Inspector
+      Verified
     </span>
   );
 }
@@ -444,13 +444,13 @@ export function DirectoryClient() {
                           {svc.chips.map((c) => (
                             <span
                               key={c}
-                              className="rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent"
+                              className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black"
                             >
                               {c}
                             </span>
                           ))}
                           {svc.remaining > 0 ? (
-                            <span className="rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+                            <span className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black">
                               +{svc.remaining}
                             </span>
                           ) : null}
