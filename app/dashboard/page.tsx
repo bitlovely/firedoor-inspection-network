@@ -7,9 +7,14 @@ import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase/browser";
 import {
   BarChart3,
+  Building2,
+  CalendarClock,
   CreditCard,
   LayoutDashboard,
   LogOut,
+  Mail,
+  Map,
+  Phone,
   UserRound,
   BadgeCheck,
   Circle,
@@ -488,25 +493,37 @@ export default function DashboardPage() {
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
                         Name
                       </p>
-                      <p className="mt-1 text-sm text-black">{app.full_name}</p>
+                      <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
+                        <UserRound className="h-4 w-4 text-accent" />
+                        {app.full_name}
+                      </p>
                     </div>
                     <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
                         Company
                       </p>
-                      <p className="mt-1 text-sm text-black">{app.company_name}</p>
+                      <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
+                        <Building2 className="h-4 w-4 text-accent" />
+                        {app.company_name}
+                      </p>
                     </div>
                     <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
                         Email
                       </p>
-                      <p className="mt-1 text-sm text-black">{app.email}</p>
+                      <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
+                        <Mail className="h-4 w-4 text-accent" />
+                        {app.email}
+                      </p>
                     </div>
                     <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
                         Phone
                       </p>
-                      <p className="mt-1 text-sm text-black">{app.phone}</p>
+                      <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
+                        <Phone className="h-4 w-4 text-accent" />
+                        {app.phone}
+                      </p>
                     </div>
                     <div className="rounded-2xl border border-black/10 bg-black/5 p-4">
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
@@ -521,7 +538,10 @@ export default function DashboardPage() {
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
                         Experience
                       </p>
-                      <p className="mt-1 text-sm text-black">{app.years_experience} years</p>
+                      <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
+                        <CalendarClock className="h-4 w-4 text-accent" />
+                        {app.years_experience} years
+                      </p>
                     </div>
                   </div>
 
@@ -529,8 +549,9 @@ export default function DashboardPage() {
                     <p className="text-xs font-semibold tracking-wider text-black uppercase">
                       Coverage area
                     </p>
-                    <p className="mt-2 whitespace-pre-wrap text-sm text-black">
-                      {app.areas_covered}
+                    <p className="mt-2 inline-flex items-start gap-2 whitespace-pre-wrap text-sm text-black">
+                      <Map className="mt-[2px] h-4 w-4 shrink-0 text-accent" />
+                      <span>{app.areas_covered}</span>
                     </p>
                   </div>
                 </section>
