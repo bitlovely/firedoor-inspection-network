@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms — FireDoor Inspection Network",
-  description: "Terms for using FireDoor Inspection Network.",
+  title: "Terms — Fire Door Inspection Network",
+  description: "Terms for using Fire Door Inspection Network.",
 };
 
 export default function TermsPage() {

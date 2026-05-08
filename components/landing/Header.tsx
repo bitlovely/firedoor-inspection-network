@@ -46,18 +46,18 @@ export function Header() {
               href="/"
               className="flex items-center gap-2 text-primary-foreground transition-opacity hover:opacity-90"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
                 <Image
                   src="/logo-mark.svg"
                   alt=""
-                  width={20}
-                  height={20}
-                  className="h-5 w-5"
+                  width={18}
+                  height={18}
+                  className="h-[18px] w-[18px]"
                   priority
                 />
               </span>
               <span className="font-display text-base font-bold tracking-tight sm:text-lg">
-                FireDoor Inspection <span className="text-accent">Network</span>
+                Fire Door Inspection <span className="text-accent">Network</span>
               </span>
             </Link>
 

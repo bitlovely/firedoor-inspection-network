@@ -118,7 +118,7 @@ export function LandingPage() {
           <div className="animate-fade-up w-full max-w-3xl text-center">
             <div className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-semibold tracking-wider text-white/80 uppercase">
               <Sparkles className="h-3.5 w-3.5" />
-              Affiliate Network
+              Inspector Network
             </div>
             <h1 className="mt-6 font-display text-4xl leading-[1.05] font-extrabold tracking-tight text-balance text-white sm:text-5xl lg:text-6xl xl:text-7xl">
               Get listed. Get leads.{" "}
@@ -128,7 +128,7 @@ export function LandingPage() {
               </span>
             </h1>
             <p className="mt-6 mx-auto max-w-2xl text-lg text-balance text-white/70 sm:text-xl">
-              Nationwide inspection opportunities for verified fire door surveyors/ inspectors and installers. Get discovered by clients who need compliant fire door work.
+            Nationwide opportunities for verified fire door inspectors, surveyors, and installers. Get discovered by clients looking for compliant fire door services.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
@@ -327,7 +327,7 @@ export function LandingPage() {
                 <ShieldCheck className="h-6 w-6" strokeWidth={2.5} />
                 <div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-accent-foreground/90">
-                    FireDoor Inspection Network
+                    Fire Door Inspection Network
                   </div>
                   <div className="font-display text-lg font-bold">Verified Affiliate</div>
                 </div>

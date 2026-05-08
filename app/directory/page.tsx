@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { DirectoryClient } from "./ui/DirectoryClient";
 
 export const metadata: Metadata = {
-  title: "Directory — FireDoor Inspection Network",
+  title: "Directory — Fire Door Inspection Network",
   description: "Find verified fire door surveyors and inspectors near you.",
 };
 

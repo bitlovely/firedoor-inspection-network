@@ -6,7 +6,7 @@ import { adminCookieName, verifyAdminSession } from "@/lib/admin/session";
 import { AdminDashboardClient } from "./AdminDashboardClient";
 
 export const metadata: Metadata = {
-  title: "Admin dashboard — FireDoor Inspection Network",
+  title: "Admin dashboard — Fire Door Inspection Network",
   description: "Review affiliate applications.",
 };
 

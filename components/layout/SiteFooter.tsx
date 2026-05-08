@@ -3,13 +3,13 @@ import Image from "next/image";
 
 function LogoMark() {
   return (
-    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
+    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-gradient shadow-accent-glow">
       <Image
         src="/logo-mark.svg"
         alt=""
-        width={20}
-        height={20}
-        className="h-5 w-5"
+        width={18}
+        height={18}
+        className="h-[18px] w-[18px]"
         priority
       />
     </span>
@@ -28,7 +28,7 @@ export function SiteFooter() {
             <Link href="/" className="flex items-center gap-2">
               <LogoMark />
               <span className="font-display text-lg font-bold">
-                FireDoor Inspection <span className="text-accent">Network</span>
+                Fire Door Inspection <span className="text-accent">Network</span>
               </span>
             </Link>
             <p className="mt-4 max-w-sm text-sm text-white/60">
@@ -94,7 +94,7 @@ export function SiteFooter() {
         </div>
         <div className="mt-12 flex flex-col justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/50 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} FireDoor Inspection Network. All rights reserved.
+            © {new Date().getFullYear()} Fire Door Inspection Network. All rights reserved.
           </p>
           <p>Built for surveyors, by people who know the trade.</p>
         </div>

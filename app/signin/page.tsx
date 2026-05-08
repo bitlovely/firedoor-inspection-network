@@ -3,8 +3,8 @@ import Image from "next/image";
 import { SignInClient } from "./SignInClient";
 
 export const metadata: Metadata = {
-  title: "Sign in — FireDoor Inspection Network",
-  description: "Sign in to your FireDoor Inspection Network account.",
+  title: "Sign in — Fire Door Inspection Network",
+  description: "Sign in to your Fire Door Inspection Network account.",
 };
 
 export default function SignInPage() {

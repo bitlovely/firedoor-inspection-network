@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Privacy Policy — FireDoor Inspection Network",
-  description: "Privacy policy for FireDoor Inspection Network.",
+  title: "Privacy Policy — Fire Door Inspection Network",
+  description: "Privacy policy for Fire Door Inspection Network.",
 };
 
 export default function PrivacyPage() {
@@ -11,7 +11,7 @@ export default function PrivacyPage() {
       <div className="container mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <h1 className="font-display text-3xl font-extrabold tracking-tight">Privacy Policy</h1>
         <p className="mt-3 text-sm text-white/70">
-          How FireDoor Inspection Network operates and what it means for users and affiliates.
+          How Fire Door Inspection Network operates and what it means for users and affiliates.
         </p>
 
         <div className="mt-10 rounded-3xl border border-white/15 bg-white/5 p-6 text-sm text-white/80">

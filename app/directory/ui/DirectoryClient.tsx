@@ -518,7 +518,7 @@ export function DirectoryClient() {
                   <img src="/logo-mark.svg" alt="" className="h-5 w-5" />
                 </span>
                 <div className="font-display text-sm font-bold leading-tight">
-                  FireDoor <span className="text-accent">Inspection</span> Network
+                  Fire Door <span className="text-accent">Inspection</span> Network
                 </div>
               </div>
               <button
