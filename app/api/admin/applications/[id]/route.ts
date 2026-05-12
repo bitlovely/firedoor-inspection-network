@@ -4,21 +4,48 @@ import { adminCookieName, verifyAdminSession } from "@/lib/admin/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { BUCKET } from "@/lib/affiliate-application";
 import { sendApplicationStatusUpdatedEmail } from "@/lib/email/send-application-status-updated";
+import { isAdminBearer } from "@/lib/admin/bearer-auth";
 
 export const runtime = "nodejs";
 
-async function isAdmin() {
+async function isAdmin(request: Request): Promise<boolean> {
   const jar = await cookies();
-  const token = jar.get(adminCookieName())?.value ?? "";
-  const session = token ? verifyAdminSession(token) : null;
-  return Boolean(session && session.role === "admin");
+  const cookieToken = jar.get(adminCookieName())?.value ?? "";
+  const cookieSession = cookieToken ? verifyAdminSession(cookieToken) : null;
+  if (cookieSession?.role === "admin") return true;
+  // bearer-based: custom admin JWT (mobile)
+  const authHeader = request.headers.get("Authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    const bearerSession = verifyAdminSession(authHeader.slice(7));
+    if (bearerSession?.role === "admin") return true;
+  }
+  // bearer-based: Supabase JWT (mobile — legacy)
+  return isAdminBearer(authHeader);
+}
+
+function buildDocuments(row: Record<string, unknown>) {
+  const toFiles = (paths: unknown): { name: string; path: string }[] =>
+    Array.isArray(paths)
+      ? paths.map((p: string) => ({ name: p.split("/").pop() ?? p, path: p }))
+      : [];
+  const toFile = (path: unknown) =>
+    typeof path === "string" && path
+      ? { name: path.split("/").pop() ?? path, path }
+      : null;
+  return {
+    certifications: toFiles(row.certification_paths),
+    insurance: toFiles(row.insurance_path ? [row.insurance_path] : []),
+    dbs: toFiles(row.dbs_path ? [row.dbs_path] : []),
+    sample_reports: toFiles(row.sample_report_paths),
+    profile_photo: toFile(row.profile_photo_path),
+  };
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await isAdmin())) {
+  if (!(await isAdmin(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -35,14 +62,17 @@ export async function GET(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-  return NextResponse.json({ application: data }, { status: 200 });
+  return NextResponse.json(
+    { application: { ...data, documents: buildDocuments(data as Record<string, unknown>) } },
+    { status: 200 },
+  );
 }
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await isAdmin())) {
+  if (!(await isAdmin(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -197,7 +227,10 @@ export async function PATCH(
     console.error("[admin/applications] status email failed:", emailErr);
   }
 
-  return NextResponse.json({ application: data }, { status: 200 });
+  return NextResponse.json(
+    { application: { ...data, documents: buildDocuments(data as Record<string, unknown>) } },
+    { status: 200 },
+  );
 }
 
 export async function POST(
@@ -205,7 +238,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   // Create signed download URLs for stored docs.
-  if (!(await isAdmin())) {
+  if (!(await isAdmin(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -3,21 +3,29 @@ import { cookies } from "next/headers";
 import { adminCookieName, verifyAdminSession } from "@/lib/admin/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { BUCKET } from "@/lib/affiliate-application";
+import { isAdminBearer } from "@/lib/admin/bearer-auth";
 
 export const runtime = "nodejs";
 
-async function assertAdmin() {
+async function assertAdmin(request: Request) {
+  // cookie-based (web)
   const jar = await cookies();
-  const token = jar.get(adminCookieName())?.value ?? "";
-  const session = token ? verifyAdminSession(token) : null;
-  if (!session || session.role !== "admin") {
-    return null;
+  const cookieToken = jar.get(adminCookieName())?.value ?? "";
+  const cookieSession = cookieToken ? verifyAdminSession(cookieToken) : null;
+  if (cookieSession?.role === "admin") return cookieSession;
+  // bearer-based: custom admin JWT (mobile)
+  const authHeader = request.headers.get("Authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    const bearerSession = verifyAdminSession(authHeader.slice(7));
+    if (bearerSession?.role === "admin") return bearerSession;
   }
-  return session;
+  // bearer-based: Supabase JWT (mobile — legacy)
+  if (await isAdminBearer(authHeader)) return { role: "admin" };
+  return null;
 }
 
-export async function GET() {
-  if (!(await assertAdmin())) {
+export async function GET(request: Request) {
+  if (!(await assertAdmin(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     maxAge: 60 * 60 * 12, // 12h
   });
 
-  return NextResponse.json({ ok: true }, { status: 200 });
+  return NextResponse.json({ ok: true, token }, { status: 200 });
 }
 
 export async function DELETE() {
