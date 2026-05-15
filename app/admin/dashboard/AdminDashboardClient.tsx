@@ -9,6 +9,7 @@ import { AdminApplicationDetailClient } from "./[id]/ui/AdminApplicationDetailCl
 
 type Application = {
   id: string;
+  fdin_pin?: string | null;
   created_at: string;
   status: string;
   full_name: string;
@@ -231,7 +232,8 @@ export function AdminDashboardClient() {
         if (Number.isFinite(t) && t < minCreatedAt) return false;
       }
       if (!needle) return true;
-      const hay = `${a.full_name} ${a.company_name} ${a.email} ${a.postcode}`.toLowerCase();
+      const hay =
+        `${a.full_name} ${a.company_name} ${a.email} ${a.postcode} ${a.fdin_pin ?? ""}`.toLowerCase();
       return hay.includes(needle);
     });
   }, [apps, q, statusFilter, dateFilter]);
@@ -480,7 +482,7 @@ export function AdminDashboardClient() {
                     <input
                       value={q}
                       onChange={(e) => setQ(e.target.value)}
-                      placeholder="Full name, company, email, postcode…"
+                      placeholder="Name, company, email, postcode, FDIN PIN…"
                       className="h-11 w-full rounded-2xl border border-black/10 bg-white pl-10 pr-4 text-sm text-black placeholder:text-black outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
                     />
                   </div>
@@ -566,6 +568,11 @@ export function AdminDashboardClient() {
                                   <p className="mt-0.5 truncate text-xs text-black/70">
                                     {a.company_name} · {a.postcode}
                                   </p>
+                                  {a.fdin_pin ? (
+                                    <p className="mt-0.5 truncate font-mono text-[11px] font-semibold text-accent">
+                                      {a.fdin_pin}
+                                    </p>
+                                  ) : null}
                                 </div>
                               </div>
 
@@ -640,6 +647,13 @@ export function AdminDashboardClient() {
                                   <MapPin className="h-4 w-4 shrink-0 text-black/50" />
                                   {a.postcode}
                                 </p>
+                                {a.fdin_pin ? (
+                                  <p className="mt-1.5 font-mono text-sm font-semibold tracking-wide text-accent">
+                                    {a.fdin_pin}
+                                  </p>
+                                ) : (
+                                  <p className="mt-1.5 text-xs text-black/50">No FDIN PIN</p>
+                                )}
                               </div>
                             </div>
 
@@ -678,19 +692,15 @@ export function AdminDashboardClient() {
                             </div>
 
                             <div className="hidden items-center gap-3 sm:flex">
-                              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-black/10 bg-white">
-                                <Star className="h-5 w-5 text-black" />
+                              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-accent/20 bg-accent/10">
+                                <span className="font-mono text-[10px] font-bold text-accent">PIN</span>
                               </span>
                               <div className="min-w-0">
                                 <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
-                                  Reviews
+                                  FDIN PIN
                                 </p>
-                                <p className="mt-1 text-sm font-semibold text-black">
-                                  {rating && reviews
-                                    ? `${rating} (${reviews})`
-                                    : reviews
-                                      ? `${reviews}`
-                                      : "—"}
+                                <p className="mt-1 font-mono text-sm font-semibold text-accent">
+                                  {a.fdin_pin ?? "—"}
                                 </p>
                               </div>
                             </div>

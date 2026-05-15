@@ -30,13 +30,32 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from("affiliate_applications")
-    .select(
-      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,profile_photo_path,bio,services,review_count,review_rating",
-    )
-    .order("created_at", { ascending: false })
-    .limit(200);
+  const selectWithPin =
+    "id,fdin_pin,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,profile_photo_path,bio,services,review_count,review_rating";
+  const selectLegacy = selectWithPin.replace("fdin_pin,", "");
+
+  let data: Record<string, unknown>[] | null = null;
+  let error: { message: string } | null = null;
+
+  {
+    const r = await supabase
+      .from("affiliate_applications")
+      .select(selectWithPin)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    data = (r.data as Record<string, unknown>[] | null) ?? null;
+    error = r.error ? { message: r.error.message } : null;
+  }
+
+  if (error && /fdin_pin/i.test(error.message)) {
+    const r = await supabase
+      .from("affiliate_applications")
+      .select(selectLegacy)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    data = (r.data as Record<string, unknown>[] | null) ?? null;
+    error = r.error ? { message: r.error.message } : null;
+  }
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
