@@ -587,11 +587,6 @@ export function DirectoryClient() {
                     </div>
                   </div>
 
-                  <RequestInspectionForm
-                    affiliateId={drawerAffiliate.id}
-                    inspectorName={drawerAffiliate.full_name}
-                  />
-
                   {drawerAffiliate.bio?.trim() ? (
                     <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
                       <h3 className="flex items-center gap-2 font-display text-sm font-bold">
@@ -705,6 +700,10 @@ export function DirectoryClient() {
                     </div>
                   </section>
 
+                  <RequestInspectionForm
+                    affiliateId={drawerAffiliate.id}
+                    inspectorName={drawerAffiliate.full_name}
+                  />
                 </div>
               ) : null}
             </div>

@@ -721,6 +721,12 @@ export function AdminDashboardClient() {
                             </span>
                           </div>
 
+                          {a.bio?.trim() ? (
+                            <p className="text-sm leading-relaxed text-black line-clamp-3 sm:line-clamp-4">
+                              {a.bio.trim()}
+                            </p>
+                          ) : null}
+
                           {svc.chips.length > 0 ? (
                             <div className="flex flex-wrap gap-2">
                               {svc.chips.map((c) => (
@@ -737,12 +743,6 @@ export function AdminDashboardClient() {
                                 </span>
                               ) : null}
                             </div>
-                          ) : null}
-
-                          {a.bio?.trim() ? (
-                            <p className="text-sm leading-relaxed text-black line-clamp-3 sm:line-clamp-4">
-                              {a.bio.trim()}
-                            </p>
                           ) : null}
 
                         </div>

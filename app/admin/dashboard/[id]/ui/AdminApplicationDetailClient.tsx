@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   BadgeCheck,
-  Briefcase,
   CheckCircle2,
   ChevronLeft,
   Circle,
@@ -44,6 +43,65 @@ type Application = {
   verified_certification?: boolean;
   identity_checked?: boolean;
 };
+
+function serviceChips(services: string | null | undefined) {
+  if (!services?.trim()) return { chips: [] as string[], remaining: 0 };
+  const parts = services
+    .split(/[\n,•|/]+/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const unique = Array.from(new Set(parts));
+  const chips = unique.slice(0, 6);
+  return { chips, remaining: Math.max(0, unique.length - chips.length) };
+}
+
+function ServiceBadges({ services }: { services?: string | null }) {
+  const svc = serviceChips(services);
+  if (svc.chips.length === 0) return null;
+  return (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {svc.chips.map((c) => (
+        <span
+          key={c}
+          className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black"
+        >
+          {c}
+        </span>
+      ))}
+      {svc.remaining > 0 ? (
+        <span className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-semibold text-black">
+          +{svc.remaining}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+function ServiceBadgesPreview({
+  services,
+  light,
+}: {
+  services?: string | null;
+  light: boolean;
+}) {
+  const svc = serviceChips(services);
+  if (svc.chips.length === 0) return null;
+  const chipClass = light
+    ? "rounded-full border border-black/10 bg-white px-2.5 py-1 text-[11px] font-semibold text-black"
+    : "rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white";
+  return (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {svc.chips.map((c) => (
+        <span key={c} className={chipClass}>
+          {c}
+        </span>
+      ))}
+      {svc.remaining > 0 ? (
+        <span className={chipClass}>+{svc.remaining}</span>
+      ) : null}
+    </div>
+  );
+}
 
 function initialsFromName(fullName: string) {
   return fullName
@@ -244,27 +302,18 @@ export function AdminApplicationDetailClient({
 
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
-              {app.bio?.trim() ? (
+              {app.bio?.trim() || app.services?.trim() ? (
                 <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
                   <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
                     <ScrollText className="h-4 w-4 text-accent" />
                     Bio
                   </h3>
-                  <p className="mt-2 whitespace-pre-wrap text-sm text-black">
-                    {app.bio.trim()}
-                  </p>
-                </section>
-              ) : null}
-
-              {app.services?.trim() ? (
-                <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">
-                  <h3 className="flex items-center gap-2 font-display text-sm font-bold text-black">
-                    <Briefcase className="h-4 w-4 text-accent" />
-                    Services
-                  </h3>
-                  <p className="mt-2 whitespace-pre-wrap text-sm text-black">
-                    {app.services.trim()}
-                  </p>
+                  {app.bio?.trim() ? (
+                    <p className="mt-2 whitespace-pre-wrap text-sm text-black">
+                      {app.bio.trim()}
+                    </p>
+                  ) : null}
+                  <ServiceBadges services={app.services} />
                 </section>
               ) : null}
 
@@ -648,7 +697,7 @@ export function AdminApplicationDetailClient({
                       </p>
                     </div>
 
-                    {app.bio?.trim() ? (
+                    {app.bio?.trim() || app.services?.trim() ? (
                       <div
                         className={
                           light
@@ -665,44 +714,18 @@ export function AdminApplicationDetailClient({
                         >
                           Bio
                         </p>
-                        <p
-                          className={
-                            light
-                              ? "mt-2 whitespace-pre-wrap text-sm text-black"
-                              : "mt-2 whitespace-pre-wrap text-sm text-white/90"
-                          }
-                        >
-                          {app.bio.trim()}
-                        </p>
-                      </div>
-                    ) : null}
-
-                    {app.services?.trim() ? (
-                      <div
-                        className={
-                          light
-                            ? "rounded-2xl border border-black/10 bg-black/5 p-4"
-                            : "rounded-2xl border border-white/10 bg-white/5 p-4"
-                        }
-                      >
-                        <p
-                          className={
-                            light
-                              ? "text-xs font-semibold tracking-wider text-black uppercase"
-                              : "text-xs font-semibold tracking-wider text-white uppercase"
-                          }
-                        >
-                          Services
-                        </p>
-                        <p
-                          className={
-                            light
-                              ? "mt-2 whitespace-pre-wrap text-sm text-black"
-                              : "mt-2 whitespace-pre-wrap text-sm text-white/90"
-                          }
-                        >
-                          {app.services.trim()}
-                        </p>
+                        {app.bio?.trim() ? (
+                          <p
+                            className={
+                              light
+                                ? "mt-2 whitespace-pre-wrap text-sm text-black"
+                                : "mt-2 whitespace-pre-wrap text-sm text-white/90"
+                            }
+                          >
+                            {app.bio.trim()}
+                          </p>
+                        ) : null}
+                        <ServiceBadgesPreview services={app.services} light={light} />
                       </div>
                     ) : null}
 
