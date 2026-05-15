@@ -16,7 +16,7 @@ function statusCopy(status: string) {
   switch (status) {
     case "approved":
       return {
-        subject: "Application approved — Fire Door Inspection Network",
+        subject: "Application approved — Fire Door Network",
         heading: "Your application has been approved",
         lines: [
           "Good news — your application has been approved.",
@@ -25,7 +25,7 @@ function statusCopy(status: string) {
       };
     case "verified":
       return {
-        subject: "Application verified — Fire Door Inspection Network",
+        subject: "Application verified — Fire Door Network",
         heading: "You’re now verified",
         lines: [
           "Great news — your documents have been verified and your inspector status is now verified.",
@@ -34,7 +34,7 @@ function statusCopy(status: string) {
       };
     case "rejected":
       return {
-        subject: "Application update — Fire Door Inspection Network",
+        subject: "Application update — Fire Door Network",
         heading: "Your application needs attention",
         lines: [
           "We weren’t able to approve your application at this time.",
@@ -43,7 +43,7 @@ function statusCopy(status: string) {
       };
     default:
       return {
-        subject: "Application update — Fire Door Inspection Network",
+        subject: "Application update — Fire Door Network",
         heading: "Your application status has been updated",
         lines: [`Your application status is now: ${status}.`],
       };
@@ -78,7 +78,7 @@ export async function sendApplicationStatusUpdatedEmail(params: Params): Promise
     "",
     statusLine,
     "",
-    "— Fire Door Inspection Network",
+    "— Fire Door Network",
   ].join("\n");
 
   const dashboardBlock = url
@@ -94,7 +94,7 @@ export async function sendApplicationStatusUpdatedEmail(params: Params): Promise
   ${status.lines.map((l) => `<p>${escapeHtml(l)}</p>`).join("\n")}
   <p><strong>Company:</strong> ${escapeHtml(params.companyName)}</p>
   ${dashboardBlock}
-  <p style="margin-top: 2rem; color: #666; font-size: 14px;">— Fire Door Inspection Network</p>
+  <p style="margin-top: 2rem; color: #666; font-size: 14px;">— Fire Door Network</p>
 </body>
 </html>`;
 

@@ -15,9 +15,9 @@ type AffiliateProfile = {
 };
 
 export const metadata: Metadata = {
-  title: "Inspector profile — Fire Door Inspection Network",
+  title: "Inspector profile — Fire Door Network",
   description:
-    "Public profile for an approved Fire Door Inspection Network inspector.",
+    "Public profile for an approved Fire Door Network inspector.",
 };
 
 export default async function AffiliateProfilePage({

@@ -118,7 +118,7 @@ export function LandingPage() {
           <div className="animate-fade-up w-full max-w-3xl text-center">
             <div className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-semibold tracking-wider text-white/80 uppercase">
               <Sparkles className="h-3.5 w-3.5" />
-              Inspector Network
+              Fire Door Network
             </div>
             <h1 className="mt-6 font-display text-4xl leading-[1.05] font-extrabold tracking-tight text-balance text-white sm:text-5xl lg:text-6xl xl:text-7xl">
               Get listed. Get leads.{" "}
@@ -327,7 +327,7 @@ export function LandingPage() {
                 <ShieldCheck className="h-6 w-6" strokeWidth={2.5} />
                 <div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-accent-foreground/90">
-                    Fire Door Inspection Network
+                    Fire Door Network
                   </div>
                   <div className="font-display text-lg font-bold">Verified Inspector</div>
                 </div>

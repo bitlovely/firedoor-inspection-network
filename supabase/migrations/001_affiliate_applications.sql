@@ -1,4 +1,4 @@
--- FireDoor Network — affiliate applications + private document storage
+-- Fire Door Network — affiliate applications + private document storage
 -- Run in Supabase SQL Editor (or `supabase db push`) after creating a project.
 
 create table if not exists public.affiliate_applications (

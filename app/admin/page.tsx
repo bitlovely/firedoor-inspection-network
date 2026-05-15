@@ -3,8 +3,8 @@ import Image from "next/image";
 import { AdminSignInClient } from "./AdminSignInClient";
 
 export const metadata: Metadata = {
-  title: "Admin — Fire Door Inspection Network",
-  description: "Admin sign-in for Fire Door Inspection Network.",
+  title: "Admin — Fire Door Network",
+  description: "Admin sign-in for Fire Door Network.",
 };
 
 export default function AdminPage() {

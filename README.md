@@ -1,4 +1,4 @@
-# FireDoor Network
+# Fire Door Network
 
 **A network that leads to work.**
 
@@ -66,7 +66,7 @@ Configure the webhook in Stripe to point at:
 | Variable | Scope | Purpose |
 |----------|--------|---------|
 | `RESEND_API_KEY` | Server | Resend API key. If unset, confirmation email is skipped (application still succeeds). |
-| `RESEND_FROM_EMAIL` | Server | Verified sender, e.g. `FireDoor Network <onboarding@resend.dev>` or your domain. Required together with `RESEND_API_KEY` to send mail. |
+| `RESEND_FROM_EMAIL` | Server | Verified sender, e.g. `Fire Door Network <onboarding@resend.dev>` or your domain. Required together with `RESEND_API_KEY` to send mail. |
 
 ### Admin dashboard
 

@@ -28,7 +28,7 @@ export function SiteFooter() {
             <Link href="/" className="flex items-center gap-2">
               <LogoMark />
               <span className="font-display text-lg font-bold">
-                Fire Door Inspection <span className="text-accent">Network</span>
+                Fire Door <span className="text-accent">Network</span>
               </span>
             </Link>
             <p className="mt-4 max-w-sm text-sm text-white/60">
@@ -94,7 +94,7 @@ export function SiteFooter() {
         </div>
         <div className="mt-12 flex flex-col justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/50 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} Fire Door Inspection Network. All rights reserved.
+            © {new Date().getFullYear()} Fire Door Network. All rights reserved.
           </p>
           <p>Built for surveyors, by people who know the trade.</p>
         </div>

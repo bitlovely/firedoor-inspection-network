@@ -20,21 +20,21 @@ const pressStart = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "Fire Door Inspection Network — A network that leads to work",
+  title: "Fire Door Network — A network that leads to work",
   description:
     "The UK network connecting verified fire door surveyors and inspectors with the property managers, contractors and clients who need them.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
   openGraph: {
-    title: "Fire Door Inspection Network — A network that leads to work",
+    title: "Fire Door Network — A network that leads to work",
     description:
       "The UK network connecting verified fire door surveyors and inspectors with the property managers, contractors and clients who need them.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fire Door Inspection Network — A network that leads to work",
+    title: "Fire Door Network — A network that leads to work",
     description:
       "The UK network connecting verified fire door surveyors and inspectors with the property managers, contractors and clients who need them.",
   },
