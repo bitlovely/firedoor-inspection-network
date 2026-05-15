@@ -93,6 +93,7 @@ Configure the webhook in Stripe to point at:
    - `supabase/migrations/002_affiliate_applications_user_id.sql`
    - `supabase/migrations/003_affiliate_public_profile_fields.sql`
    - `supabase/migrations/004_affiliate_subscriptions.sql`
+   - `supabase/migrations/005_affiliate_fdin_pin.sql`
 
 3. Enable **Auth** (email/password) and add redirect URLs your app uses (e.g. `/dashboard`, `/reset-password`) under Authentication → URL configuration.
 

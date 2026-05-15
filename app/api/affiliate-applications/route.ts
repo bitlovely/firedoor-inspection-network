@@ -7,6 +7,7 @@ import {
   BUCKET,
   sanitizeFilename,
 } from "@/lib/affiliate-application";
+import { createUniqueFdinPin } from "@/lib/fdin-pin";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -157,10 +158,13 @@ export async function POST(request: Request) {
       await uploadOne(dbsFile, dbsPath);
     }
 
+    const fdinPin = await createUniqueFdinPin(supabase);
+
     const { data: inserted, error: insertError } = await supabase
       .from("affiliate_applications")
       .insert({
         id: applicationId,
+        fdin_pin: fdinPin,
         user_id: userId,
         status: "pending",
         full_name: fields.full_name,

@@ -29,6 +29,7 @@ import { SubscriptionPanel } from "./SubscriptionPanel";
 
 type Application = {
   id: string;
+  fdin_pin?: string | null;
   status: "pending" | "approved" | "rejected" | "verified" | string;
   full_name: string;
   company_name: string;
@@ -479,12 +480,23 @@ export default function DashboardPage() {
                 <section
                   className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm lg:col-span-7 sm:p-8"
                 >
-                  <div className="flex flex-wrap items-start justify-end gap-4">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-semibold tracking-wider text-black uppercase">
+                        FDIN PIN
+                      </p>
+                      <p className="mt-2 font-display text-2xl font-extrabold tracking-tight text-accent">
+                        {app.fdin_pin ?? "—"}
+                      </p>
+                      <p className="mt-1 text-xs text-black/60">
+                        Quote this number for account queries and support.
+                      </p>
+                    </div>
                     <div className="text-right">
                       <p className="text-xs font-semibold tracking-wider text-black uppercase">
                         Application ID
                       </p>
-                      <p className="mt-2 font-mono text-xs text-black">{app.id}</p>
+                      <p className="mt-2 font-mono text-xs text-black/70">{app.id}</p>
                     </div>
                   </div>
 

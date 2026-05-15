@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { ensureApplicationFdinPin } from "@/lib/fdin-pin";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -34,7 +35,7 @@ export async function GET(request: Request) {
 
   const admin = createAdminClient();
   const baseSelect =
-    "id,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,certification_paths,insurance_path,dbs_path,profile_photo_path,verified_insurance,verified_certification,identity_checked";
+    "id,fdin_pin,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,created_at,certification_paths,insurance_path,dbs_path,profile_photo_path,verified_insurance,verified_certification,identity_checked";
   const planSelect = `${baseSelect},plan_type,subscription_status,subscription_current_period_end`;
 
   let data: unknown = null;
@@ -54,7 +55,12 @@ export async function GET(request: Request) {
     error = r.error ? { message: r.error.message } : null;
   }
 
-  if (error && /plan_type|subscription_status|subscription_current_period_end/i.test(error.message)) {
+  if (
+    error &&
+    /plan_type|subscription_status|subscription_current_period_end|fdin_pin/i.test(
+      error.message,
+    )
+  ) {
     const r = await admin
       .from("affiliate_applications")
       .select(baseSelect)
@@ -80,6 +86,22 @@ export async function GET(request: Request) {
     return NextResponse.json({ application: null }, { status: 200 });
   }
 
-  return NextResponse.json({ application: data }, { status: 200 });
+  const record = data as Record<string, unknown> & { id: string };
+  let fdinPin =
+    typeof record.fdin_pin === "string" && record.fdin_pin.trim()
+      ? record.fdin_pin.trim()
+      : null;
+  if (!fdinPin) {
+    try {
+      fdinPin = await ensureApplicationFdinPin(admin, record.id);
+    } catch {
+      // column may not exist until migration runs
+    }
+  }
+
+  return NextResponse.json(
+    { application: { ...record, fdin_pin: fdinPin ?? record.fdin_pin ?? null } },
+    { status: 200 },
+  );
 }
 

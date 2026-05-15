@@ -20,6 +20,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 type Affiliate = {
   id: string;
+  fdin_pin?: string | null;
   status: string;
   full_name: string;
   company_name: string;
@@ -369,6 +370,11 @@ export function DirectoryClient() {
                             <p className="mt-0.5 truncate text-sm font-semibold text-black">
                               {a.company_name}
                             </p>
+                            {a.fdin_pin ? (
+                              <p className="mt-1 font-mono text-xs font-semibold tracking-wide text-accent">
+                                {a.fdin_pin}
+                              </p>
+                            ) : null}
                             <p className="mt-1 inline-flex items-center gap-2 text-sm text-black">
                               <MapPin className="h-4 w-4 shrink-0 text-black/50" />
                               {a.postcode}
@@ -562,6 +568,11 @@ export function DirectoryClient() {
                         {badge(drawerAffiliate.status)}
                       </div>
                       <p className="mt-1 text-sm text-black/70">{drawerAffiliate.company_name}</p>
+                      {drawerAffiliate.fdin_pin ? (
+                        <p className="mt-2 font-mono text-sm font-semibold tracking-wide text-accent">
+                          {drawerAffiliate.fdin_pin}
+                        </p>
+                      ) : null}
                       <p className="mt-2 inline-flex items-center gap-2 text-sm text-black/80">
                         <MapPin className="h-4 w-4 shrink-0 text-black/50" />
                         {drawerAffiliate.postcode}

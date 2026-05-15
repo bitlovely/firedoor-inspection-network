@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { adminCookieName, verifyAdminSession } from "@/lib/admin/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { BUCKET } from "@/lib/affiliate-application";
+import { ensureApplicationFdinPin } from "@/lib/fdin-pin";
 import { sendApplicationStatusUpdatedEmail } from "@/lib/email/send-application-status-updated";
 import { isAdminBearer } from "@/lib/admin/bearer-auth";
 
@@ -54,7 +55,7 @@ export async function GET(
   const { data, error } = await supabase
     .from("affiliate_applications")
     .select(
-      "id,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,reviewed_at,reviewed_by,updated_at,verified_insurance,verified_certification,identity_checked,bio,services,review_count,review_rating",
+      "id,fdin_pin,created_at,status,full_name,company_name,email,phone,postcode,years_experience,areas_covered,certification_paths,insurance_path,dbs_path,internal_notes,reviewed_at,reviewed_by,updated_at,verified_insurance,verified_certification,identity_checked,bio,services,review_count,review_rating",
     )
     .eq("id", id)
     .single();
@@ -66,6 +67,18 @@ export async function GET(
     { application: { ...data, documents: buildDocuments(data as Record<string, unknown>) } },
     { status: 200 },
   );
+
+  let application = data as Record<string, unknown> & { id: string };
+  if (!application.fdin_pin) {
+    try {
+      const pin = await ensureApplicationFdinPin(supabase, application.id);
+      if (pin) application = { ...application, fdin_pin: pin };
+    } catch {
+      // ignore if column missing
+    }
+  }
+
+  return NextResponse.json({ application }, { status: 200 });
 }
 
 export async function PATCH(

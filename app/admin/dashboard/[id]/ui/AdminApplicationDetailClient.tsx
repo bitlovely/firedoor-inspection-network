@@ -22,6 +22,7 @@ import {
 
 type Application = {
   id: string;
+  fdin_pin?: string | null;
   created_at: string;
   status: string;
   full_name: string;
@@ -228,6 +229,11 @@ export function AdminApplicationDetailClient({
                 {saving ? <Loader2 className="h-4 w-4 animate-spin text-black" /> : null}
               </div>
               <p className="mt-1 text-sm font-semibold text-black">{app.company_name}</p>
+              {app.fdin_pin ? (
+                <p className="mt-2 font-mono text-sm font-semibold tracking-wide text-accent">
+                  FDIN PIN: {app.fdin_pin}
+                </p>
+              ) : null}
               <p className="mt-2 inline-flex items-center gap-2 text-sm text-black">
                 <MapPin className="h-4 w-4 shrink-0 text-black/50" />
                 {app.postcode}

@@ -4,6 +4,7 @@ type Params = {
   to: string;
   applicantName: string;
   companyName: string;
+  fdinPin?: string;
 };
 
 /**
@@ -26,6 +27,10 @@ export async function sendApplicationReceivedEmail(params: Params): Promise<void
     ? `You can check your application status anytime: ${dashboardUrl}`
     : "You can check your application status anytime by signing in to your dashboard on our website.";
 
+  const pinLine = params.fdinPin
+    ? `Your FDIN PIN is ${params.fdinPin}. Please quote this number if you contact us about your application.`
+    : "";
+
   const text = [
     `Hi ${params.applicantName},`,
     "",
@@ -33,6 +38,7 @@ export async function sendApplicationReceivedEmail(params: Params): Promise<void
     "",
     `We’ve received your application for ${params.companyName}. Our team will review your details and uploaded documents. We’ll email you when there’s an update.`,
     "",
+    ...(pinLine ? [pinLine, ""] : []),
     statusLine,
     "",
     "— Fire Door Network",
@@ -49,6 +55,11 @@ export async function sendApplicationReceivedEmail(params: Params): Promise<void
   <p>Hi ${escapeHtml(params.applicantName)},</p>
   <p>Thanks for applying to <strong>Fire Door Network</strong> as an inspector.</p>
   <p>We’ve received your application for <strong>${escapeHtml(params.companyName)}</strong>. Our team will review your details and uploaded documents. We’ll email you when there’s an update.</p>
+  ${
+    params.fdinPin
+      ? `<p><strong>Your FDIN PIN:</strong> <span style="font-family: ui-monospace, monospace;">${escapeHtml(params.fdinPin)}</span><br /><span style="color:#666;font-size:14px;">Quote this number if you contact us about your application.</span></p>`
+      : ""
+  }
   ${dashboardBlock}
   <p style="margin-top: 2rem; color: #666; font-size: 14px;">— Fire Door Network</p>
 </body>

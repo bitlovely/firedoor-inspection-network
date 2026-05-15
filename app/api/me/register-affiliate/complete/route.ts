@@ -10,6 +10,7 @@ import {
   sanitizeFilename,
 } from "@/lib/affiliate-application";
 import { sendApplicationReceivedEmail } from "@/lib/email/send-application-received";
+import { createUniqueFdinPin } from "@/lib/fdin-pin";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -209,10 +210,13 @@ export async function POST(request: Request) {
     }
   }
 
+  const fdinPin = await createUniqueFdinPin(supabase);
+
   const { data: inserted, error: insertError } = await supabase
     .from("affiliate_applications")
     .insert({
       id: applicationId,
+      fdin_pin: fdinPin,
       user_id: user.id,
       full_name: parsedFields.data.full_name,
       company_name: parsedFields.data.company_name,
@@ -243,6 +247,7 @@ export async function POST(request: Request) {
       to: parsedFields.data.email,
       applicantName: parsedFields.data.full_name,
       companyName: parsedFields.data.company_name,
+      fdinPin,
     });
   } catch (emailErr) {
     console.error("[register-affiliate/complete] confirmation email failed:", emailErr);
