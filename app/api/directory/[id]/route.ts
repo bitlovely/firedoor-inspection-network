@@ -12,7 +12,7 @@ export async function GET(
 
   const supabase = createAdminClient();
   const baseSelect =
-    "id,fdin_pin,status,full_name,company_name,postcode,email,phone,created_at,profile_photo_path,bio,services,areas_covered,years_experience,verified_insurance,verified_certification,identity_checked,dbs_path,review_count,review_rating,sample_report_paths";
+    "id,fdin_pin,status,full_name,company_name,postcode,email,phone,created_at,reviewed_at,profile_photo_path,bio,services,areas_covered,years_experience,verified_insurance,verified_certification,identity_checked,dbs_path,review_count,review_rating,sample_report_paths";
   const planSelect = `${baseSelect},plan_type,subscription_status`;
 
   let data: any | null = null;
@@ -48,6 +48,7 @@ export async function GET(
   const contact_enabled = data.plan_type === "advanced" && data.subscription_status === "active";
   const affiliate = {
     ...data,
+    reviewed_at: data.status === "verified" ? data.reviewed_at : null,
     contact_enabled,
     email: contact_enabled ? data.email : null,
     phone: contact_enabled ? data.phone : null,

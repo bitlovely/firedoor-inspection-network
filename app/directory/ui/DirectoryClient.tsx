@@ -17,6 +17,8 @@ import {
   X,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { formatVerifiedOn } from "@/lib/format-verified-on";
+import { RequestInspectionForm } from "./RequestInspectionForm";
 
 type Affiliate = {
   id: string;
@@ -31,6 +33,7 @@ type Affiliate = {
   email: string | null;
   phone: string | null;
   contact_enabled: boolean;
+  reviewed_at?: string | null;
   created_at: string;
   services?: string | null;
   areas_covered?: string;
@@ -51,13 +54,23 @@ function initialsFromName(fullName: string) {
     .join("");
 }
 
-function badge(status: string) {
+function verifiedBadge(status: string) {
   if (status !== "verified") return null;
   return (
     <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 sm:px-2.5 sm:py-1 sm:text-xs">
       <ShieldCheck className="h-3 w-3 text-emerald-700 sm:h-3.5 sm:w-3.5" />
       Verified
     </span>
+  );
+}
+
+function verifiedOnLabel(reviewedAt: string | null | undefined) {
+  const label = formatVerifiedOn(reviewedAt);
+  if (!label) return null;
+  return (
+    <p className="mt-0.5 text-[11px] font-medium text-emerald-800/85 sm:text-xs">
+      Verified on {label}
+    </p>
   );
 }
 
@@ -365,8 +378,9 @@ export function DirectoryClient() {
                               <h2 className="truncate font-display text-lg font-extrabold text-black sm:text-xl">
                                 {a.full_name}
                               </h2>
-                              {badge(a.status)}
+                              {verifiedBadge(a.status)}
                             </div>
+                            {a.status === "verified" ? verifiedOnLabel(a.reviewed_at) : null}
                             <p className="mt-0.5 truncate text-sm font-semibold text-black">
                               {a.company_name}
                             </p>
@@ -428,10 +442,10 @@ export function DirectoryClient() {
                           </span>
                           <div className="min-w-0">
                             <p className="text-xs font-semibold tracking-wider text-black/60 uppercase">
-                              Contact
+                              Enquiry
                             </p>
                             <p className="mt-1 text-sm font-semibold text-black">
-                              {a.contact_enabled ? "Available now" : "Contact locked"}
+                              Open
                             </p>
                           </div>
                         </div>
@@ -474,16 +488,6 @@ export function DirectoryClient() {
                   );
                 })()}
 
-                {a.contact_enabled && a.email ? (
-                  <div className="mt-4 flex justify-end border-t border-black/10 pt-4">
-                    <a
-                      href={`mailto:${encodeURIComponent(a.email)}`}
-                      className="inline-flex h-10 w-fit items-center justify-center rounded-2xl bg-accent-gradient px-5 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
-                    >
-                      Contact
-                    </a>
-                  </div>
-                ) : null}
               </article>
             ))}
           </div>
@@ -565,8 +569,11 @@ export function DirectoryClient() {
                         <h2 className="min-w-0 truncate font-display text-xl font-extrabold">
                           {drawerAffiliate.full_name}
                         </h2>
-                        {badge(drawerAffiliate.status)}
+                        {verifiedBadge(drawerAffiliate.status)}
                       </div>
+                      {drawerAffiliate.status === "verified"
+                        ? verifiedOnLabel(drawerAffiliate.reviewed_at)
+                        : null}
                       <p className="mt-1 text-sm text-black/70">{drawerAffiliate.company_name}</p>
                       {drawerAffiliate.fdin_pin ? (
                         <p className="mt-2 font-mono text-sm font-semibold tracking-wide text-accent">
@@ -580,20 +587,10 @@ export function DirectoryClient() {
                     </div>
                   </div>
 
-                  {drawerAffiliate.contact_enabled && drawerAffiliate.email ? (
-                    <a
-                      href={`mailto:${encodeURIComponent(drawerAffiliate.email)}?subject=${encodeURIComponent(
-                        "Request inspection",
-                      )}`}
-                      className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent-gradient px-5 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-opacity hover:opacity-95"
-                    >
-                      Request inspection
-                    </a>
-                  ) : (
-                    <div className="rounded-2xl border border-black/10 bg-black/5 px-4 py-3 text-sm font-semibold text-black/70">
-                      Contact locked (Advanced)
-                    </div>
-                  )}
+                  <RequestInspectionForm
+                    affiliateId={drawerAffiliate.id}
+                    inspectorName={drawerAffiliate.full_name}
+                  />
 
                   {drawerAffiliate.bio?.trim() ? (
                     <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.12)]">

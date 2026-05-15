@@ -21,7 +21,7 @@ export async function GET(request: Request) {
 
   const supabase = createAdminClient();
   const baseSelect =
-    "id,fdin_pin,status,full_name,company_name,postcode,email,phone,created_at,profile_photo_path,bio,services,areas_covered,years_experience,verified_insurance,verified_certification,identity_checked,dbs_path,review_count,review_rating,sample_report_paths";
+    "id,fdin_pin,status,full_name,company_name,postcode,email,phone,created_at,reviewed_at,profile_photo_path,bio,services,areas_covered,years_experience,verified_insurance,verified_certification,identity_checked,dbs_path,review_count,review_rating,sample_report_paths";
   const planSelect = `${baseSelect},plan_type,subscription_status`;
 
   let query = supabase
@@ -110,6 +110,7 @@ export async function GET(request: Request) {
     const contact_enabled = a.plan_type === "advanced" && a.subscription_status === "active";
     return {
       ...a,
+      reviewed_at: a.status === "verified" ? a.reviewed_at : null,
       contact_enabled,
       email: contact_enabled ? a.email : null,
       phone: contact_enabled ? a.phone : null,
